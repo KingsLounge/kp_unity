@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2d136ad60fa9f04f980fe196f4a4301, type: 3}
+  m_Name: ChipDataList1
+  m_EditorClassIdentifier: 
+  list:
+  - sprite: {fileID: 21300000, guid: 66817ea30b3d5c846943b7afb8ac4f54, type: 3}
+    price: 1
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: bd299b758322ca041a768e9876c991d9, type: 3}
+    price: 10
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 2e7f20a9dcaaf05458f0365082675099, type: 3}
+    price: 100
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: cc4737f4bcc5efc4fae2206ab67653a8, type: 3}
+    price: 1000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: b78026fa591543340bf6b3c57180dbd9, type: 3}
+    price: 10000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: ad603391825e3e04aa16dc3310c61fb7, type: 3}
+    price: 100000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: d278d14c26e87dc468d2ebed24c8d583, type: 3}
+    price: 1000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 4ae16766cdd3a004b9bce57621292e5b, type: 3}
+    price: 10000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 33871ba5a26a12445a81c4edf5af50cb, type: 3}
+    price: 100000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 2036c06bc496f8e4fa444d6fcc9be025, type: 3}
+    price: 1000000000
+    isCircle: 1
+  maxThrowChip: 15

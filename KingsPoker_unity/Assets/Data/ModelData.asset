@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e08ade942676ff74b982ab07216a45e6, type: 3}
+  m_Name: ModelData
+  m_EditorClassIdentifier: 
+  defaultCharactor: 0
+  modelInfos:
+  - charactor: 0
+    prefab: {fileID: 6891360283894719910, guid: 028b820857b013d46b208258bd2bab75,
+      type: 3}
+    throwSpeed: 2
+    throwDelay: 0.44
+  - charactor: 1
+    prefab: {fileID: 3673843836852119335, guid: f240867a6135f8648bd62c57f921c2f4,
+      type: 3}
+    throwSpeed: 2
+    throwDelay: 0.44
+  - charactor: 2
+    prefab: {fileID: 7442007606524161011, guid: 149230eb5c659244c96ebad301083847,
+      type: 3}
+    throwSpeed: 2
+    throwDelay: 0.44
+  - charactor: 3
+    prefab: {fileID: 5032029787700902980, guid: 6542d734c2033174f87f42626bd3c1b8,
+      type: 3}
+    throwSpeed: 2
+    throwDelay: 0.44
+  - charactor: 4
+    prefab: {fileID: 7120933091052592891, guid: 40d339c5261c9604e8b1eaa745ceb019,
+      type: 3}
+    throwSpeed: 2
+    throwDelay: 0.44
+  - charactor: 5
+    prefab: {fileID: 7120933091052592891, guid: d119cc744edab354e8a313cc490ddbe4,
+      type: 3}
+    throwSpeed: 2
+    throwDelay: 0.44
+  - charactor: 6
+    prefab: {fileID: 7120933091052592891, guid: d119cc744edab354e8a313cc490ddbe4,
+      type: 3}
+    throwSpeed: 2
+    throwDelay: 0.44

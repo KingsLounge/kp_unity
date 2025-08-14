@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2d136ad60fa9f04f980fe196f4a4301, type: 3}
+  m_Name: ChipDataList2
+  m_EditorClassIdentifier: 
+  list:
+  - sprite: {fileID: 21300000, guid: 93a3b3b528ac61340ac3c5cce0622e1c, type: 3}
+    price: 1
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 6bc8ea60c9746c24eac2dca04073509a, type: 3}
+    price: 5
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: d1c49b6702a1e164c826deb8bbeea3d9, type: 3}
+    price: 10
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: cdd8387ff8fd99d42a9f5629b24305cb, type: 3}
+    price: 50
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 54dbea39cb9157847bb02ed6355b0c02, type: 3}
+    price: 100
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 6a9f74ee12d998e47a1bc8704479be82, type: 3}
+    price: 500
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 8f59f3cda0c83d94d8d1661cff705f59, type: 3}
+    price: 1000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: aced8b421dac8ab438502813a4c74c01, type: 3}
+    price: 5000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: f54417ea8b3d22343adf5fe8dc4abb2c, type: 3}
+    price: 10000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 359d457a97d9f9947956b7c6288e3390, type: 3}
+    price: 50000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 2ab01d5181f8054409b8da59e996f134, type: 3}
+    price: 100000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 56178a6a482910f4f800b4a8666888c0, type: 3}
+    price: 500000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 171898a4e08e0cf4caec960df819f735, type: 3}
+    price: 1000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: fd849c8669bea2e44b32ad1a76946ce4, type: 3}
+    price: 5000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 0b970cd8129020547a55ca0b97f1ed84, type: 3}
+    price: 10000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 3ec6cba4e524b304cbd632982253e52b, type: 3}
+    price: 50000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: b9e54118170040c4eab1f51ecc06976d, type: 3}
+    price: 100000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 42f239b280a744e438c795f3d74580f2, type: 3}
+    price: 500000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 3847520e9fa7023489f7b8fa776c9b39, type: 3}
+    price: 1000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: b9a90c3d79a50204daae56c34fd6a3f1, type: 3}
+    price: 5000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 3a8570274b56f7a4ca12864b2f76104b, type: 3}
+    price: 10000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 18b75d36195cf5140b96c5ddef10460f, type: 3}
+    price: 50000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 2da5367b02b686f43b6cbbebc97ba56d, type: 3}
+    price: 100000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: d8f8d817cf48dad439832ae9d65b6db5, type: 3}
+    price: 500000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: ff5ad851058c75142ad6be22f7d333f2, type: 3}
+    price: 1000000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: b3c8a6a80d139a44589130a618e6a871, type: 3}
+    price: 10000000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 8301b76e5d80c98478d759097ae7c04f, type: 3}
+    price: 50000000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: cdc7713acc288284f9ba564302cacc5e, type: 3}
+    price: 100000000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: ff1eebe3f02f6c042a4131451ba3cde0, type: 3}
+    price: 500000000000000
+    isCircle: 1
+  - sprite: {fileID: 21300000, guid: 703ef15b5f30e8d4bab088bd005df2b9, type: 3}
+    price: 1000000000000000
+    isCircle: 1
+  maxThrowChip: 15

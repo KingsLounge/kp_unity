@@ -1,0 +1,9 @@
+diff a/jackpot_holdem_unity/Assets/Plugins/Android/mainTemplate.gradle b/jackpot_holdem_unity/Assets/Plugins/Android/mainTemplate.gradle	(rejected hunks)
+@@ -36,7 +36,6 @@
+ // Android Resolver Dependencies Start
+     implementation 'com.kakao.sdk:usermgmt:1.29.0'
+     implementation 'com.android.support:support-v4'
+-    implementation 'com.google.android.gms:play-services-auth:16+' // Assets/GoogleSignIn/Editor/GoogleSignInDependencies.xml:10
+     implementation 'com.naver.nid:naveridlogin-android-sdk:4.2.6' // Assets/GoogleSignIn/Editor/GoogleSignInDependencies.xml:10
+     implementation 'com.google.firebase:firebase-analytics:17.2.2' // Assets/Firebase/Editor/MessagingDependencies.xml:15
+     implementation 'com.google.firebase:firebase-app-unity:6.13.0' // Assets/Firebase/Editor/AppDependencies.xml:20

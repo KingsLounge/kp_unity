@@ -1,0 +1,14 @@
+id,item_id,name,sound_prefix,3d_index,2d_index,description
+0,201,char0,man_01_,,char01,남성 기본 01
+1,202,char1,girl_01_,,char02,여성 기본 01
+2,203,char2,man_01_,,char03,남성 기본 02
+3,204,char3,girl_01_,,char04,
+4,205,char4,man_01_,,char05,
+5,206,char5,man_01_,,char06,
+6,207,char6,man_01_,,char07,남성 기본 05
+7,208,char7,girl_01_,,char08,남성 기본 06
+8,209,char8,girl_01_,,char09,남성 기본 07
+9,210,char9,man_01_,,char10,여성 기본 03
+10,211,char10,man_01_,,char11,남성 기본 07
+11,212,char11,girl_01_,,char12,남성 기본 08
+12,213,char12,man_01_,,char13,

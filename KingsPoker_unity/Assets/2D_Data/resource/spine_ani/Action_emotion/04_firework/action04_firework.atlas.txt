@@ -1,0 +1,132 @@
+
+action04_firework.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+convert_eff01
+  rotate: false
+  xy: 1177, 97
+  size: 164, 164
+  orig: 164, 164
+  offset: 0, 0
+  index: -1
+convert_eff02
+  rotate: false
+  xy: 1212, 339
+  size: 164, 164
+  orig: 164, 164
+  offset: 0, 0
+  index: -1
+convert_eff03
+  rotate: false
+  xy: 1343, 173
+  size: 164, 164
+  orig: 164, 164
+  offset: 0, 0
+  index: -1
+convert_eff04
+  rotate: false
+  xy: 1378, 339
+  size: 164, 164
+  orig: 164, 164
+  offset: 0, 0
+  index: -1
+eff01
+  rotate: false
+  xy: 2, 263
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff02
+  rotate: false
+  xy: 2, 21
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff03
+  rotate: false
+  xy: 244, 263
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff04
+  rotate: false
+  xy: 244, 21
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff05
+  rotate: false
+  xy: 486, 263
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff06
+  rotate: false
+  xy: 486, 21
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff07
+  rotate: false
+  xy: 728, 263
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff08
+  rotate: false
+  xy: 728, 21
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+eff09
+  rotate: false
+  xy: 970, 263
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+other_emo_icon_04_fw
+  rotate: false
+  xy: 970, 56
+  size: 205, 205
+  orig: 205, 205
+  offset: 0, 0
+  index: -1
+wick_fire01
+  rotate: false
+  xy: 52, 4
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: -1
+wick_fire02
+  rotate: false
+  xy: 2, 2
+  size: 15, 17
+  orig: 15, 17
+  offset: 0, 0
+  index: -1
+wick_fire03
+  rotate: false
+  xy: 19, 3
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: -1
+wick_fire04
+  rotate: false
+  xy: 36, 3
+  size: 14, 16
+  orig: 14, 16
+  offset: 0, 0
+  index: -1

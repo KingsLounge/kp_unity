@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e28c69096ee4f2440b15229c396833b2, type: 3}
+  m_Name: BadugiBettingSoundData
+  m_EditorClassIdentifier: 
+  spriteInfo:
+  - bettype: 1
+    soundType: 58
+  - bettype: 2
+    soundType: 54
+  - bettype: 4
+    soundType: 57
+  - bettype: 8
+    soundType: 56
+  - bettype: 32
+    soundType: 55
+  - bettype: 64
+    soundType: 60
+  - bettype: 128
+    soundType: 62
+  - bettype: 256
+    soundType: 61
+  - bettype: 512
+    soundType: 52
+  - bettype: 1024
+    soundType: 0
+  - bettype: 2048
+    soundType: 0
+  - bettype: 4096
+    soundType: 53
+  - bettype: 8192
+    soundType: 63
+  - bettype: 16384
+    soundType: 0
+  - bettype: 32768
+    soundType: 0

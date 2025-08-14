@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: OtherPlayerCard
+  m_Controller: {fileID: 9100000, guid: 1b449593598d09242bc5ca1011793f4d, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 7d8e727fa012bca49b4c4b3a9502e3ee, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 7d8e727fa012bca49b4c4b3a9502e3ee, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 671f536201825af4cbea2c26555899ee, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 1db855266b1cf4a4ab952bd2dd03b956, type: 2}

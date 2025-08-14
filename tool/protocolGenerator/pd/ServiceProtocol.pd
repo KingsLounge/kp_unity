@@ -1,0 +1,1880 @@
+#
+# PD file
+#
+import GameCommon
+# insert_code cs 'using GameCommon;
+
+insert_code js 'var bigint = require("node-biginteger");'
+insert_code js 'var GameCommon = require("./GameCommon");'
+insert_code js 'var NetData = require("../NetData");'
+
+protocol CPProtocol(0x0)
+{
+	code CP_PROTOCOL_START = 0;
+	code CP_LOGOUT;					# 현재 사용하지 않음. 
+
+	code CP_CONSOLE_LOGIN;			# 콘솔 로그인 
+	code CP_CONSOLE_LOGOUT;			# 콘솔 로그아웃 
+	code CP_CONSOLE_USERINFO;		# 콘솔 로그인 
+
+	code CP_OBSERVER_ENTER;			# 옵저버 입장 
+	code CP_OBSERVER_EXIT;			# 옵저버 퇴장
+
+	code CP_USER_TRANSFER_GCSC = 8;
+	code CP_USER_INFO_CHECK;		# LLL 유저의 정보가 바뀌었음을 서버에게 확인 요청 한다.
+	code CP_USER_TOKEN_UPDATE;
+	code CP_COUNT_OF_TABLES_ZC;
+	code CP_XXXXX_02;
+	code CP_PING;
+	code CP_SET_NOTIFICATION;
+    
+    code CP_USER_GAMEINFO;
+    code CP_USER_QUESTINFO;
+
+    code CP_QUEST_LIST;
+    code CP_QUEST_CLEAR;
+
+    code CP_RANKING;
+    code CP_USER_INFO_OPTION_UPDATE;
+    code CP_USER_DAILY_LOSS_LIMIT_UPDATE;
+
+	code CP_TNMT_REWARD_TABLE = 25;  	# 리워드 테이블
+	code CP_TNMT_LIST; 		 			# 토너먼트 리스트 요청 ( 내가 참가한 토너먼트 정보 포함 )
+	code CP_TNMT_APPLY;  				# 토너먼트 신청 
+	code CP_TNMT_UNAPPLY;  				# 토너먼트 신청 취소 
+	code CP_TNMT_MY;  					# 내가 신청한 토너먼트 
+	code CP_TNMT_MY_RESULT;  			# 토너먼트 유저 종료 등수, 상금, 나를 때린 유저 
+	code CP_TNMT_BLIND_UP;  			# 현재 블라인드값( 브레이크 타임 포함 ) 요청 
+	code CP_TNMT_BLIND_TABLE;         	# 블라인드 테이블
+    code CP_TNMT_RANKING;               # 토너먼트 랭킹 요청
+    code CP_TNMT_CREATE;                # 토너먼트 생성
+    code CP_TNMT_FIX;                   # 토너먼트 수정
+	code CP_TNMT_INFO;                  # 토너먼트 정보
+	code CP_TNMT_ICM_REQUEST;			# 토너먼트 ICM 요청
+	code CP_TNMT_DEAL;					# 토너먼트 딜 요청
+	code CP_TNMT_DEAL_AGREE;			# 토너먼트 딜 요청 승낙
+
+	code CP_PLAY_GAME_LIST = 41;        		# 나의 전체 게임 리스트 	
+	code CP_PLAY_GAME_ENTER;        	# 카페 게임 입장
+
+    # 카페 일반 
+	code CP_CAFE_LIST;             # 나의 카페 리스트 
+	code CP_CAFE_CREATE;        		# 카페 생성
+	code CP_CAFE_JOIN;        			# 카페 Apply
+										# 성공적으로 join 신청 하셨습니다. 
+										# 이미 join 신청 하셨습니다. 
+	code CP_CAFE_JOIN_LIST;
+	code CP_CAFE_JOIN_UPDATE;
+	code CP_CAFE_INFO;        			# 특정 카페 정보. 카페의 게임리스트도 함께 
+	code CP_CAFE_UPDATE;        		# 카페 수정/삭제 
+
+	code CP_CAFE_GAME_CREATE;        	# 카페 게임 생성
+	code CP_CAFE_GAME_UPDATE;        	# 카페 게임 수정/삭제 	
+
+	code CP_CAFE_MEMBER_LIST;        	# 카페 멤버 리스트
+	code CP_CAFE_MEMBER_UPDATE;        	# 카페 멤버 정보 업데이트 ( )
+
+	code CP_CAFE_INVITE_LINK;			# 
+	code CP_CAFE_ZUICE_HISTORY;			# ㅋㅏㅍㅔㅇㅡㅣ zuice 입출금 내역 
+	code CP_CAFE_CHIP_HISTORY;			# ㅋㅏㅍㅔㅇㅔ chip 입출금 내역 
+	code CP_CAFE_GAME_HISTORY;			# member가 공유한 게임로그 
+	code CP_CAFE_MEMBER_ZUICE_HISTORY;
+	code CP_CAFE_MEMBER_CHIP_HISTORY;
+	code CP_CAFE_MEMBER_GAME_HISTORY;
+
+	code CP_CAFE_TRANS_ZUICE;					# zuice 요청하기 
+	code CP_CAFE_MEMBER_ORDER;					# 칩 요청하기 
+	code CP_CAFE_MEMBER_ORDER_LIST;				# 칩 요청 리스트 
+	code CP_CAFE_MEMBER_MY_ORDER_LIST;			# 유저의 칩 요청 리스트
+	code CP_CAFE_MEMBER_ORDER_UPDATE;			# 칩 요청 답하기
+
+	code CP_MY_CAFE_MEMBER_LIST;        		# 카페 멤버 리스트
+
+	code CP_HANDS_LOG_MY_LIST;					# 나의 게임 히스토리 
+	code CP_HANDS_LOG_MY;						# 나의 게임 
+
+	code CP_HANDS_LOG_CAFE_LIST;				# 카페 게임 히스토리 	
+	code CP_HANDS_LOG_CAFE;						# 카페 게임 히스토리 	
+
+	code CP_CAFE_LEAVE;							# 
+	code CP_CAFE_AUTO_JOIN_CODE;						# 카페코드 요청 
+
+	code CP_CAFE_CHAT;							# 카페채팅
+	code CP_CAFE_CHAT_LIST;						# 카페기록 
+
+	code CP_MESSAGE;							# 카페기록 
+	code CP_CAFE_RESERVE_REMOVE;				# 카페 제거 
+	code CP_PLAY_GAME_ENTER_OBSERVER;
+	code CP_PLAY_GAME_LEAVE_OBSERVER;
+
+		code CP_ROOM_PROTOCOL_START = 100;		# ------ room -----------------------------
+			code CP_ROOM_CREATE;					# 유저가 새로운 방생성을 요청했다. 
+			code CP_ROOM_DELETE;
+			code CP_ROOM_ENTER;
+			code CP_ROOM_RESERVE_LEAVE;
+			code CP_ROOM_COMMAND;
+			code CP_ROOM_USER_LIST;
+			code CP_LOBBY_ROOM_LIST;    			# 
+			code CP_LOBBY_USER_LIST;
+			code CP_ROOM_CHAT;
+			code CP_ROOM_GAME_START;				# 딜러가 게임을 시작 코맨트를 한다. 
+			code CP_ROOM_CREATE_OPTION_LIST;		# 게임방 생성 옵션 리스트 요청 ( 현재는 홀덤만, )
+			code CP_ROOM_TIME;						# 베팅타임 ...
+			code CP_ROOM_HISTORY;					# 각 게임의 히스토리 
+			code CP_ROOM_REBUY;  					# 토너먼트 리바이 
+			code CP_ROOM_ADDON;  					# 토너먼트 애드온  
+			code CP_ROOM_USER_STATUS_SEAT;			# 0 = not 	1 = on    2 = not
+			code CP_ROOM_BUYIN;
+			code CP_ROOM_SEAT;
+			code CP_ROOM_WAIT_FOR_BLIND;			# 
+			code CP_ROOM_TIME_BANK;					# 
+			code CP_ROOM_INSURANCE;					# 
+			code CP_ROOM_IN_PLAYING;				# 
+			code CP_ROOM_TIME_BANK2;				# 
+			code CP_ROOM_TIME_BANK2_USE;			# 
+			code CP_ROOM_RABBIT;					# 
+			code CP_ROOM_USER_SHOW_CARDS;			
+
+
+		code CP_ROOM_END_OF_PROTOCOL;
+
+		code CP_GAME_PROTOCOL_START = 200;			#	 -------  poker --------------------------
+			code CP_HOLDEM_BET;						# 베팅한다. 
+			code CP_HOLDEM_STATUS;					# 현재 방의 상태를 요청한다. ROOM_COMMAND, HOLDEM_COMMAND, community cards, whose turn, money_totam, money_call, 
+			code CP_POST_BLIND;						# post_blind 신청 
+			code CP_STRADDLE;						# declare straddle
+			code CP_STRADDLE_BET;					# declare straddle
+			code CP_RUN_IT_TWICE;					# 쇼다운 되면 run-it-twice 팝업이 뜬다. 한명이다로 run-it-once 누르면 취소 된다. 
+		code CP_GAME_END_OF_PROTOCOL;		
+
+		code CP_KINGSHILL_API_PROTOCOL_START = 250;	#	 -------  kingshill --------------------------
+			code CP_KINGSHILL_USER_LINK;
+			code CP_KINGSHILL_GET_RANK_LIST;
+			code CP_KINGSHILL_GET_USER_INFO;
+			code CP_KINGSHILL_GET_TICKET_HISTORY;
+			code CP_KINGSHILL_POINT_IN;
+			code CP_KINGSHILL_POINT_OUT;
+			code CP_KINGSHILL_TICKET_TO_POINT;
+		code CP_KINGSHILL_API_PROTOCOL_END;	#	 -------  kingshill --------------------------
+		code CP_CAFE_QUEST_API_PROTOCOL_START = 300; # ---------quest_server --------
+			code CP_CAFE_QUEST_LIST;
+			code CP_CAFE_REQUEST_QUEST_REWARD;
+		code CP_CAFE_QUEST_API_PROTOCOL_START_END; # --------quest_server --------
+		
+
+	code CP_END_OF_PROTOCOL;
+}
+
+
+protocol PCProtocol(0x0)
+{
+	code PC_PROTOCOL_START              = 0;
+	code PC_ACCOUNT_BLOCKED;
+	code PC_KICK;
+	code PC_CONSOLE_LOGIN_SUCCESS;
+	code PC_CONSOLE_LOGIN_FAIL;
+	code PC_CONSOLE_USERINFO;
+
+	code PC_OBSERVER_ENTER;			# 옵저버 입장 
+	code PC_OBSERVER_EXIT;			# 옵저버 퇴장
+
+	code PC_USER_TRANSFER_GCSC 			= 9;
+	code PC_USER_TRANSFER_GCSC_FAIL;
+	code PC_USER_INFO_UPDATE;
+	code PC_USER_TOKEN_UPDATE;
+	code PC_SET_NOTIFICATION;
+	code PC_PING;
+
+    code PC_USER_GAMEINFO;
+    code PC_USER_QUESTINFO;
+
+    code PC_QUEST_LIST;
+    code PC_QUEST_CLEAR;
+    code PC_QUEST_CLEAR_FAIL;
+
+    code PC_RANKING;
+
+    code PC_USER_INFO_OPTION_UPDATE;
+    code PC_USER_INFO_OPTION_UPDATE_FAIL;
+
+    code PC_USER_NOTIFICATION;
+
+    code PC_USER_DAILY_LOSS_LIMIT_UPDATE;
+    code PC_USER_DAILY_LOSS_LIMIT_UPDATE_FAIL;
+
+	code PC_TNMT_LIST = 30;  			# 토너먼트 리스트 요청
+	code PC_TNMT_UPDATE;  				# 새로 생성된 토너먼트
+	code PC_TNMT_APPLY;  				# 토너먼트 신청 결과
+	code PC_TNMT_APPLY_FAIL;  			# 토너먼트 신청 실패 
+	code PC_TNMT_UNAPPLY;  				# 토너먼트 신청 취소 결과
+	code PC_TNMT_UNAPPLY_FAIL;  		# 토너먼트 신청 취소 실패 
+	code PC_TNMT_MY; 					# 내가 신청/참가중인 토너먼트 
+	code PC_TNMT_MY_RESULT;				# 토너먼트 참가 결과 
+	code PC_TNMT_BLIND_UP;				# 토너먼트 블라인드업 & 브레이크타임 
+	code PC_TNMT_INFO;   				# 토너먼트 정보
+    code PC_TNMT_UPDATE_APPLY_COUNT;	# 토너먼트 등록유저 업데이트
+    code PC_TNMT_REWARD_TABLE;          # 토너먼트 리워드 테이블
+    code PC_TNMT_BLIND_TABLE;           # 토너먼트 블라인드 테이블
+    code PC_TNMT_RANKING;               # 토너먼트 랭킹 요청
+    code PC_TNMT_MOVE_ROOM;             # 토너먼트 방 이동
+    code PC_TNMT_CREATE;                # 토너먼트 생성
+    code PC_TNMT_FIX;                   # 토너먼트 수정
+
+
+
+	code PC_PLAY_GAME_LIST;        		# 나의 전체 게임 리스트 	
+	code PC_PLAY_GAME_ENTER;        	# 카페 게임 입장
+
+    # 카페 일반 
+	code PC_CAFE_LIST;             # 나의 카페 리스트 
+	code PC_CAFE_CREATE;        		# 카페 생성
+	code PC_CAFE_JOIN;        			# 카페 Apply
+		# 성공적으로 join 신청 하셨습니다. 
+		# 이미 join 신청 하셨습니다. 
+	code PC_CAFE_JOIN_LIST;
+	code PC_CAFE_JOIN_UPDATE;
+	code PC_CAFE_INFO;        			# 특정 카페 정보. 카페의 게임리스트도 함께 
+	code PC_CAFE_UPDATE;        		# 카페 수정/삭제 
+
+	code PC_CAFE_GAME_CREATE;        	# 카페 게임 생성
+	code PC_CAFE_GAME_UPDATE;        	# 카페 게임 수정/삭제 	
+
+	code PC_CAFE_MEMBER_LIST;        	# 카페 멤버 리스트
+	code PC_CAFE_MEMBER_UPDATE;        	# 카페 멤버 정보 업데이트 ( )
+
+	code PC_CAFE_INVITE_LINK;			# 
+	code PC_CAFE_ZUICE_HISTORY;			# ㅋㅏㅍㅔㅇㅡㅣ zuice 입출금 내역 
+	code PC_CAFE_CHIP_HISTORY;			# ㅋㅏㅍㅔㅇㅔ chip 입출금 내역 
+	code PC_CAFE_GAME_HISTORY;			# member가 공유한 게임로그 
+	code PC_CAFE_MEMBER_ZUICE_HISTORY;
+	code PC_CAFE_MEMBER_CHIP_HISTORY;
+	code PC_CAFE_MEMBER_GAME_HISTORY;
+
+	code PC_CAFE_TRANS_ZUICE;					# zuice 요청하기 
+	code PC_CAFE_MEMBER_ORDER;					# 칩 요청하기 
+	code PC_CAFE_MEMBER_ORDER_LIST;				# 칩 요청 리스트 
+	code PC_CAFE_MEMBER_MY_ORDER_LIST;			# 칩 요청 리스트 
+	code PC_CAFE_MEMBER_ORDER_UPDATE;			# 칩 요청 답하기. 
+
+	code PC_CAFE_TIME_UPDATE;					# 카페 시간/zc 업데이트
+	code PC_MY_CAFE_MEMBER_LIST;
+
+	code PC_HANDS_LOG_MY_LIST;					# 나의 게임 히스토리 
+	code PC_HANDS_LOG_MY;						# 나의 게임 히스토리 
+	code PC_HANDS_LOG_CAFE_LIST;				# 카페 게임 히스토리 	
+	code PC_HANDS_LOG_CAFE;						# 카페 게임 히스토리 	
+
+	code PC_CAFE_NOTICE;						# 카페 NOTICE 
+
+	code PC_CAFE_LEAVE;
+	code PC_CAFE_AUTO_JOIN_CODE;						# 카페코드 요청 
+
+	code PC_CAFE_CHAT;							# 카페채팅
+	code PC_CAFE_CHAT_LIST;						# 카페기록 
+
+	code PC_MESSAGE;							# 카페기록 
+
+	code PC_CAFE_RESERVE_REMOVE;				# 카페 제거 
+
+	code PC_TNMT_ICM_REQUEST;				# 
+
+  code PC_USER_NOTICE;  # 전체 흐르르 공지
+	code PC_PLAY_GAME_ENTER_OBSERVER;        	# 관전 방 입장
+	code PC_PLAY_GAME_LEAVE_OBSERVER;   			# 관전 방 나감
+
+	code PC_TNMT_CAN_DEAL;				# 
+	code PC_TNMT_DEAL;
+	code PC_TNMT_DEAL_AGREE_START;
+	code PC_TNMT_DEAL_AGREE;
+
+
+		code PC_ROOM_PROTOCOL_START = 100;
+			code PC_ROOM_CREATE;				# 유저가 요청한 새로운 방이 생성되었다. 요청한 유저에게만 보내진다. 
+			code PC_ROOM_CREATE_FAIL;
+			code PC_ROOM_NEW;					# 유저들에게 새로운 방이 생성됨을 알린다. 
+			code PC_ROOM_DELETE;
+			code PC_ROOM_DELETE_FAIL;
+			code PC_ROOM_ENTER;
+			code PC_ROOM_ENTER_FAIL;
+			code PC_ROOM_RESERVE_LEAVE;
+			code PC_ROOM_RESERVE_LEAVE_FAIL;
+			code PC_ROOM_LEAVE;
+			code PC_ROOM_COMMAND;
+			code PC_ROOM_USER_STATUS;			# 게임중의 상태를 알린다.   nothing, ingame,   /    seat가 바뀌었다. 
+			code PC_ROOM_USER_LIST;				# 이방의 유저들에게 유저정보를 보내준다.
+			code PC_LOBBY_ROOM_LIST;
+			code PC_LOBBY_USER_LIST;
+			code PC_ROOM_CHAT;
+			code PC_ROOM_GAME_READY;            # NOT USE
+			code PC_ROOM_CREATE_OPTION_LIST;
+			code PC_ROOM_READY_TO_ENTER; 		# 유저에게 들어 올 방번호(gtn)을 보낸다. 
+			code PC_COUNT_OF_TABLES_ZC;
+			code PC_XXXXXX_02;
+			code PC_ROOM_TIME;					# 베팅타임 ... 
+			code PC_ROOM_HISTORY;				#
+			code PC_ROOM_REBUY;  				# 토너먼트 리바이 
+			code PC_ROOM_ADDON;  				# 토너먼트 애드온 
+			code PC_ROOM_USER_STATUS_SEAT;		#   
+			code PC_ROOM_BUYIN;					#   
+			code PC_GAME_PLAYER_COUNT;			#  playGameList Reflash 해준다. 
+			code PC_ROOM_SEAT;
+			code PC_ROOM_WAIT_FOR_BLIND;
+			code PC_ROOM_PLAYER_SEAT_LIST;
+			code PC_ROOM_PLAYER_INFO_CHANGE;
+
+			code PC_ROOM_TIME_BANK;
+			code PC_ROOM_INSURANCE_START;
+			code PC_ROOM_INSURANCE;
+			code PC_ROOM_IN_PLAYING;			# 지금 게임중인 gtn array 를 가져온다. 
+			code PC_ROOM_TIME_BANK2;			# 
+			code PC_ROOM_TIME_BANK2_USE;			# 
+			code PC_ROOM_RABBIT;			
+			code PC_ROOM_USER_SHOW_CARDS;			
+
+		code PC_ROOM_END_OF_PROTOCOL;
+
+		code PC_GAME_PROTOCOL_START = 200;
+			code PC_HOLDEM_COMMAND;
+			code PC_HOLDEM_WHO_IS_BOSS;		# boss == dealer 
+			code PC_HOLDEM_DRAW_CARDS;
+			code PC_HOLDEM_OPEN_CARDS;		# 게임이 끝나서 카드를 오픈한다. 
+			code PC_HOLDEM_BET;				# 베팅한다. 
+			code PC_HOLDEM_BET_FAIL;
+			code PC_HOLDEM_BET_MONEY;		# 현재 바닥에 있는 베팅액.
+			code PC_HOLDEM_WHO_IS_TURN;		# [208]  지금 누구 순서인가?  
+			code PC_HOLDEM_USER_MONEY;		# 유저가 베팅했다. 게임중에 유저의 머니를 업데이트 한다.
+			code PC_HOLDEM_USER_STATUS;		# 게임중에 유저의 상태를 보낸다.
+			code PC_HOLDEM_GAMERESULT;
+			code PC_HOLDEM_STATUS;			
+			code PC_POST_BLIND;				# post_blind 신청 
+			code PC_STRADDLE;				# declare straddle
+			code PC_STRADDLE_BET_START;		# straddle again
+			code PC_STRADDLE_BET;			# straddle again
+			code PC_RUN_IT_TWICE_START;		# 
+			code PC_RUN_IT_TWICE;			# 쇼다운 되면 run-it-twice 팝업이 뜬다. 한명이다로 run-it-once 누르면 취소 된다. 
+			
+			code PC_HOLDEM_EQUITY;			#
+
+		code PC_GAME_END_OF_PROTOCOL;
+
+		code PC_KINGSHILL_API_PROTOCOL_START = 250;	#	 -------  kingshill --------------------------
+			code PC_KINGSHILL_USER_LINK;
+			code PC_KINGSHILL_GET_USER_INFO;
+			code PC_KINGSHILL_GET_TICKET_HISTORY;
+			code PC_KINGSHILL_POINT_IN;
+			code PC_KINGSHILL_POINT_OUT;
+			code PC_KINGSHILL_TICKET_TO_POINT;
+		code PC_KINGSHILL_API_PROTOCOL_END;	#	 -------  kingshill --------------------------
+
+		code PC_QUEST_API_PROTOCOL_START = 300;  #--------- quest_server ------------
+			code PC_CAFE_QUEST_LIST;
+			code PC_CAFE_REQUEST_QUEST_REWARD;
+		code PC_QUEST_API_PROTOCOL_END; #
+
+	code PC_END_OF_PROTOCOL;
+}
+
+
+protocol CPProtocol
+{
+	# 설명: 로그아웃 요청 
+	struct CP_LOGOUT {
+		int why;
+	}
+		
+	struct CP_CONSOLE_LOGIN{						# 설명 : 콘솔 버전  로그인 
+		char[STRING_8_LEN+1] 		os ;				# web, android, ios
+		char[STRING_8_LEN+1] 		browser;			# web, android, ios  exp
+		char[STRING_8_LEN+1] 		client_type;		# basic, 
+
+		bool						isObserver;
+		char[STRING_32_LEN+1] 		streamerUid;
+
+		char[STRING_64_LEN+1] 		acc;             # acc ---> userid
+		char[STRING_256_LEN+1] 		pass;
+		char[STRING_2048_LEN+1] 	token;              # token만 있으면 lll,  userid + password = 일반, userid + token = from pub_api
+	}
+
+	struct CP_CONSOLE_USERINFO{}					# 설명 : 유저 정보 요청 
+
+	struct CP_OBSERVER_ENTER{						#  	
+		char[STRING_64_LEN+1] 		gid;            # acc ---> userid
+		int 						gtn;
+		int 						dn;
+	}
+	struct CP_OBSERVER_EXIT{
+		char[STRING_64_LEN+1] 		gid;             
+		int 						gtn;
+		int 						dn;
+	}
+
+	struct CP_USER_TRANSFER_GCSC{
+		char[ STRING_8_LEN+1] 		transfertype; 	# 'gc2sc', 'sc2gc'
+		int 						amount;
+	}
+	struct CP_USER_INFO_CHECK {					# 라라랜드용 
+	}
+
+	struct CP_USER_TOKEN_UPDATE{				# 라라랜드용 
+		char[STRING_2048_LEN+1] 	token;
+	}
+
+	struct CP_COUNT_OF_TABLES_ZC{	
+
+	}
+
+	struct CP_PING{
+	}
+
+	struct CP_SET_NOTIFICATION{
+		push   						o;
+	}
+
+
+    struct CP_USER_GAMEINFO{
+        char[STRING_32_LEN+1] 	gid;
+    }
+
+    struct CP_USER_QUESTINFO{
+    }
+
+    struct CP_QUEST_LIST{
+    }
+
+    struct CP_QUEST_CLEAR{
+        char[STRING_32_LEN+1] questname;
+    }
+
+    struct CP_RANKING{
+        int type;
+    }
+
+    struct CP_USER_INFO_OPTION_UPDATE{					# 설명 : 유저 옵션 정보 수정
+        optionData updateData;
+    }
+
+    struct CP_USER_DAILY_LOSS_LIMIT_UPDATE{
+        long limit;
+    }
+
+	# /////////////////////////////////////////////////////////////////  CP GAME ////
+	# /////////////////////////////////////////////////////////////////  CP GAME ////
+	# /////////////////////////////////////////////////////////////////  CP GAME ////
+	# /////////////////////////////////////////////////////////////////  CP GAME ////
+	# /////////////////////////////////////////////////////////////////  CP GAME ////
+
+	struct CP_ROOM_CREATE {
+        int                     room_type;              # 1 = 일반 2 = 친구대전
+		char[STRING_8_LEN+1] 	game_type;				# holdem badugi poker7
+		int                   	chip_type;				# 1 = chip = gc  2 = gold = sc 
+		wchar[STRING_16_LEN+1] 	title;					# 방제목 	
+		char[STRING_16_LEN+1] 	password;			
+		int  					index;
+		int  					blind;
+        int  					max_seat;               # 기본 2명
+        long                    buyin;                  # 0 = all
+	}
+	struct CP_ROOM_DELETE{								# 
+		long 								gtn;
+		long 								cafeIdx;
+	}
+	struct CP_ROOM_ENTER{
+		long 								gameIdx;
+		long 								gtn;		#  gtn = gameTableNumber 
+	}
+	struct CP_ROOM_RESERVE_LEAVE{ 
+		long 								gtn;
+		bool 								leave;  	# true == leave ,   false == cancel to leave
+		int 								type; 		# 0 = sit out next hand,  # 0 = sit out next blind
+	}
+	struct CP_ROOM_COMMAND{
+		long 								gtn;
+	}
+	struct CP_ROOM_USER_LIST{
+		long 								gtn;
+	}
+	struct CP_LOBBY_ROOM_LIST { 						# 사용하지 말아야 할 패킷 
+		char[STRING_8_LEN+1] 				game_type;		
+	}
+	struct CP_LOBBY_USER_LIST { 						# 사용하지 말아야 할 패킷 	
+		char[STRING_8_LEN+1] 				game_type;
+	}
+	struct CP_ROOM_CHAT {
+		long 								gtn;	
+		char[STRING_4_LEN+1] 				type;		# emo, room, 2usr
+		char[STRING_32_LEN+1] 				to_gid;		# to gid 
+		wchar[STRING_64_LEN+1] 				msg;
+	}
+
+	struct CP_ROOM_GAME_START {							# 방장이 사용하는 패킷 	
+		long 								gtn;	
+	}
+
+	struct CP_ROOM_CREATE_OPTION_LIST {
+	}
+
+	struct CP_ROOM_TIME {								# 라라랜드 
+		long 								gtn;
+		long 								dn;
+		int 								bettime;	# seconds
+	}
+
+	struct CP_ROOM_HISTORY {
+		long 								gtn;
+		int 								offset;   	# 처음 0 1 
+	}	
+
+	struct CP_ROOM_REBUY {
+		long								tn;
+		long 								gtn;
+		int 								multiple;	# 1 = 기본,  2 = 더블리바이,  3이상은 없음.
+	}	
+	struct CP_ROOM_ADDON {
+		long								tn;
+		long 								gtn;
+		int 								multiple;	# 1 = 기본,  2 = 더블리바이,  3이상은 없음.
+	}	
+
+	struct CP_ROOM_USER_STATUS_SEAT {
+		long 							gtn;
+		int 							status_seat;	# 0 = not    1 = on
+	}
+
+	struct CP_ROOM_BUYIN {
+		long 							gtn;
+		int 							howmuch;			
+		int 							tb2;
+	}
+
+	struct CP_ROOM_SEAT {
+		long 							gtn;
+		int 							seat;
+	}
+	struct CP_ROOM_WAIT_FOR_BLIND {
+		long 							gtn;
+		bool 							wait_for_blind; 	# false = 바로 참여하겠다. true = BB가 될때까지 기다리겠다. 
+	}
+
+	struct CP_ROOM_TIME_BANK {
+		long 							gtn;
+		int 							mode;
+		
+	}
+	struct CP_ROOM_INSURANCE {
+		long 							gtn;
+		bool 							on; 				# on = 인슈어런스를 하겠다. 
+	}
+	struct CP_ROOM_IN_PLAYING {
+	}
+
+
+	struct CP_ROOM_TIME_BANK2 {
+		long 							gtn;
+	}
+	struct CP_ROOM_TIME_BANK2_USE {
+		long 							gtn;
+	}
+	struct CP_ROOM_RABBIT {
+		long 							gtn;
+	}
+	struct CP_ROOM_USER_SHOW_CARDS {
+		long 							gtn;
+		int 							type;  		# USER_SHOW_CARDS.left / right / all 
+	}
+
+	struct CP_HOLDEM_BET{
+		long 							gtn;
+		int 							betstep;	#	bet_0,	bet_1,	bet_2,	bet_3
+		int 							bettype;	#	half,	dadang  quater  max   bing   check  call die
+		int 							howmuch; 	#   1000
+	}
+
+	struct CP_HOLDEM_STATUS{
+		long 							gtn;	
+	}
+	struct CP_POST_BLIND{
+		long 							gtn;
+		bool							on;
+	}
+
+	struct CP_STRADDLE{
+		long 							gtn;
+		bool							on;
+	}
+	struct CP_STRADDLE_BET{
+		long 							gtn;
+		long 							howmuch;
+	}
+	struct CP_RUN_IT_TWICE{
+		long 							gtn;
+		int 							howmany;
+	}
+
+	struct CP_TNMT_LIST {						# enum = 30      토너먼트 리스트 요청 ( 내가 참가한 토너먼트 정보 포함 )
+        int 					startTn;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;	
+    }
+
+	struct CP_TNMT_APPLY{
+        int 					        cafeIdx;
+		int 							tn;		# tbTournament.tn
+		int  							ticket;	# default = 0,   1 = 사용한다. 
+		int 							rebuy;	# default = 0,   1 = 사용한다. 
+		int 							double;	# default = 0,   1 = 사용한다. 
+	}
+	struct CP_TNMT_UNAPPLY {   					# 토너먼트 신청 취소 성공 후,  유저정보가 갱신되어야 한다. 
+		int 	tn;								# tbTournament.tn
+	}
+
+	struct CP_TNMT_MY{  						# 토너먼트 신청 취소 결과
+	}
+
+	struct CP_TNMT_BLIND_UP{
+		long 							tn;
+		long 							gtn;
+	}
+
+    struct CP_TNMT_REWARD_TABLE {				# 토너먼트 리워드 테이블 요청
+	}
+
+    struct CP_TNMT_RANKING {  						# 토너먼트 랭킹 요청
+		int 	tn;
+	}
+
+    struct CP_TNMT_CREATE {
+        int cafeIdx;
+        tnmt_options o;
+    }
+
+    struct CP_TNMT_BLIND_TABLE {				# 토너먼트 블라인드 테이블 요청
+        int mode;
+	}
+
+    struct CP_TNMT_FIX {
+        int tn;
+        int state;
+    }
+    struct CP_TNMT_INFO {
+        int tn;
+    }
+
+			struct CP_TNMT_ICM_REQUEST{							# tnmt의 icm 요청 배포 
+        int 					tn;
+        int 					icm;
+	}
+
+
+	struct CP_PLAY_GAME_LIST{        		# 나의 카페게임 리스트 	
+		int 					startGtn;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;	
+	}
+	struct CP_PLAY_GAME_ENTER{        	# 카페 게임 입장
+		int 					gtn;
+	}
+
+	struct CP_PLAY_GAME_ENTER_OBSERVER{        	# 관전 방으로 입장
+		int 					gtn;
+	}
+
+	struct CP_PLAY_GAME_LEAVE_OBSERVER{        	# 관전 방에서 나감
+		int 					gtn;
+	}
+
+    # 카페 일반 
+	struct CP_CAFE_LIST{             # 나의 카페 리스트 
+	}
+	struct CP_CAFE_CREATE{        		# 카페 생성
+		cafe_info				o;
+	}
+	struct CP_CAFE_JOIN{        			# 카페 멤버 리스트
+		int 					cafeIdx;
+		char[STRING_32_LEN+1] 	cafeCode;
+		char[STRING_512_LEN+1] 	autoJoinCode;
+	}
+	struct CP_CAFE_JOIN_LIST{        		# 카페에 조인한 유저 리스트 
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_JOIN_UPDATE{        		# 카페에 조인한 유저 리스트 
+		int 					cafeIdx;
+		int 					cafeJoinIdx;	
+		int 					status;		
+	}
+	struct CP_CAFE_INFO{        		# 특정 카페 정보
+		int						cafeIdx;
+	}
+	struct CP_CAFE_UPDATE{        		# 카페 수정/삭제 
+		int						cafeIdx;
+		cafe_info				o;
+	}
+
+	struct CP_CAFE_GAME_CREATE{        	# 카페 게임 생성
+		int 					cafeIdx;
+		cafe_game 				o;
+	}
+	struct CP_CAFE_GAME_UPDATE{        	# 카페 게임 수정/삭제 
+		cafe_game 				info;
+	}
+
+	struct CP_CAFE_MEMBER_LIST{        	# 카페 멤버 리스트 
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_MEMBER_UPDATE{        	# 카페 멤버 정보 업데이트 ( )
+		int 					cafeIdx;
+		int 					cafeMemberIdx;
+		int 					status;	
+		int 					permit;		#  CAFE_MEMBER_PERMIT.member = 1, manager = 2 
+	}
+	struct CP_CAFE_INVITE_LINK{			#  카페 초청 링크 요청 
+		int 					cafeIdx;
+	}
+	struct CP_CAFE_ZUICE_HISTORY{			# ㅋㅏㅍㅔㅇㅡㅣ zuice 입출금 내역 
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_CHIP_HISTORY{			# ㅋㅏㅍㅔㅇㅔ chip 입출금 내역 
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_GAME_HISTORY{			# member가 공유한 게임로그 
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_MEMBER_ZUICE_HISTORY{
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_MEMBER_CHIP_HISTORY{
+		int 					startIdx;		# 최초는 -1
+		int 					cafeIdx;
+		int 					cafeMemberIdx;	# != 0 이면 개인적인 chip history,  == 0 이면 cafeIdx 전체. 
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_MEMBER_GAME_HISTORY{
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_TRANS_ZUICE{					# zuice 요청하기 
+		int 					ecode;
+		int 					cafeIdx;
+		int 					type;			# TRANSFER_TYPE.none/sell/buy/borrow
+		int 					zc;
+	}
+	struct CP_CAFE_MEMBER_ORDER{				# 칩 요청하기 
+		int 					ecode;
+		int 					cafeIdx;
+		int 					cafeMemberOrderIdx;
+		int 					goods;			# CHIP_TYPE.zc/dc;
+		int 					status;			# TRANSFER_TYPE.none/sell/buy/borrow   transfer / transfer2
+		int 					amount; 		# 1000   borrowed: 100  900
+		int 					toCafeMemberIdx; # status = TRANSFER_TYPE.transfer2  일때만, 사용 
+	}
+	struct CP_CAFE_MEMBER_ORDER_LIST{			# 카페가 사용하는 유저들의 칩 요청 리스트 
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_MEMBER_MY_ORDER_LIST{			# 카페가 사용하는 유저들의 칩 요청 리스트 
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_CAFE_MEMBER_ORDER_UPDATE{				# 칩 요청 리스트 
+		int 					cafeIdx;
+		int 					cafeMemberOrderIdx;	
+		int						status;		
+	}
+	struct CP_MY_CAFE_MEMBER_LIST{					# 칩 요청 리스트 
+		int 					cafeIdx;
+	}
+
+	
+	struct CP_HANDS_LOG_MY_LIST{				# 나의 게임 히스토리 
+		int 					startIdx;		# 최초는 -1
+		int 					gtn;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+
+	struct CP_HANDS_LOG_MY{						# 나의 게임 히스토리 
+		long 					gn;				# 최초는 -1
+	}
+
+	struct CP_HANDS_LOG_CAFE_LIST {				# 카페 게임 히스토리 		
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+	}
+	struct CP_HANDS_LOG_CAFE{					# 카페 게임 히스토리 		
+		long 					gn;
+	}
+
+	struct CP_CAFE_LEAVE{						# 카페 탈퇴 
+		int 					cafeIdx;
+	}
+
+	struct CP_CAFE_AUTO_JOIN_CODE{
+		int 					cafeIdx;
+		int 					type;			# 0 = only code,   1 = code and auto join
+	}
+
+	struct CP_CAFE_CHAT {					# 카페 채팅
+		int 					cafeIdx;
+		char[STRING_32_LEN+1] 	type;
+		char[STRING_32_LEN+1] 	to_gid;
+		char[STRING_32_LEN+1] 	nick;
+		char[STRING_64_LEN+1] 	msg;
+	}
+
+	struct CP_CAFE_CHAT_LIST{					# 카페 게임 히스토리 
+		int 					ecode;
+		int 					total;
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;		# ASC DESC
+
+		list 					list;
+	}
+
+
+	struct CP_KINGSHILL_USER_LINK{
+		char[STRING_32_LEN+1] 	code;
+	}
+	struct CP_KINGSHILL_GET_USER_INFO{
+	}
+	struct CP_KINGSHILL_GET_TICKET_HISTORY{
+	}
+	struct CP_KINGSHILL_POINT_IN{
+		int point;
+	}
+	struct CP_KINGSHILL_POINT_OUT{
+		int point;
+	}
+	struct CP_KINGSHILL_TICKET_TO_POINT{
+		int cafeIdx;
+		int ticketGbn;
+		int changeTicket;
+	}
+
+	struct CP_CAFE_QUEST_LIST{}
+	struct CP_CAFE_REQUEST_QUEST_REWARD{
+		char[STRING_32_LEN+1] 	questkey;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+protocol PCProtocol
+{
+	struct PC_ACCOUNT_BLOCKED				# 설명 : 관리자에 의해 계정 블록
+	{
+		wchar[STRING_64_LEN+1] 				text;
+		char[DATETIME_LEN+1]				active;
+		char[DATETIME_LEN+1]				expire;
+	}
+	
+	struct PC_KICK							# 설명 : 나가
+	{
+		int						reason;
+	}
+	
+	struct PC_CONSOLE_LOGIN_SUCCESS	{
+		bool 					success;
+        char[STRING_32_LEN+1] 	token;
+        char[STRING_32_LEN+1] 	uid;
+		wchar[STRING_32_LEN+1] 	nick;
+		int 					status;
+	}
+	struct PC_CONSOLE_LOGIN_FAIL {
+		int 					reason;
+	}
+	struct PC_CONSOLE_USERINFO	{		# {"success":true,"uid":"aaa001","umoney":0,"token":"631031C9D39A8E952EC0"}
+		bool 					success;
+        char[STRING_32_LEN+1] 	token;
+        char[STRING_32_LEN+1] 	uid;
+		wchar[STRING_32_LEN+1] 	nick;
+		int 					status;
+		int 					type;		# 0 = 일반유저  1 = 딜러
+		char[STRING_4_LEN+1] 	currency;
+		long					gc;
+		long					sc;
+	}
+
+	struct PC_OBSERVER_ENTER{
+		char[STRING_16_LEN+1] 	game_type;
+		int 					gtn;
+		int 					dn;
+	}
+	struct PC_OBSERVER_EXIT{
+		int 					gtn;
+		int 					dn;
+	}
+
+	struct PC_USER_TRANSFER_GCSC{
+		char[ STRING_8_LEN+1] 	transfertype;
+		int 					amount;
+		long 					gc;
+		long 					sc;
+	}
+	struct PC_USER_TRANSFER_GCSC_FAIL{
+		int 					code;
+		wchar[STRING_32_LEN+1] 	reason;
+	}
+	struct PC_USER_INFO_UPDATE{
+		char[STRING_32_LEN+1] 	gid;
+		wchar[STRING_32_LEN+1] 	nick;
+		int 					icon;
+		long 					gc;
+		long 					sc;
+	}
+
+	struct PC_USER_TOKEN_UPDATE{
+		int 					reason;
+	}
+
+	struct PC_PING{
+	}
+
+	struct PC_SET_NOTIFICATION{
+		int 						ecode;
+		push   						o;
+	}
+
+    struct PC_USER_GAMEINFO{
+        gameinfo                info;
+    }
+
+    struct PC_USER_QUESTINFO{
+        questinfo               info;
+    }
+
+    struct PC_QUEST_LIST{
+        questlist               list;
+    }
+
+	struct PC_QUEST_CLEAR{
+        item                            update;
+	}
+
+    struct PC_QUEST_CLEAR_FAIL{
+        int                             code;
+		wchar[STRING_32_LEN+1] 			reason;
+	}
+
+    struct PC_RANKING{
+        ranking  		list;
+    }
+
+    struct PC_USER_INFO_OPTION_UPDATE{
+        optionData updateData;
+    }
+
+    struct PC_USER_INFO_OPTION_UPDATE_FAIL{
+        int                             code;
+		wchar[STRING_32_LEN+1] 			reason;
+    }
+
+    struct PC_USER_NOTIFICATION{
+        int                             code;
+		wchar[STRING_32_LEN+1] 			message;
+        char[STRING_32_LEN+1] 	gid;
+    }
+
+    struct PC_USER_DAILY_LOSS_LIMIT_UPDATE{
+        bool 					success;
+    }
+
+    struct PC_USER_DAILY_LOSS_LIMIT_UPDATE_FAIL{
+        int                             code;
+		wchar[STRING_32_LEN+1] 			reason;
+    }
+
+	# /////////////////////////////////////////////////////////////////  PC GAME ////
+	# /////////////////////////////////////////////////////////////////  PC GAME ////
+	# /////////////////////////////////////////////////////////////////  PC GAME ////
+	# /////////////////////////////////////////////////////////////////  PC GAME ////
+	# /////////////////////////////////////////////////////////////////  PC GAME ////
+	# /////////////////////////////////////////////////////////////////  PC GAME ////
+
+
+	struct PC_ROOM_CREATE {
+		char[STRING_8_LEN+1] 			game_type;
+		lobby_room 						room;
+	}
+	struct PC_ROOM_CREATE_FAIL {
+		int code;
+		wchar[STRING_32_LEN+1] 			reason;
+	}
+
+	struct PC_ROOM_NEW {
+		char[STRING_8_LEN+1] 			game_type;
+		lobby_room 						room;
+	}
+
+	struct PC_ROOM_DELETE {
+		long 							gtn;
+	}
+	struct PC_ROOM_DELETE_FAIL {
+		int 							code;
+		wchar[STRING_32_LEN+1] 			reason;	
+		long 							gtn;
+	}
+	struct PC_ROOM_ENTER {
+		long 							userIndex;
+		char[STRING_8_LEN+1] 			game_type;
+		lobby_room 						room;
+	}
+	struct PC_ROOM_ENTER_FAIL {
+		int 							code;
+		wchar[STRING_32_LEN+1] 			reason;
+		long 							gtn;
+	}
+	struct PC_ROOM_RESERVE_LEAVE {
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		bool 							leave;
+		int  							type; 		# 0 = sit out next hand,  # 0 = sit out next blind
+	}
+	struct PC_ROOM_RESERVE_LEAVE_FAIL {
+		int 							code;
+		wchar[STRING_32_LEN+1] 			reason;
+		long 							gtn;
+	}
+	struct PC_ROOM_LEAVE {
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+	}
+	struct PC_ROOM_COMMAND{
+		long 							gtn;
+		long 							gn;  	# 0 == 무시,  0 != game number,  command === ROOM_COMMAND.start ( 20 ) 일때 사용 
+		int command;
+	}
+	struct PC_ROOM_USER_STATUS {  
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;	
+		int 							status;
+		int 							seat;
+	}
+	struct PC_ROOM_USER_LIST {  						# gtn 방에 있는 유저 리스트.	
+		long 							gtn;
+		room_user_list list;
+	}
+	struct PC_LOBBY_ROOM_LIST { 
+		char[STRING_8_LEN+1] 			game_type;		# holdem, badugi, poker7, hldm_bsc
+		lobby_room_list 				list;			# 
+	}
+	struct PC_LOBBY_USER_LIST {		# 로비에 있는 유저리스트.
+		char[STRING_8_LEN+1] 			game_type;		# pkr1  pkr2
+		lobby_user_list 				list;
+	}
+	struct PC_ROOM_CHAT {
+		long							gtn;
+		char[STRING_4_LEN+1] 			type;
+		char[STRING_32_LEN+1] 			to_gid;			# to gid 
+		wchar[STRING_64_LEN+1] 			msg;
+	}
+	struct PC_ROOM_GAME_READY {
+		long 							gtn;	
+	}
+	struct PC_ROOM_CREATE_OPTION_LIST {
+		room_create_option_list  		holdem_list;
+		room_create_option_list  		badugi_list;
+		room_create_option_list  		poker7_list;
+	}
+	struct PC_ROOM_READY_TO_ENTER {	
+		long   							gtn;				# room number 	
+	}
+
+	struct PC_COUNT_OF_TABLES_ZC {
+		count_of_zc_tables  zc;
+	}
+
+	struct PC_ROOM_TIME {
+		long 							gtn;
+		long 							dn;
+		int 							bettime;		# seconds
+	}
+
+	struct PC_ROOM_HISTORY {
+		char[STRING_8_LEN+1] 			game_type;		# holdem, badugi, poker7, hldm_bsc
+		int 							offset;			# 받은 offset 그대로 
+		int 							count;			# 총 log 의 수 
+		long 							gtn;
+		long 							gn;
+		char[STRING_256_LEN+1] 			history;
+	}	
+
+	struct PC_ROOM_REBUY {
+		long 							tn;
+		long 							gtn;
+		int 							multiple;		# 1 = 기본,  2 = 더블리바이,  3이상은 없음.
+		int 							rebuyCount;		# 내가 리바이한 횟수.  토너먼트에서는 중요!
+
+		long 							rebuyCost;   	# 리바이한 비용   실패했을 때 amount = 0 
+		long 							rebuyChip;   	# 리바이한 chip, 일반게임은 rebuyCost와 rebuyChip의 값이 같다. 
+		long 							gc;   			# 남은 gc 
+	}	
+
+	struct PC_ROOM_ADDON {
+		long 							tn;
+		long 							gtn;
+		int 							multiple;		# 1 = 기본,  2 = 더블,  3이상은 없음.
+		int 							addOnCount;		# 내가 리바이한 횟수.  토너먼트에서는 중요!
+
+		long 							addOnCost;   	# 애드온한 비용  실패했을 때 amount = 0 
+		long 							addOnChip;   	# 애드온한 chip, 일반게임은 addOn못한다. 
+		long 							gc;   			# 남은 gc 
+	}
+
+	struct PC_ROOM_USER_STATUS_SEAT {
+		long 							gtn;
+		int 							status_seat;	# 0 = not    1 = on
+	}
+	struct PC_ROOM_BUYIN {
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		int 							gc;
+		int 							tb2;	# 몇개 
+	}
+	struct PC_GAME_PLAYER_COUNT {
+		long 							gtn;
+		int 							player_count;
+	}
+
+	struct PC_ROOM_SEAT {
+		long 							gtn;
+		int 							seat;
+	}
+
+	struct PC_ROOM_WAIT_FOR_BLIND {
+		long 							gtn;
+		int 							seat;
+		bool 							wait_for_blind; 	# false = 바로 참여하겠다. true = BB가 될때까지 기다리겠다. 
+	}
+	struct PC_ROOM_PLAYER_SEAT_LIST {
+		long 							gtn;
+		playerSeatList					list;				# playerList = [seat, seat, seat, seat]
+	}
+	struct PC_ROOM_PLAYER_INFO_CHANGE {
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		long  							old_gc;
+		long  							gc;
+		int 							reason;
+	}
+
+	struct PC_ROOM_TIME_BANK {
+		long 							gtn;
+		int 							mode;
+		int 							command;
+		int   							time;
+	}
+	struct PC_ROOM_INSURANCE_START {
+		long 							gtn;
+		int 							fee;
+		int 							equity;
+		int 							reason;
+	}
+	struct PC_ROOM_INSURANCE {
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		char[STRING_32_LEN+1] 			seat;
+		long  							old_gc;
+		long  							gc;
+		int 							reason;
+	}
+
+	struct PC_ROOM_IN_PLAYING {
+		int 							ecode;
+		gtn_list 						gtn_list;	# 현재 게임중인 gtn array 
+	}
+
+	struct PC_ROOM_TIME_BANK2 {						# canuse = true 사용할수 있음. 버튼 생성.
+		int 							ecode;
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		bool 							canuse;
+		int 							count;
+	}
+	struct PC_ROOM_TIME_BANK2_USE {					# gid님이 time_bank2 를 사용하였습니다. time 이 되었습니다. 
+		int 							ecode;
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		int 							time; 		# 빨간색으로 전환. 
+	}
+
+	struct PC_ROOM_RABBIT {
+		long 							gtn;
+		char[STRING_16_LEN+1] 			cards;		#  'ac,3h,6d,,'  ',,,6d,'
+		long 							zc;
+	}
+	struct PC_ROOM_USER_SHOW_CARDS {
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		char[STRING_16_LEN+1] 			cards;		#  ex)  NLH: ',3h' / 'ah,' / 'ah,3h'  PLO: 'ah,3h,5c,6d'
+	}
+
+
+
+	struct PC_HOLDEM_COMMAND{
+		long 							gtn;
+		int 							command;
+	}
+	struct PC_HOLDEM_WHO_IS_BOSS{
+		long 							gtn;
+		int 							boss_seat;
+		char[STRING_32_LEN+1] 			gid;
+	}
+	struct PC_HOLDEM_DRAW_CARDS{						# 홀카드 또는 커뮤니티 카드를 돌린다. 
+		long 							gtn;
+		int 							kind; 			# 0 = hole, 1 = flop, 2 = turn, 3 = river 
+		char[STRING_32_LEN+1] 			gid;
+		char[STRING_16_LEN+1] 			cards;			#  'ac,3h,6d,3s,23'
+	}
+	struct PC_HOLDEM_OPEN_CARDS{			
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		char[STRING_24_LEN+1] 			strHands;   #  'ac,3h,6d,3s,STRAIGHT'
+	}
+	struct PC_HOLDEM_BET{						# bet
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		int 							betstep;			#	blind_bet, flop, turn, river 
+		int 							bettype;			#	half dadang  quater max bing check call die 
+		long							howmuch;			# 내가 베팅한 chip
+		long							amount;				# 이번판에서 지금까지 내가 베팅한 총 chip
+	}
+	struct PC_HOLDEM_BET_FAIL{		
+		long 							gtn;
+		int 							code;
+		wchar[STRING_32_LEN+1] 			reason;
+	}
+
+	struct PC_HOLDEM_BET_MONEY{
+		long 							gtn;
+		long 							money_total;
+		long 							money_call;
+		long 							money_accumulate;
+		pot_money_list					list;
+	}
+
+	struct PC_HOLDEM_WHO_IS_TURN{
+		long 							gtn;
+		int 							seat;
+		int 							betstep;
+		int 							bettype;  
+		int 							time;
+	}
+
+	struct PC_HOLDEM_USER_MONEY{
+		long 							gtn;
+		int  							seat;
+		int  							bettype;
+		long 							gc;					# 게임 시작할때, chip 
+		long 							total;				# 이번 게임에 베팅한 총 chip 
+		long 							bet;				# 이번 베팅에 사용된 chip
+	}
+	struct PC_HOLDEM_USER_STATUS {  	# 대기중,  (2020-08-10: 나가기예약과 중복된 패킷,  자리비움으로 교체 필요 ) 
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;	
+		int 							status;
+		int 							bettype;
+	}
+
+	struct PC_HOLDEM_GAMERESULT {  			# gtn 게임 결과. 
+		long 							gtn;
+		long 							gn;
+		int 							gameresult_time;
+		poker_gameresult_list 			list;
+	}
+
+	struct PC_HOLDEM_STATUS {  			# 현재 방의 게임 상태를 요청한다. ROOM_COMMAND, POKER_HOLDEM_COMMAND, bos_seat, community cards, whose turn, money_total, money_call, 	
+		long 							gtn;
+		long 							gn;
+		int 							room_command;
+		int 							flow;
+		int 							boss_seat;
+		char[STRING_16_LEN+1] 			commcards;			#  'ac,3h,6d,3s,23'
+		int 							who_turn;
+		int 							who_turn_seat;
+		int 							turn_nexttime;
+		long 							money_total;
+		long							money_call;
+
+		player_status_list 				players;
+	}
+
+	struct PC_POST_BLIND{
+		int 							ecode;
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		int 							seat;
+	}
+	struct PC_STRADDLE{
+		int 							ecode;
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		bool  							on;
+	}
+	struct PC_STRADDLE_BET_START{		
+		long 							gtn;
+		long 							howmuch;			
+		int  							time;				# action time 
+	}
+	struct PC_STRADDLE_BET{
+		int 							ecode;
+
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		int 							seat;
+
+		int 							bettype;			# half dadang  quater max bing check call die 
+		long							howmuch;			# 내가 베팅한 chip
+		long							amount;				# 이번판에서 지금까지 내가 베팅한 총 chip
+	}
+	struct PC_RUN_IT_TWICE_START{
+		long 							gtn;
+		int 							time;
+	}
+	struct PC_RUN_IT_TWICE{
+		int 							ecode;
+		long 							gtn;
+		char[STRING_32_LEN+1] 			gid;
+		int 							seat;
+		int 							howmany;
+	}
+
+	struct PC_HOLDEM_EQUITY{
+		int 							ecode;
+		long 							gtn;
+		odds							odds;
+	}
+
+	# TNMT --------------------------------------------------------------------------------------------
+
+	struct PC_TNMT_LIST{  						# enum = 30     # 토너먼트 리스트 요청
+		tournament_list 			list;
+	}
+	struct PC_TNMT_UPDATE{  					# 수정된 토너먼트 리스트 
+		tournament_list 			list;
+	}
+	struct PC_TNMT_APPLY{  						# 토너먼트 신청 결과
+		int 						tn;			# tbTournament.tn
+		int  						ticket;		# default = 0,   1 = 사용한다. 
+		int 						rebuy;		# default = 0,   1 = 사용한다. 
+		int 						double;		# default = 0,   1 = 사용한다. 
+	}
+	struct PC_TNMT_APPLY_FAIL{  				# 토너먼트 신청 실패
+		int 						ecode;
+		wchar[STRING_32_LEN+1] 		message;	
+	}
+	struct PC_TNMT_UNAPPLY{  					# 토너먼트 신청 취소 결과
+		int 						tn;			# tbTournament.tn
+	}
+	struct PC_TNMT_UNAPPLY_FAIL{  				# 토너먼트 신청 취소 실패
+		int 						ecode;
+		wchar[STRING_32_LEN+1] 		message;	
+	}
+	struct PC_TNMT_MY{  						# 토너먼트 신청 취소 결과
+		int 						tn;
+		int 						gtn;	
+        tournament                  tournament;
+        eliminate                   eliminate;
+	}
+	struct PC_TNMT_MY_RESULT {					# 토너먼트 유저 종료 등수, 상금, 나를 때린 유저 
+		int 						tn;			# tbTournament.tn
+		long  						gtn;
+		int 						reward;
+		int 						gc;
+		int 						sc;
+
+        int                         rank;
+        char[STRING_64_LEN+1]       my;                 # acc ---> userid        TODO:  2Room --> 2User  
+
+		int 						ticket;				
+		int 						ticket_amount;
+
+	 	char[STRING_64_LEN+1] 		enemy;             	# acc ---> userid
+	}
+	struct PC_TNMT_BLIND_UP {					# 토너먼트 블라인드업 OR 브레이킹타임 
+		int 						tn;			# tbTournament.tn
+		long  						gtn;
+		int 						cur_time;	# type = new Date().getTime()
+		int 						next_time;	# type = new Date() 
+		int 						ante;
+		int 						small;
+		int 						big;
+
+		bool 						isBreak;	# true = 다음은 break 타임이다.   true = 다음은 블라인드 업이다. 
+		int 						break_time;	# type = new Date().getTime()
+	}
+
+	struct PC_TNMT_INFO {					# 토너먼트 블라인드업 OR 브레이킹타임 
+		int 						tn;			# tbTournament.tn
+		tnmt  			   		    tnmt;
+	}
+
+
+    struct PC_TNMT_UPDATE_APPLY_COUNT{
+        int                         tn;
+        int                         apply_count;
+    }
+
+    struct PC_TNMT_REWARD_TABLE {
+		tnmt_reward_table  		list;
+	}
+
+    struct PC_TNMT_BLIND_TABLE {
+		tnmt_blind_table  		list;
+	}
+
+    struct PC_TNMT_RANKING {
+		tnmt_ranking  		list;
+	}
+
+    struct PC_TNMT_MOVE_ROOM {
+		int  		gid;
+        int         tn;
+        int         gtn;
+	}
+	struct PC_TNMT_CREATE{
+        int                 ecode;
+        int                 tn;
+		tournament 			tnmt;
+	}
+    struct PC_TNMT_FIX {
+        int ecode;
+        int tn;
+        int state;
+    }
+
+ 	###########################################################
+ 	###########################################################
+
+
+	struct PC_PLAY_GAME_LIST{        		# 나의 카페게임 리스트 	
+		int 					ecode;
+
+		int 					total;  
+		int 					startGtn;	
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		cafe_game_list 			playGameList;
+	}
+	struct PC_PLAY_GAME_ENTER{        	# 카페 게임 입장
+		long 							userIndex;
+		lobby_room 						room;
+	}
+
+	struct PC_PLAY_GAME_ENTER_OBSERVER{        	# 관전 방 입장
+		long 							userIndex;
+		lobby_room 						room;
+	}
+	struct PC_PLAY_GAME_LEAVE_OBSERVER{        	# 관전 방 나감
+		int 									gtn;
+		char[STRING_32_LEN+1] 			gid;
+	}
+	
+
+	struct PC_CAFE_LIST{            	 		# 나의 카페 리스트 
+		int 					ecode;
+
+		int 					total;  
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		cafe_info_list 			cafeList;
+
+		cafe_member_join_list	cafeMemberJoinList;  # 내가 신청한 카페 리스트
+	}
+	struct PC_CAFE_CREATE{        			# 카페 생성
+		int 					ecode;
+		cafe_info				o;
+	}
+
+	struct PC_CAFE_JOIN{        			# 카페가입 신청 결과
+		int 					ecode;
+		int 					result; 		# CAFE_JOIN_RESULT
+	}
+	struct PC_CAFE_JOIN_LIST{        		# 카페 manager가 요청하는 조인한 유저 리스트 
+		int 					ecode;
+		
+		int 					total;  
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		cafe_join_list			cafeJoinList;  # 내가 신청한 카페 리스트
+	}
+	struct PC_CAFE_JOIN_UPDATE{        			# 카페에 조인한 유저 리스트 
+		int 					ecode;
+		int 					cafeIdx;
+		int 					cafeJoinIdx;	
+		int 					status;
+		cafeList 				cafeList; 		# 
+	}
+
+	struct PC_CAFE_INFO{        			# 특정 카페 정보
+		int 					ecode;
+		cafe_info				data;
+	}
+	struct PC_CAFE_UPDATE{        			# 카페 수정/삭제 
+		int 					ecode;
+		cafe_info				data;
+	}
+	struct PC_CAFE_GAME_CREATE{        		# 카페 게임 생성
+		int 					ecode;
+		cafe_game 				data;
+	}
+	struct PC_CAFE_GAME_UPDATE{        		# 카페 게임 수정/삭제 
+		int 					ecode;
+		cafe_game 				data;
+	}
+	struct PC_CAFE_MEMBER_LIST{        		# 카페 멤버 리스트 
+		int 					ecode;
+		int 					total;  	# total
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		cafe_member_list 		cafeMembers;
+	}
+	struct PC_CAFE_MEMBER_UPDATE{       	# 카페 멤버 정보 업데이트 ( )
+		int 					ecode;
+		int 					cafeIdx;
+		int 					cafeMemberIdx;
+		int 					status;
+		int 					permit;
+	}
+	struct PC_CAFE_INVITE_LINK{				#  카페 초청 링크 요청 
+		int 					ecode;
+		int 					cafeIdx;
+	}
+	struct PC_CAFE_ZUICE_HISTORY{			# ㅋㅏㅍㅔㅇㅡㅣ zuice 입출금 내역 
+		int 					ecode;
+		int 					cafeIdx;
+
+		int 					total;  	# total
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		cafe_zuice_history_list cafeZuiceHistoryList;
+	}
+	struct PC_CAFE_CHIP_HISTORY{			# ㅋㅏㅍㅔㅇㅔ chip 입출금 내역 
+		int 					ecode;
+		int 					cafeIdx;
+
+		int 					total;  	# total
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		cafe_chip_history_list  cafeMemberChipHistoryList;
+	}
+	struct PC_CAFE_GAME_HISTORY{			# member가 공유한 게임로그 
+		int 					ecode;
+		int 					cafeIdx;
+
+		int 					total;  	# total
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		cafe_game_history_list  cafeGameHistoryList;
+	}
+	struct PC_CAFE_MEMBER_ZUICE_HISTORY{
+		int 					ecode;
+
+		int 					total;  	# total
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		cafe_member_zuice_history_list  cafeMemberZuiceHistoryList;
+	}
+	struct PC_CAFE_MEMBER_CHIP_HISTORY{
+		int 					ecode;
+		int 					cafeIdx;
+
+		int 					total;  	# total
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		cafe_member_chip_history_list  cafeMemberChipHistoryList;
+	}
+	struct PC_CAFE_MEMBER_GAME_HISTORY{
+		int 					ecode;
+
+		int 					total;  	# total
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		cafe_member_game_history_list  cafeMemberGameHistory;
+	}
+	struct PC_CAFE_TRANS_ZUICE{					# zuice 요청하기 
+		int 					ecode;
+		int 					cafeIdx;
+		int 					type;			# TRANSFER_TYPE.none/sell/buy/borrow
+		int 					zc;
+		int 					current_zc;
+	}
+	struct PC_CAFE_MEMBER_ORDER{					# 칩 요청하기 	
+		int 					ecode;
+		int 					cafeIdx;
+		int 					goods;				# TRANSFER_TYPE.none/sell/buy/borrow
+		int 					status;				# TRANSFER_TYPE.none/sell/buy/borrow
+		int 					amount;
+		int 					toCafeMemberIdx; 	# status = TRANSFER_TYPE.transfer2  일때만, 사용 
+	}
+
+	struct PC_CAFE_MEMBER_ORDER_LIST{				# 칩 요청 리스트 
+		int 					ecode;
+		
+		int 					total;  
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		cafe_member_order_list	cafeMemberOrderList;  # 유저가 요청한 칩 리스트 
+	}
+	struct PC_CAFE_MEMBER_MY_ORDER_LIST{				# 칩 요청 리스트 
+		int 					ecode;
+		
+		int 					total;  
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		cafe_member_order_list	cafeMemberOrderList;  # 유저가 요청한 칩 리스트 
+	}
+	struct PC_CAFE_MEMBER_ORDER_UPDATE{
+		int 					ecode;
+		int 					cafeIdx;
+		int 					cafeMemberOrderIdx;
+		int 					status;
+
+		char[STRING_64_LEN+1] 	gid;             	# gid가 있을 경우는 나에게 온거다. 
+        cafeMember 				cafeMember;
+	}
+	struct PC_CAFE_TIME_UPDATE{
+		int 					ecode;
+		int 					cafeIdx;
+		int 					nextAt;
+		int 					zc;
+		int 					leftSeconds;			# 시간 단위 
+	}
+	struct PC_MY_CAFE_MEMBER_LIST{
+		int 					total;  
+		int 					startIdx;
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		cafeMembers 			cafeMembers;
+	}
+
+	struct PC_HANDS_LOG_MY_LIST{						# 나의 게임 히스토리 
+		int 					ecode;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+		int 					total;
+
+		history 				handsLog;
+	}
+
+	struct PC_HANDS_LOG_MY{						# 나의 게임 히스토리 
+		int 					ecode;
+		long 					gn;
+		history 				log;
+	}
+
+	struct PC_HANDS_LOG_CAFE_LIST{					# 카페 게임 히스토리 		
+		int 					ecode;
+		int 					total;
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		history 				handsLog;		
+	}
+	struct PC_HANDS_LOG_CAFE{					# 카페 게임 히스토리 		
+		int 					ecode;
+		long 					gn;
+		history 				log;
+	}
+
+	struct PC_CAFE_NOTICE{						# 카페 게임 히스토리 
+		int 					ecode;
+		int 					cafeIdx;
+		int  					type;			# CAFE_NOTICE_TYPE.cafe_join = 1,   cafe_chip_request = 2
+		int 					count; 			# 갯수를 넣는다. 지금은 그냥 '!' 만으로 표시. 
+	}
+
+	struct PC_CAFE_LEAVE{						# 카페 탈퇴 
+		int 					ecode;
+		int 					cafeIdx;
+	}
+
+	struct PC_CAFE_AUTO_JOIN_CODE{				# 카페코드 요청 
+		int 					ecode;
+		int 					cafeIdx;
+		int 					type;
+
+		char[STRING_512_LEN+1] 	autoJoinCode;
+	}						
+
+	struct PC_CAFE_CHAT {						# 카페 채팅
+		int 					ecode;
+		chat 					chat;
+	}
+
+	struct PC_CAFE_CHAT_LIST{					# 카페 게임 히스토리 		
+		int 					ecode;
+		int 					total;
+		int 					cafeIdx;
+		int 					startIdx;		# 최초는 -1
+		int 					per;
+        char[STRING_32_LEN+1] 	orderColumn;
+		char[STRING_8_LEN+1] 	orderDir;
+
+		list 					list;
+	}
+
+	struct PC_MESSAGE{							# 카페 게임 히스토리 		
+		int 					ecode;
+        int 					cafeIdx;
+        int 					gtn;
+        char[STRING_32_LEN+1] 	gid;
+        int 					type;
+        char[STRING_64_LEN+1] 	msg;
+        char[STRING_32_LEN+1] 	time;
+	}
+
+	struct PC_TNMT_ICM_REQUEST{							# tnmt의 icm 요청 배포 
+				int 					ecode;
+        int 					cafeIdx;
+        int 					tn;
+        char[STRING_32_LEN+1] 	gid;
+        int 					icm;
+	}
+
+	struct PC_KINGSHILL_USER_LINK{
+		char[STRING_32_LEN+1] 	code;
+	}
+	struct PC_KINGSHILL_GET_USER_INFO{
+		char[STRING_32_LEN+1] 	code;
+	}
+	struct PC_KINGSHILL_GET_TICKET_HISTORY{
+	}
+	struct PC_KINGSHILL_POINT_IN{
+		int point;
+		int cc;
+	}
+	struct PC_KINGSHILL_POINT_OUT{
+		int point;
+		int cc;
+	}
+
+	struct PC_KINGSHILL_TICKET_TO_POINT{
+		int cc;
+		int ticketGbn;
+		int ticketCount;
+	}
+
+	struct PC_CAFE_QUEST_LIST{
+		cafe_quest_list 	list;	
+	}
+	struct PC_CAFE_REQUEST_QUEST_REWARD{
+		bool 				success;
+	}
+
+}

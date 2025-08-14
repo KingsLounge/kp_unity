@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "617791995859",
+    "firebase_url": "https://a9j-holdemcafe-default-rtdb.firebaseio.com",
+    "project_id": "a9j-holdemcafe",
+    "storage_bucket": "a9j-holdemcafe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617791995859:android:e36273388d484462f53926",
+        "android_client_info": {
+          "package_name": "com.a9j.cardroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617791995859-2o19l2igtuh4gq3paogjn2agvmn79cf5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a9j.cardroom",
+            "certificate_hash": "b31e187c1582950bee52501264c041324eb82cb7"
+          }
+        },
+        {
+          "client_id": "617791995859-42692tgpn20uhf4jjl9bquufgns4kepi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a9j.cardroom",
+            "certificate_hash": "d61f9ea1ff10cd46e5d4ee971170de88ff4bf1d0"
+          }
+        },
+        {
+          "client_id": "617791995859-vi5jundr1oepag0kupgeb3i8gib4bjkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi3r86gRzMoydgoxz4IhX5BVEArQQS50k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617791995859-vi5jundr1oepag0kupgeb3i8gib4bjkn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "617791995859-pr126fd17o2vksbmd06e8qsuafl1d69p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.a9j.holdemcafe.appstore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

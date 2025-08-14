@@ -1,0 +1,48 @@
+
+emo_tomato.png
+size: 1024,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+icon_other_emo_01_tom
+  rotate: false
+  xy: 2, 194
+  size: 205, 205
+  orig: 205, 205
+  offset: 0, 0
+  index: -1
+tomato_Eff_01
+  rotate: false
+  xy: 2, 2
+  size: 190, 190
+  orig: 190, 190
+  offset: 0, 0
+  index: -1
+tomato_Eff_03
+  rotate: false
+  xy: 194, 2
+  size: 190, 190
+  orig: 190, 190
+  offset: 0, 0
+  index: -1
+tomato_Eff_05
+  rotate: false
+  xy: 209, 209
+  size: 190, 190
+  orig: 190, 190
+  offset: 0, 0
+  index: -1
+tomato_Eff_06
+  rotate: false
+  xy: 386, 17
+  size: 190, 190
+  orig: 190, 190
+  offset: 0, 0
+  index: -1
+tomato_Eff_07
+  rotate: false
+  xy: 401, 209
+  size: 190, 190
+  orig: 190, 190
+  offset: 0, 0
+  index: -1

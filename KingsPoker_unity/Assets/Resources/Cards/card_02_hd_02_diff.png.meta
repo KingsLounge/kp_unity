@@ -1,0 +1,1566 @@
+fileFormatVersion: 2
+guid: 1759f756657e7d147b5fad14da79e1f9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7519484272230107857
+    second: kh_card_02_hd_02_diff_0
+  - first:
+      213: -3937695623831393490
+    second: kh_card_02_hd_02_diff_1
+  - first:
+      213: 1490801003324310360
+    second: kh_card_02_hd_02_diff_2
+  - first:
+      213: 7967210504347560864
+    second: kh_card_02_hd_02_diff_3
+  - first:
+      213: -7689992095966461246
+    second: kh_card_02_hd_02_diff_4
+  - first:
+      213: -429179496645110264
+    second: kh_card_02_hd_02_diff_5
+  - first:
+      213: 7142094267548676815
+    second: kh_card_02_hd_02_diff_6
+  - first:
+      213: -9204338225831792647
+    second: kh_card_02_hd_02_diff_7
+  - first:
+      213: -2322508964907558117
+    second: kh_card_02_hd_02_diff_8
+  - first:
+      213: -1514850709928926348
+    second: kh_card_02_hd_02_diff_9
+  - first:
+      213: -9109577844433293698
+    second: kh_card_02_hd_02_diff_10
+  - first:
+      213: 8028835124390333400
+    second: kh_card_02_hd_02_diff_11
+  - first:
+      213: -3535562061033368690
+    second: kh_card_02_hd_02_diff_12
+  - first:
+      213: 1249517144774597576
+    second: kh_card_02_hd_02_diff_13
+  - first:
+      213: -4152718943496081336
+    second: kh_card_02_hd_02_diff_14
+  - first:
+      213: 6674099468104592618
+    second: kh_card_02_hd_02_diff_15
+  - first:
+      213: 7541647985379105958
+    second: kh_card_02_hd_02_diff_16
+  - first:
+      213: 8609573225956343792
+    second: kh_card_02_hd_02_diff_17
+  - first:
+      213: -8955672443872719946
+    second: kh_card_02_hd_02_diff_18
+  - first:
+      213: -7531935913696183079
+    second: kh_card_02_hd_02_diff_19
+  - first:
+      213: 4871062266057803767
+    second: kh_card_02_hd_02_diff_20
+  - first:
+      213: -8097326106196594071
+    second: kh_card_02_hd_02_diff_21
+  - first:
+      213: -2124573014090966284
+    second: kh_card_02_hd_02_diff_22
+  - first:
+      213: 5162051264735136457
+    second: kh_card_02_hd_02_diff_23
+  - first:
+      213: 5518131843427380899
+    second: kh_card_02_hd_02_diff_24
+  - first:
+      213: 3678856039743733352
+    second: kh_card_02_hd_02_diff_25
+  - first:
+      213: -7780669014282705933
+    second: kh_card_02_hd_02_diff_26
+  - first:
+      213: 2659624397404728977
+    second: kh_card_02_hd_02_diff_27
+  - first:
+      213: -6749539578397411042
+    second: kh_card_02_hd_02_diff_28
+  - first:
+      213: 1746500105133950521
+    second: kh_card_02_hd_02_diff_29
+  - first:
+      213: 7423611318054063320
+    second: kh_card_02_hd_02_diff_30
+  - first:
+      213: 8267229727616163300
+    second: kh_card_02_hd_02_diff_31
+  - first:
+      213: -2603195315577012796
+    second: kh_card_02_hd_02_diff_32
+  - first:
+      213: -7901092144786870577
+    second: kh_card_02_hd_02_diff_33
+  - first:
+      213: 8267220751573539449
+    second: kh_card_02_hd_02_diff_34
+  - first:
+      213: 3988307638699764931
+    second: kh_card_02_hd_02_diff_35
+  - first:
+      213: 8948947971006767208
+    second: kh_card_02_hd_02_diff_36
+  - first:
+      213: -2265516210612495898
+    second: kh_card_02_hd_02_diff_37
+  - first:
+      213: 5239311594990753070
+    second: kh_card_02_hd_02_diff_38
+  - first:
+      213: 4606731692755068841
+    second: kh_card_02_hd_02_diff_39
+  - first:
+      213: -8310526022182123495
+    second: kh_card_02_hd_02_diff_40
+  - first:
+      213: 7107100743259464186
+    second: kh_card_02_hd_02_diff_41
+  - first:
+      213: -9108916265479165336
+    second: kh_card_02_hd_02_diff_42
+  - first:
+      213: -86642100900484416
+    second: kh_card_02_hd_02_diff_43
+  - first:
+      213: -8585773661862491236
+    second: kh_card_02_hd_02_diff_44
+  - first:
+      213: 8976135844269337885
+    second: kh_card_02_hd_02_diff_45
+  - first:
+      213: -606722305585484400
+    second: kh_card_02_hd_02_diff_46
+  - first:
+      213: -3121453633346048125
+    second: kh_card_02_hd_02_diff_47
+  - first:
+      213: -8942773833752286833
+    second: kh_card_02_hd_02_diff_48
+  - first:
+      213: 2708885038713691815
+    second: kh_card_02_hd_02_diff_49
+  - first:
+      213: 4367512874517828878
+    second: kh_card_02_hd_02_diff_50
+  - first:
+      213: -4124787725784024962
+    second: kh_card_02_hd_02_diff_51
+  - first:
+      213: 6482166551429013136
+    second: kh_card_02_hd_02_diff_52
+  - first:
+      213: -274484096279335513
+    second: kh_card_02_hd_02_diff_53
+  - first:
+      213: -1783285746803851035
+    second: kh_card_02_hd_02_diff_54
+  - first:
+      213: 8664479027142949315
+    second: kh_card_02_hd_02_diff_55
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f725af6fcd5d42744a115b063b12b0f0
+      internalID: 1465544104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_1
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c25ff4f13044af45ab80e678ef5d52f
+      internalID: 1733381948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_2
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf6ac761494846046b5027595cebdc1c
+      internalID: 305886336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_3
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc222bdf782173549bda385ceb80a27a
+      internalID: -1500646320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_4
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 384861a1067d7a0408a2b425718a50d9
+      internalID: 796963912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_5
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4d29a979020ef64d91eff88f6365952
+      internalID: -1752997864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_6
+      rect:
+        serializedVersion: 2
+        x: 3075
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2f0af7ba70cc4a44a3016aec18058ee
+      internalID: -423101122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_7
+      rect:
+        serializedVersion: 2
+        x: 3587
+        y: 3511
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e3a9ef6fcc8d624c957d14d528f4330
+      internalID: 920002305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_8
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef03d30d8410908429b494857a240007
+      internalID: -1269285421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_9
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a09454a30fe9d9f428c9fa41b1263f6f
+      internalID: 936859571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_10
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8deab5ebc22f6244d92324f8c3b8ab99
+      internalID: -1869609671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_11
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bef40809066a8946a5176283aefefaa
+      internalID: 868792133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_12
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f36cbe85b091b024a8330fb030d8affc
+      internalID: 790806697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_13
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caffa57fc0ee47f4990740118e4ee5a8
+      internalID: 2147404093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_14
+      rect:
+        serializedVersion: 2
+        x: 3075
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b215157f7b2d6b341a86e8f0ac83b40e
+      internalID: -1723145329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_15
+      rect:
+        serializedVersion: 2
+        x: 3587
+        y: 2926
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d9b1f7b0687677468c3b81a923ccc2f
+      internalID: 844739676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_16
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4080cf844ad42f148bab8e83a5b6f85e
+      internalID: 1526675602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_17
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f0373bdc6d3da6499ed2e5836851521
+      internalID: 1152088808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_18
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d3db24734bc2ad44891b1f4ccbe36c8
+      internalID: 119309868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_19
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3405e3db1f02dda458f1c14bd1164127
+      internalID: -1805731006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_20
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a0156f86fb50214bb169af35834ef15
+      internalID: -1785175262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_21
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caf059c8067eca64893abebbfc55533c
+      internalID: 696782571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_22
+      rect:
+        serializedVersion: 2
+        x: 3075
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1fcfdb669dbd53547b99cfe62770ccd9
+      internalID: 905078709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_23
+      rect:
+        serializedVersion: 2
+        x: 3587
+        y: 2341
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3948e211f6e2ea4784028e2ac1c3878
+      internalID: 16998796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_24
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ad44d75494ab0644af5d98da1992ddb
+      internalID: -1116109872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_25
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab94ec1447d06454696df28c958bc0e0
+      internalID: 818512289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_26
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 740ef68f211aa76458c4b6a9d2376f9e
+      internalID: -893810019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_27
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6a6a858381dcb246b4ef2d905b29bcf
+      internalID: -1888318190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_28
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88e3ca1f7123b36488d8a568598a5528
+      internalID: -430805590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_29
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61fe4fbcc6e425d4fa455ffd66750a5d
+      internalID: -1830036281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_30
+      rect:
+        serializedVersion: 2
+        x: 3075
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c947ca30f29f2104aa0fbd7838e7c1e2
+      internalID: 764965226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_31
+      rect:
+        serializedVersion: 2
+        x: 3587
+        y: 1756
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae65ff6166ba1bb4bb684a395495f5f2
+      internalID: 631714054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_32
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e5404a9992500c459a1552dda941cee
+      internalID: -1974172693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_33
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 682d49f0c6c3b924fb5ed62f0a355772
+      internalID: 146653409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_34
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cf1f0f174af2374cb589b128627f220
+      internalID: -66801054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_35
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9e1c96a8e367624dbfae693876e7577
+      internalID: -1661224058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_36
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b84213daa861fe047b120cbc6b5e9035
+      internalID: -251353528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_37
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24884e835664b784e95c9dd82181857d
+      internalID: -957875749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_38
+      rect:
+        serializedVersion: 2
+        x: 3075
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45a6697e9ecdd2f4a92356d3e72b2a28
+      internalID: 499291977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_39
+      rect:
+        serializedVersion: 2
+        x: 3587
+        y: 1171
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da29d9080f6ee2c43a52a48f8af08c1d
+      internalID: 1226617894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_40
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8ae7295605248a4fbcf8c6db0ab1589
+      internalID: -1727730222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_41
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f0076a77d62d0844a890ca3277474a1
+      internalID: 1225673862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_42
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bafdd86f2bf2a0142b9c0c685d84ade2
+      internalID: -1936210349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_43
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16a5543ff4246a44bbb9045bccf3199d
+      internalID: 1681265197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_44
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f48f88d9b78ce04face44a79ca077aa
+      internalID: -1551657497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_45
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93f661e725baee241929832f89be7935
+      internalID: 1490353177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_46
+      rect:
+        serializedVersion: 2
+        x: 3075
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 929e8e882e9dc4148875dd09bef57a43
+      internalID: -164342268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_47
+      rect:
+        serializedVersion: 2
+        x: 3587
+        y: 586
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 715156575f0398c4182620517d57251c
+      internalID: 1341778869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_48
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe07e9859e5292840b21f7fbdbf15f6e
+      internalID: -627535442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_49
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 638db05cefbf79143987814740eb3617
+      internalID: 681521401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_50
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c52d8ad42df677d419cad58a09477c52
+      internalID: 1105404250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_51
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94932d2b0b1036f4891458a6502e8adc
+      internalID: -990282686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_52
+      rect:
+        serializedVersion: 2
+        x: 2051
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15f712c01c8330f4b85a0a3a9c46b364
+      internalID: -2005970781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_53
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c30fc09065369e4c8ea81cd006a4d6f
+      internalID: -1599423344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_54
+      rect:
+        serializedVersion: 2
+        x: 3075
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01d4867d12e02a34e94ca3cdbde3a48d
+      internalID: -592737085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_02_hd_02_diff_55
+      rect:
+        serializedVersion: 2
+        x: 3587
+        y: 1
+        width: 507
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a40b519f87f3f284697d5248bad8eb0c
+      internalID: 2080139198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      card_02_hd_02_diff_0: 1465544104
+      card_02_hd_02_diff_1: 1733381948
+      card_02_hd_02_diff_10: -1869609671
+      card_02_hd_02_diff_11: 868792133
+      card_02_hd_02_diff_12: 790806697
+      card_02_hd_02_diff_13: 2147404093
+      card_02_hd_02_diff_14: -1723145329
+      card_02_hd_02_diff_15: 844739676
+      card_02_hd_02_diff_16: 1526675602
+      card_02_hd_02_diff_17: 1152088808
+      card_02_hd_02_diff_18: 119309868
+      card_02_hd_02_diff_19: -1805731006
+      card_02_hd_02_diff_2: 305886336
+      card_02_hd_02_diff_20: -1785175262
+      card_02_hd_02_diff_21: 696782571
+      card_02_hd_02_diff_22: 905078709
+      card_02_hd_02_diff_23: 16998796
+      card_02_hd_02_diff_24: -1116109872
+      card_02_hd_02_diff_25: 818512289
+      card_02_hd_02_diff_26: -893810019
+      card_02_hd_02_diff_27: -1888318190
+      card_02_hd_02_diff_28: -430805590
+      card_02_hd_02_diff_29: -1830036281
+      card_02_hd_02_diff_3: -1500646320
+      card_02_hd_02_diff_30: 764965226
+      card_02_hd_02_diff_31: 631714054
+      card_02_hd_02_diff_32: -1974172693
+      card_02_hd_02_diff_33: 146653409
+      card_02_hd_02_diff_34: -66801054
+      card_02_hd_02_diff_35: -1661224058
+      card_02_hd_02_diff_36: -251353528
+      card_02_hd_02_diff_37: -957875749
+      card_02_hd_02_diff_38: 499291977
+      card_02_hd_02_diff_39: 1226617894
+      card_02_hd_02_diff_4: 796963912
+      card_02_hd_02_diff_40: -1727730222
+      card_02_hd_02_diff_41: 1225673862
+      card_02_hd_02_diff_42: -1936210349
+      card_02_hd_02_diff_43: 1681265197
+      card_02_hd_02_diff_44: -1551657497
+      card_02_hd_02_diff_45: 1490353177
+      card_02_hd_02_diff_46: -164342268
+      card_02_hd_02_diff_47: 1341778869
+      card_02_hd_02_diff_48: -627535442
+      card_02_hd_02_diff_49: 681521401
+      card_02_hd_02_diff_5: -1752997864
+      card_02_hd_02_diff_50: 1105404250
+      card_02_hd_02_diff_51: -990282686
+      card_02_hd_02_diff_52: -2005970781
+      card_02_hd_02_diff_53: -1599423344
+      card_02_hd_02_diff_54: -592737085
+      card_02_hd_02_diff_55: 2080139198
+      card_02_hd_02_diff_6: -423101122
+      card_02_hd_02_diff_7: 920002305
+      card_02_hd_02_diff_8: -1269285421
+      card_02_hd_02_diff_9: 936859571
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

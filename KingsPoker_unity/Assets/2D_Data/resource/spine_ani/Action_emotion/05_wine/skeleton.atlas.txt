@@ -1,0 +1,34 @@
+
+skeleton.png
+size: 512,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+glass_r_01
+  rotate: true
+  xy: 222, 82
+  size: 75, 147
+  orig: 75, 147
+  offset: 0, 0
+  index: -1
+glass_r_02
+  rotate: true
+  xy: 2, 88
+  size: 69, 218
+  orig: 69, 218
+  offset: 0, 0
+  index: -1
+glass_y_01
+  rotate: true
+  xy: 2, 11
+  size: 75, 147
+  orig: 75, 147
+  offset: 0, 0
+  index: -1
+glass_y_02
+  rotate: true
+  xy: 151, 2
+  size: 78, 222
+  orig: 78, 222
+  offset: 0, 0
+  index: -1

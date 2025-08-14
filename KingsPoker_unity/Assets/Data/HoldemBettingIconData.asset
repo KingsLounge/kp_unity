@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddea8c62294c59b498890cee17b06aa5, type: 3}
+  m_Name: HoldemBettingIconData
+  m_EditorClassIdentifier: 
+  spriteInfo:
+  - bettype: 1
+    onSprite: {fileID: 21300000, guid: 98356e605e9bf524e9aba330339f4abd, type: 3}
+    offSprite: {fileID: 21300000, guid: fa0bc803f8b380040a8390331d11f590, type: 3}
+  - bettype: 2
+    onSprite: {fileID: 21300000, guid: 4dfb4b24229fad249b7bff295c10e284, type: 3}
+    offSprite: {fileID: 21300000, guid: a0beae5dafe850c4d932845109e41857, type: 3}
+  - bettype: 4
+    onSprite: {fileID: 21300000, guid: 845cd842d9215f341849c3ecb2acb4c6, type: 3}
+    offSprite: {fileID: 21300000, guid: d9b09e44b9d43df479311372d268c651, type: 3}
+  - bettype: 32
+    onSprite: {fileID: 21300000, guid: 3c9d7a39aff7f5841a59324b94ca5c57, type: 3}
+    offSprite: {fileID: 21300000, guid: 6a652a0e6c691fc448c9e5b08a17907b, type: 3}
+  - bettype: 64
+    onSprite: {fileID: 21300000, guid: 04a198a3e01a1a649a9cd3035182b3e5, type: 3}
+    offSprite: {fileID: 21300000, guid: fe9d20403aa5a054285faceae71cad76, type: 3}
+  - bettype: 256
+    onSprite: {fileID: 21300000, guid: 0d5937daa0b6d42429cdfd9907117191, type: 3}
+    offSprite: {fileID: 21300000, guid: 8a671b4c759643e49b2341cc5d504c3a, type: 3}
+  - bettype: 512
+    onSprite: {fileID: 21300000, guid: ca5554908020ab44e92196432908e47f, type: 3}
+    offSprite: {fileID: 21300000, guid: f260a416317c53a4e91e1668a591afff, type: 3}
+  - bettype: 1024
+    onSprite: {fileID: 21300000, guid: ad5a2f4d714b8164b824b35c9b6bb180, type: 3}
+    offSprite: {fileID: 21300000, guid: ad5a2f4d714b8164b824b35c9b6bb180, type: 3}
+  - bettype: 2048
+    onSprite: {fileID: 21300000, guid: 008c39cc75d04804cb5fb99fe24d6340, type: 3}
+    offSprite: {fileID: 21300000, guid: 008c39cc75d04804cb5fb99fe24d6340, type: 3}

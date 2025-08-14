@@ -1,0 +1,3803 @@
+{
+  "cafe_create": [
+    { "type": "ui", "style": "title=create_cafe_1;title-align=center;height=1400" },
+    { "type": "space" },
+    {
+      "type": "image_button",
+      "data": [""],
+      "style": "width=124;height=124",
+      "event": {
+        "load_end": [{ "event": "subscribe_logo_selector" }, { "event": "logo_selector_random" }],
+        "clicked": [{ "event": "selector_open" }],
+        "clear": [{ "event": "unsubscribe_logo_selector" }]
+      }
+    },
+    { "type": "space" },
+    { "key": "name", "default": "", "max": 16, "type": "input3", "style": "placeholder=cafe_characters" },
+    { "type": "space" },
+    { "title": "line", "type": "line" },
+    { "type": "space" },
+    { "type": "link", "data": ["cafe_tier", "cafe_button1"] },
+    { "default": "cafe_tier", "type": "text", "style": "font-size=34;color=#ffffff", "group": "cafe_tier" },
+    {
+      "title": "",
+      "type": "image_button",
+      "data": ["icon_infor"],
+      "group": "cafe_button1",
+      "event": { "clicked": [{ "event": "popup_open", "param": "cafe_tier" }] }
+    },
+    { "type": "space" },
+    { "type": "link", "data": ["cafetier1", "cafetier2"] },
+    {
+      "key": "tier",
+      "default": 4,
+      "min": "b",
+      "names": ["diamond", "platinum", "gold", "silver", "bronze"],
+      "type": "radio_v1",
+      "data": [5, 4, 3, 2, 1],
+      "style": "align=left",
+      "group": "cafetier1"
+    },
+    { "default": "cafe_zuice_diamond", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_platinum", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_gold", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_sliver", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_bronze", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "type": "sub_start" },
+    { "title": "cafe_create", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "CP_CAFE_CREATE" }] } },
+    { "type": "sub_end" }
+  ],
+  "null": [
+    { "type": "link", "data": ["cafe_password", "cafe_password1"] },
+    { "key": "pw", "title": "cafecode_1", "default": "", "max": 12, "type": "input3", "group": "cafe_password" },
+    { "key": "password", "title": "", "default": true, "type": "toggle", "style": "icon-align=center", "group": "cafe_password1" },
+    { "key": "private_club", "title": "cafe_password_2", "default": true, "type": "toggle" },
+    { "key": "apply_join", "title": "cafe_option3", "default": true, "type": "toggle" },
+    { "default": [0, 9], "type": "link", "data": ["cafe_list_1", "cafe_list_2"] },
+    { "default": "icon_set_members", "type": "image", "group": "cafe_list_1" },
+    { "default": "icon_set_approve", "type": "image", "group": "cafe_list_1", "event": "{\"load_end\":[{\"event\":\"show_only_manager\"}]" },
+    { "default": "icon_set_changeO", "type": "image", "group": "cafe_list_1", "event": "{\"load_end\":[{\"event\":\"show_only_manager\"}]" },
+    { "default": "icon_set_hosting", "type": "image", "group": "cafe_list_1", "event": "{\"load_end\":[{\"event\":\"show_only_manager\"}]" },
+    { "default": "icon_set_branding", "type": "image", "group": "cafe_list_1", "event": "{\"load_end\":[{\"event\":\"show_only_manager\"}]" },
+    { "default": "icon_set_notification", "type": "image", "group": "cafe_list_1", "event": "{\"load_end\":[{\"event\":\"show_only_manager\"}]" },
+    { "default": "icon_set_withdraw", "type": "image", "group": "cafe_list_1" },
+    { "default": "icon_set_disband", "type": "image", "group": "cafe_list_1", "event": "{\"load_end\":[{\"event\":\"show_only_owner\"}]" },
+    { "default": "icon_set_disband", "type": "image", "group": "cafe_list_1", "event": "{\"load_end\":[{\"event\":\"show_only_owner\"}]" },
+    {
+      "title": "co",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "load_end": [{ "event": "show_only_manager" }], "clicked": [{ "event": "scene_change", "param": "cafe_list_co" }] }
+    },
+    {
+      "title": "cafe_hosting",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "load_end": [{ "event": "show_only_manager" }], "clicked": [{ "event": "scene_change", "param": "cafe_host" }] }
+    },
+    {
+      "key": "cafe_management",
+      "title": "cafe_management",
+      "default": 0,
+      "names": ["mm", "ac", "co", "lc", "cho"],
+      "active_groups": ["mm", "ac", "co", "lc", "cho"],
+      "type": "active_fulldown",
+      "data": ["mm", "ac", "co", "lc", "cho"],
+      "event": { "load_end": [{ "event": "show_only_manager", "manager": [1, 2], "owner": [4] }] }
+    },
+    { "type": "ui", "style": "title=zuice;title-align=center" },
+    { "title": "my_zuice", "min": 0, "type": "info", "group": "zc", "event": { "load": [{ "event": "set_default", "param": "my_zuice" }] } },
+    { "title": "cafe_zuice", "min": 0, "type": "info", "group": "zc", "event": { "load": [{ "event": "set_default", "param": "cafe_zuice" }] } },
+    { "title": "line", "type": "line", "group": "zc" },
+    {
+      "key": "zc",
+      "title": "add_zuice",
+      "min": 0,
+      "type": "input",
+      "group": "zc",
+      "event": {
+        "changed": [{ "event": "trans_zuice_calculate", "result_cafe": "result_cafe", "result_my": "result_my" }],
+        "load_end": [{ "event": "trans_zuice_calculate", "result_cafe": "result_cafe", "result_my": "result_my" }]
+      }
+    },
+    { "title": "line", "type": "line", "group": "zc" },
+    { "title": "my_zuice_result", "min": 0, "type": "info", "group": "zc", "group_1": "result_my" },
+    { "title": "cafe_zuice_result", "min": 0, "type": "info", "group": "zc", "group_1": "result_cafe" },
+    { "type": "space" },
+    { "title": "cafe_confrim", "type": "button", "style": "width=424;height=124", "group": "zc", "event": { "clicked": [{ "event": "CP_CAFE_TRANS_ZUICE" }] } },
+    { "key": "zc_date", "title": "zc_date", "type": "date", "group": "zch", "event": { "load_end": [{ "event": "btn_back_active", "active": false }] } },
+    { "type": "ui", "style": "title=cafe_list;title-align=center" },
+    { "type": "space", "style": "height=0" },
+    {
+      "type": "image_button",
+      "data": ["btn_setting_back"],
+      "style": "width=1000;height=154;text-align=left",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cafe_list" }] }
+    },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_list" }] }
+        ]
+      }
+    },
+    { "type": "link", "data": ["cafe_brading", "cafe_brading2"], "group": "co" },
+    { "default": "cafe_branding", "type": "text", "group": "co", "group_1": "cafe_brading" },
+    {
+      "key": "cafe_branding",
+      "title": "",
+      "type": "image_button",
+      "data": ["icon_edit"],
+      "style": "anchor=right,center;position=0,0;text-align=left",
+      "group": "co",
+      "group_1": "cafe_brading2",
+      "event": { "clicked": [{ "event": "popup_open", "param": "cafe_confirm" }] }
+    },
+    { "type": "link", "data": ["cafe_privacy", "cafe_privacy2"], "group": "co" },
+    { "default": "cafe_hosting", "type": "text", "group": "co", "group_1": "cafe_privacy" },
+    {
+      "key": "cafe_privacy",
+      "title": "",
+      "type": "image_button",
+      "data": ["icon_edit"],
+      "style": "anchor=right,center;position=0,0;text-align=left",
+      "group": "co",
+      "group_1": "cafe_privacy2",
+      "event": { "clicked": [{ "event": "popup_open", "param": "cafe_host" }] }
+    },
+    { "type": "link", "data": ["cafe_noti", "cafe_noti2"], "group": "co" },
+    { "default": "cafe_noti", "type": "text", "group": "co", "group_1": "cafe_noti" },
+    {
+      "key": "cafe_noti",
+      "title": "",
+      "type": "image_button",
+      "data": ["icon_edit"],
+      "style": "anchor=right,center;position=0,0;text-align=left",
+      "group": "co",
+      "group_1": "cafe_noti2",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cafe_noti" }] }
+    },
+    { "type": "text", "style": "font-size=34;align=left" },
+    {
+      "title": "cafe_disbandcafe",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "co",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cafe_del" }] }
+    },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_list" }] }
+        ]
+      }
+    },
+    {},
+    { "type": "link", "data": ["cafe_password", "cafe_password1"], "event": { "load_end": [{ "event": "btn_back_set", "on_click": "default" }] } },
+    { "key": "pw", "title": "cafecode_1", "default": "", "max": 12, "type": "input3", "group": "cafe_password" },
+    { "key": "password", "title": "", "default": true, "type": "toggle", "group": "cafe_password1" },
+    { "key": "private_club", "title": "cafe_password_2", "default": true, "type": "toggle" },
+    { "key": "apply_join", "title": "cafe_option3", "default": true, "type": "toggle" },
+    {
+      "key": "cafe_hosting",
+      "title": "cafe_hosting",
+      "default": 0,
+      "names": ["owner", "manager", "member"],
+      "type": "active_fulldown",
+      "data": ["owner", "manager", "member"],
+      "event": "fulldown변경 시 멤버권한 개별설정"
+    },
+    {
+      "title": "owner",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=1000;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cafe_host_owner" }] }
+    },
+    {
+      "title": "manager",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=1000;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cafe_host_manager" }] }
+    },
+    {
+      "title": "member",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=1000;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cafe_host_member" }] }
+    },
+    { "key": "cafe_option1", "title": "cafe_option1", "default": true, "type": "toggle" },
+    { "key": "cafe_option2", "title": "cafe_option2", "default": true, "type": "toggle" },
+    { "key": "cafe_option3", "title": "cafe_option3", "default": true, "type": "toggle" },
+    { "key": "cafe_option4", "title": "cafe_option4", "default": true, "type": "toggle" },
+    { "key": "cafe_password", "title": "cafe_password", "default": true, "type": "toggle" },
+    {
+      "type": "space",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_host" }] }
+        ]
+      }
+    },
+    { "key": "cafe_confirm", "title": "cafe_confirm", "type": "button", "style": "width=424;height=124" },
+    { "key": "cafe_option1", "title": "cafe_option1", "default": true, "type": "toggle" },
+    { "key": "cafe_option2", "title": "cafe_option2", "default": true, "type": "toggle" },
+    { "key": "cafe_option3", "title": "cafe_option3", "default": true, "type": "toggle" },
+    { "key": "cafe_option4", "title": "cafe_option4", "default": true, "type": "toggle" },
+    { "key": "cafe_password", "title": "cafe_password", "default": true, "type": "toggle" },
+    {
+      "type": "space",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_host" }] }
+        ]
+      }
+    },
+    { "key": "cafe_confirm", "title": "cafe_confirm", "type": "button", "style": "width=424;height=124" },
+    { "key": "cafe_option1", "title": "cafe_option1", "default": true, "type": "toggle" },
+    { "key": "cafe_option2", "title": "cafe_option2", "default": true, "type": "toggle" },
+    { "key": "cafe_option3", "title": "cafe_option3", "default": true, "type": "toggle" },
+    { "key": "cafe_option4", "title": "cafe_option4", "default": true, "type": "toggle" },
+    { "key": "cafe_password", "title": "cafe_password", "default": true, "type": "toggle" },
+    {
+      "type": "space",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_host" }] }
+        ]
+      }
+    },
+    { "key": "cafe_confirm", "title": "cafe_confirm", "type": "button", "style": "width=424;height=124" },
+    { "default": "cafe_delete_popup", "type": "text", "style": "font-size=34;align=left" },
+    {
+      "title": "cashier_trade",
+      "default": 0,
+      "names": ["sbb", "confirmsbb"],
+      "active_groups": ["trade", "tradeh", "cb", "sc", "ah"],
+      "type": "active_fulldown",
+      "data": ["sbb", "confirmsbb"],
+      "event": { "load_end": [{ "event": "show_only_manager", "manager": [1, 2] }] }
+    },
+    {
+      "title": "transfer_cashier",
+      "type": "button",
+      "style": "width=324;height=124;text-align=center",
+      "group": "trans",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cashier_trans" }] }
+    },
+    {},
+    {},
+    { "type": "space" },
+    {
+      "title": "cashier_trade1",
+      "type": "info",
+      "style": "align=right",
+      "group": "trade",
+      "event": { "load": [{ "event": "set_default", "param": "cafe_my_dc" }] }
+    },
+    {
+      "title": "cashier_trade2",
+      "type": "info",
+      "style": "align=right",
+      "group": "trade",
+      "event": { "load": [{ "event": "set_default", "param": "cafe_my_debt" }] }
+    },
+    {
+      "title": "cashier_trade3",
+      "type": "info",
+      "style": "align=right",
+      "group": "trade",
+      "event": { "load": [{ "event": "set_default", "param": "cafe_my_surplus" }] }
+    },
+    { "type": "space", "group": "trade" },
+    { "type": "line", "group": "trade" },
+    { "type": "space", "group": "trade" },
+    {
+      "type": "link",
+      "data": ["cashier_trade", "link_cashier_chip"],
+      "group": "trade",
+      "event": {
+        "load": [{ "event": "set_max", "formula": "{balance}" }],
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    {
+      "key": "status",
+      "default": 0,
+      "names": ["cashier_sell", "cashier_buy", "cashier_borrow"],
+      "active_groups": ["cashier_sell", "cashier_buy", "cashier_borrow"],
+      "type": "active_radio_v1",
+      "data": ["sell", "buy", "borrow"],
+      "style": "align=left",
+      "group": "trade",
+      "group_1": "cashier_trade",
+      "event": {
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    {
+      "key": "amount",
+      "title": "",
+      "min": 0,
+      "type": "input",
+      "style": "color=#2B2B2B",
+      "group": "trade",
+      "group_1": "cashier_sell",
+      "group_2": "link_cashier_chip",
+      "event": {
+        "load": [{ "event": "set_max", "formula": "{balance}" }],
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    { "type": "space", "style": "height=100", "group": "trade", "group_1": "cashier_buy", "group_2": "link_cashier_chip" },
+    {
+      "key": "amount",
+      "title": "",
+      "min": 0,
+      "type": "input",
+      "style": "color=#2B2B2B",
+      "group": "trade",
+      "group_1": "cashier_buy",
+      "group_2": "link_cashier_chip",
+      "event": {
+        "load": [],
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    { "type": "space", "style": "height=100", "group": "trade", "group_1": "cashier_borrow", "group_2": "link_cashier_chip" },
+    { "type": "space", "style": "height=100", "group": "trade", "group_1": "cashier_borrow", "group_2": "link_cashier_chip" },
+    {
+      "key": "amount",
+      "title": "",
+      "min": 0,
+      "type": "input",
+      "style": "color=#2B2B2B",
+      "group": "trade",
+      "group_1": "cashier_borrow",
+      "group_2": "link_cashier_chip",
+      "event": {
+        "load": [],
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    { "type": "space", "style": "height=100", "group": "trade" },
+    { "type": "line", "group": "trade" },
+    { "type": "space", "group": "trade" },
+    {
+      "title": "cashier_trade4",
+      "type": "info",
+      "style": "align=right",
+      "group": "trade",
+      "group_1": "result_my_dc",
+      "event": {
+        "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER" }],
+        "load_end": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    { "title": "cashier_trade5", "type": "info", "style": "align=right", "group": "trade", "group_1": "result_my_debt" },
+    { "title": "cashier_trade6", "type": "info", "style": "align=right", "group": "trade", "group_1": "result_my_surplus" },
+    { "type": "space", "group": "trade" },
+    {
+      "title": "cashier_confirm",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "trade",
+      "event": {
+        "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER" }],
+        "load_end": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": { "load_end": [{ "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cashier_chip" }] }] }
+    },
+    {},
+    { "type": "space" },
+    { "type": "date", "group": "tradeh" },
+    { "key": "cashier_type", "title": "cashier_type", "type": "list", "group": "tradeh" },
+    { "key": "cashier_chip", "title": "cashier_chip", "type": "list", "group": "tradeh" },
+    { "type": "link", "data": ["cashier_id", "cashier_trade1", "cashier_cuurrdebt", "cashier_confirm", "cashier_rejcet"], "group": "sc" },
+    { "key": "cashier_id", "title": "cashier_id", "type": "list", "group": "sc", "group_1": "cashier_id" },
+    { "key": "cashier_trade1", "title": "cashier_trade1", "type": "list", "group": "sc", "group_1": "cashier_trade1" },
+    { "key": "cashier_currdebt", "title": "cashier_currdebt", "type": "list", "group": "sc", "group_1": "cashier_currdebt" },
+    {
+      "type": "link",
+      "group": "sc",
+      "event": {
+        "load": [],
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    {
+      "type": "toggle",
+      "group": "sc",
+      "event": {
+        "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER" }],
+        "load_end": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    { "type": "input", "group": "sc" },
+    {
+      "type": "link",
+      "group": "sc",
+      "event": {
+        "load": [{ "event": "set_max", "formula": "balance" }],
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    { "type": "toggle", "group": "sc", "group_1": "cashier_confirm" },
+    {
+      "type": "input",
+      "group": "sc",
+      "group_1": "cashier_reject",
+      "event": {
+        "load": [],
+        "changed": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    {
+      "type": "link",
+      "data": "[\"cashier_id\",\"cashier_money\",\"cashier_currdebt\",\"cashier_accept,cashier_decline]",
+      "group": "cb",
+      "event": {
+        "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER" }],
+        "load_end": [
+          { "event": "calculate_sell_buy_borrow", "result_my_dc": "result_my_dc", "result_my_debt": "result_my_debt", "result_my_surplus": "result_my_surplus" }
+        ]
+      }
+    },
+    { "key": "cashier_id", "title": "cashier_id", "type": "list", "group": "cb", "group_1": "cashier_id" },
+    { "key": "cashier_money", "title": "cashier_money", "type": "list", "group": "cb", "group_1": "cashier_money" },
+    { "key": "cashier_currdebt", "title": "cashier_currdebt", "type": "list", "group": "cb", "group_1": "cashier_currdebt" },
+    { "key": "cashier_accept", "title": "", "type": "button", "group": "cb", "group_1": "cashier_accept" },
+    { "key": "cashier_decline", "title": "", "type": "button", "group": "cb", "group_1": "cashier_decline" },
+    { "key": "cashier_id", "title": "cashier_id", "type": "list", "group": "cb", "group_1": "cashier_id" },
+    { "key": "cashier_money", "title": "cashier_money", "type": "list", "group": "cb", "group_1": "cashier_money" },
+    { "key": "cashier_currdebt", "title": "cashier_currdebt", "type": "list", "group": "cb", "group_1": "cashier_currdebt" },
+    { "key": "cashier_accept", "title": "", "type": "button", "group": "cb", "group_1": "cashier_accept" },
+    { "key": "cashier_decline", "title": "", "type": "button", "group": "cb", "group_1": "cashier_decline" },
+    { "type": "link", "data": "[\"cashier_id\",\"cashier_money\",\"cashier_currdebt\",\"cashier_accept,cashier_decline]", "group": "cb" },
+    { "key": "cashier_id", "title": "cashier_id", "type": "list", "group": "cb", "group_1": "cashier_id" },
+    { "key": "cashier_money", "title": "cashier_money", "type": "list", "group": "cb", "group_1": "cashier_money" },
+    { "key": "cashier_currdebt", "title": "cashier_currdebt", "type": "list", "group": "cb", "group_1": "cashier_currdebt" },
+    { "key": "cashier_accept", "title": "", "type": "button", "group": "cb", "group_1": "cashier_accept" },
+    { "key": "cashier_decline", "title": "", "type": "button", "group": "cb", "group_1": "cashier_decline" },
+    { "type": "ui", "style": "title=cafe_join_1;title-align=center" },
+    { "key": "cafe_invite_1", "type": "input3", "style": "placeholder=cafe_invite_1" },
+    { "key": "cafe_invite_2", "type": "input3", "style": "placeholder=cafe_invite_2" },
+    { "key": "join", "title": "join", "type": "button", "style": "width=424;height=124", "group": "join" },
+    { "default": "confirmsbb", "type": "text" },
+    { "type": "link", "data": ["cashier_id", "cashier_money", "cashier_dept"] },
+    { "key": "cashier_id", "title": "cashier_id", "type": "list", "group": "cashier_id" },
+    { "key": "cashier_money", "title": "cashier_money", "type": "list", "group": "cashier_money" },
+    { "key": "cashier_debt", "title": "cashier_debt", "type": "list", "group": "cashier_debt" },
+    { "default": "cashier_history", "type": "text" },
+    { "type": "link", "data": ["cashier_time", "cashier_borrowing_1", "cashier_totaldebt"] },
+    { "key": "cashier_time", "title": "cashier_time", "type": "list", "group": "cashier_time" },
+    { "key": "cashier_borrowing_1", "title": "confirmsbh", "type": "list", "group": "cashier_borrowing_2" },
+    { "key": "cashier_totaldebt", "title": "cashier_totaldebt", "type": "list", "group": "cashier_totaldebt" },
+    { "default": "confirmsbb", "type": "text" },
+    { "type": "link", "data": ["cashier_id", "cashier_money", "cashier_dept"] },
+    { "key": "cashier_id", "title": "cashier_id", "type": "list", "group": "cashier_id" },
+    { "key": "cashier_money", "title": "cashier_money", "type": "list", "group": "cashier_money" },
+    { "key": "cashier_debt", "title": "cashier_debt", "type": "list", "group": "cashier_debt" },
+    { "default": "cashier_history", "type": "text" },
+    { "type": "link", "data": ["cashier_time", "cashier_borrowing_1", "cashier_totaldebt"] },
+    { "key": "cashier_time", "title": "cashier_time", "type": "list", "group": "cashier_time" },
+    { "key": "cashier_borrowing_1", "title": "confirmsbh", "type": "list", "group": "cashier_borrowing_2" },
+    { "key": "cashier_totaldebt", "title": "cashier_totaldebt", "type": "list", "group": "cashier_totaldebt" },
+    { "default": "nlh", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space" },
+    { "key": "timebank", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "default": 0, "min": 0, "max": 10000000, "type": "input", "style": "sub-text=bb", "group": "group1" },
+    { "key": "time_price", "title": "time_price", "default": 1, "min": 1, "max": 10, "type": "input", "style": "sub-text=bb" },
+    { "key": "time_extension", "title": "time_extension", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec" },
+    { "key": "tb2", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "tb2_time", "title": "timebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "tb2_price", "title": "addtime_price", "default": 1, "min": 1, "max": 10000000, "type": "input", "style": "sub-text=chip", "group": "group1" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "default": false, "type": "active_toggle", "true_group": "extra_group" },
+    {
+      "key": "extra_blind",
+      "title": "extra_blind",
+      "default": 50,
+      "min": 1,
+      "max": 5000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "extra_group",
+      "group_1": "eb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "type": "space" },
+    { "key": "buyin_min", "title": "buyin_min", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "buyin_max", "title": "buyin_max", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    {
+      "key": "jackpot_fund",
+      "title": "jackpot_fund",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 10,
+      "type": "input",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group22"
+    },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "default": true, "type": "active_toggle", "true_group": "active" },
+    { "default": [100, 366, 366], "type": "link", "data": ["passive_radio", "group2", "group26"], "group": "active" },
+    { "key": "passive_rake_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "passive_radio" },
+    { "key": "pr1", "title": "passive_rake_1", "default": 1, "min": 1, "max": 100, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr2", "title": "passive_rake_2", "default": 10, "min": 10, "max": 999, "type": "input2", "group": "group26" },
+    { "key": "pr3", "title": "passive_rake_3", "default": 1, "min": 1, "max": 100, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr4", "title": "passive_rake_4", "default": 10, "min": 10, "max": 999, "type": "input2", "group": "group26" },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "default": true, "type": "active_toggle", "true_group": "group3" },
+    {
+      "key": "insurance_house_commission",
+      "title": "insurance_house_commission",
+      "default": 1,
+      "min": 1,
+      "max": 10,
+      "type": "input",
+      "style": "sub-text=%",
+      "group": "group3"
+    },
+    { "type": "line" },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "default": true, "type": "active_toggle", "true_group": "group5" },
+    { "default": [100, 366, 366], "type": "link", "data": ["removal", "group55", "stack_link"], "group": "group5" },
+    { "key": "stack_removal_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "removal" },
+    { "key": "stack_removal_bb1", "title": "bb", "default": 50, "min": 0, "max": 5000, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option1",
+      "title": "stack_removal_option1",
+      "default": 10,
+      "min": 1,
+      "max": 200,
+      "type": "input2",
+      "style": "sub-text=hand",
+      "group": "stack_link"
+    },
+    { "key": "stack_removal_bb2", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option2",
+      "title": "stack_removal_option2",
+      "default": 10,
+      "min": 1,
+      "max": 200,
+      "type": "input2",
+      "style": "sub-text=min_2",
+      "group": "stack_link"
+    },
+    { "default": "stack_removal_option3", "type": "text", "group": "group5" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "default": true, "type": "toggle" },
+    { "key": "nolook_allin", "title": "nolook_allin", "default": true, "type": "toggle" },
+    { "key": "run_it_multi", "title": "run_it_multi", "default": true, "type": "toggle" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "default": false, "type": "toggle" },
+    { "key": "anonymous", "title": "anonymous", "default": false, "type": "toggle" },
+    { "key": "community_ban", "title": "community_ban", "default": false, "type": "toggle" },
+    { "key": "spectator_ban", "title": "spectator_ban", "default": false, "type": "toggle" },
+    { "key": "device_ban", "title": "device_ban", "default": false, "type": "toggle" },
+    { "title": "t_start_time", "default": true, "type": "active_toggle", "true_group": "late" },
+    { "type": "link", "data": ["prize5", "prize6"] },
+    { "default": "total_buyin", "type": "text", "group": "prize5" },
+    { "title": "total_buyin", "type": "info", "group": "prize6" },
+    { "type": "link", "data": ["late1", "late2", "late3"] },
+    { "key": "rate_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "late1" },
+    {
+      "key": "rate_before",
+      "title": "rate_before",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0.#} min_2",
+      "group": "late2"
+    },
+    {
+      "key": "rate_after",
+      "title": "rate_after",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0.#} min_2",
+      "group": "late3"
+    },
+    {
+      "key": "t_reentry_count",
+      "title": "t_reentry_count",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "group": "late3"
+    },
+    { "title": "t_late_reg_time_reentry_count", "default": true, "type": "active_toggle", "true_group": "late2", "group": "late" },
+    { "default": 5, "type": "radio_slider", "data": [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50], "style": "unit={0:0.#} min_2", "group": "late2" },
+    { "title": "t_reentry_count", "default": true, "type": "active_toggle", "true_group": "late3", "group": "late" },
+    {
+      "key": "t_reentry_count",
+      "title": "t_reentry_count",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "style": "unit={0:0.#} min_2",
+      "group": "late3"
+    },
+    {
+      "key": "personnel",
+      "title": "personal",
+      "default": 3,
+      "type": "radio_slider",
+      "data": [2, 6, 8, 9],
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    {
+      "key": "t_min_max_player",
+      "title": "t_min_player_1",
+      "default": [0, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200],
+      "data_type": "int",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "title": "t_min_player_des" },
+    { "default": "sng", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "title": "t_start_time", "default": true, "type": "active_toggle", "true_group": "late" },
+    { "default": "t_start_time", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "key": "t_start_time", "title": "t_start_time", "default": "t_start_time", "max": 1000, "type": "date", "group": "late" },
+    { "title": "t_reentry_count", "default": true, "type": "active_toggle", "true_group": "reentry" },
+    {
+      "title": "t_reentry_count",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "group": "reentry"
+    },
+    { "title": "t_reentry_count_des" },
+    { "type": "link", "data": ["prize5", "prize6"] },
+    { "default": "total_buyin", "type": "text", "group": "prize5" },
+    { "title": "total_buyin", "type": "info", "group": "prize6" },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    { "key": "timebank", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "default": 0, "min": 0, "max": 10000000, "type": "input", "style": "sub-text=bb", "group": "group1" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "default": false, "type": "active_toggle", "true_group": "extra_group" },
+    {
+      "key": "extra_blind",
+      "title": "extra_blind",
+      "default": 50,
+      "min": 1,
+      "max": 5000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "extra_group",
+      "group_1": "eb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "type": "space" },
+    { "key": "buyin_min", "title": "buyin_min", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "buyin_max", "title": "buyin_max", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "nolook_allin", "title": "nolook_allin", "default": true, "type": "toggle" },
+    { "key": "device_ban", "title": "device_ban", "default": false, "type": "toggle" },
+    { "key": "timebank", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "default": 0, "min": 0, "max": 10000000, "type": "input", "style": "sub-text=bb", "group": "group1" },
+    {
+      "key": "small_blind",
+      "title": "small_blind",
+      "default": 10,
+      "min": 1,
+      "max": 1000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "sb",
+      "event": { "changed": [{ "event": "ButtonBlindChange" }] }
+    },
+    { "key": "ante", "title": "ante", "default": 20, "min": 1, "max": 2000, "type": "input", "style": "sub-text=chip" },
+    { "key": "tbs", "title": "tripsBeatStraight", "default": false, "type": "toggle" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "default": false, "type": "active_toggle", "true_group": "extra_group" },
+    {
+      "key": "extra_blind",
+      "title": "extra_blind",
+      "default": 50,
+      "min": 1,
+      "max": 5000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "extra_group",
+      "group_1": "eb",
+      "event": { "changed": [{ "event": "ButtonBlindChange" }] }
+    },
+    { "type": "space" },
+    { "key": "buyin_min", "title": "buyin_min", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "buyin_max", "title": "buyin_max", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "nolook_allin", "title": "nolook_allin", "default": true, "type": "toggle" },
+    { "key": "device_ban", "title": "device_ban", "default": false, "type": "toggle" },
+    { "default": [0.5, 9], "type": "link", "data": ["", "accountlink1"] },
+    { "default": "account_link", "type": "text", "style": "text-align=left;font-size=40;color=#DAA520", "group": "accountlink1" },
+    {
+      "title": "language_setting",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "my_language" }] }
+    },
+    {
+      "title": "notification_setting",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "push" }] }
+    },
+    {
+      "title": "customer_help",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_history;icon-align=right",
+      "event": { "clicked": [{ "event": "open_url", "url": "https://www.pocketacesinc.com/" }] }
+    },
+    { "default": [0.5, 9], "type": "link", "data": ["", "version2"] },
+    {},
+    {
+      "key": "buyinsize_dess",
+      "title": "buyinsize_dess",
+      "default": false,
+      "type": "toggle",
+      "event": { "load_end": [{ "event": "load_prefs", "key": "autobuyin" }], "changed": [{ "event": "save_prefs", "key": "autobuyin" }] }
+    },
+    { "default": "buyinsize_des_1", "type": "text" },
+    { "type": "line" },
+    {
+      "title": "autorebuy",
+      "default": false,
+      "type": "active_toggle",
+      "true_group": "group69",
+      "event": { "load_end": [{ "event": "load_prefs", "key": "autorebuy" }], "changed": [{ "event": "save_prefs", "key": "autorebuy" }] }
+    },
+    { "default": "autorebuy_desc", "type": "text", "group": "group69" },
+    {
+      "key": "autorebuy_chip",
+      "title": "autorebuy_chip",
+      "default": [0, 5],
+      "type": "radio_dual_slider",
+      "data": [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
+      "data_type": "int",
+      "style": "unit={0:#,##0}%",
+      "group": "group69",
+      "event": {
+        "load_end": [
+          { "event": "load_prefs", "key": "autorebuy_chip" },
+          { "event": "value_text", "group": "autorebuy_value" }
+        ],
+        "changed": [
+          { "event": "save_prefs", "key": "autorebuy_chip" },
+          { "event": "dual_limit", "min_maximum": 11 },
+          { "event": "value_text", "group": "autorebuy_value" }
+        ]
+      }
+    },
+    { "default": "autorebuy_des", "type": "text", "group": "group69", "group_1": "autorebuy_value" },
+    { "type": "line" },
+    { "default": "autotimebank", "type": "text", "style": "font-size=38;color=#ffffff" },
+    {
+      "title": "",
+      "default": 2,
+      "names": ["alwaysbank_1", "includingbank_1", "excludingbank_1", "neverbank_1"],
+      "type": "radio_v1",
+      "data": [1, 2, 3, 4],
+      "style": "align=left;color=#818181",
+      "group": "timebank",
+      "event": { "load_end": [{ "event": "load_prefs", "key": "auto_timebank" }], "changed": [{ "event": "save_prefs", "key": "auto_timebank" }] }
+    },
+    { "type": "line" },
+    { "title": "accout_select", "type": "info", "style": "text-align=left;font-size=32;color=#DAA520", "event": { "load_end": [{ "event": "fun_account" }] } },
+    {
+      "key": "personnel",
+      "title": "personal",
+      "default": 3,
+      "type": "radio_slider",
+      "data": [2, 6, 8, 9],
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "space" },
+    { "key": "timebank", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "default": 0, "min": 0, "max": 10000000, "type": "input", "style": "sub-text=bb", "group": "group1" },
+    { "key": "time_price", "title": "time_price", "default": 1, "min": 1, "max": 10, "type": "input", "style": "sub-text=bb" },
+    { "key": "time_extension", "title": "time_extension", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec" },
+    { "key": "tb2", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "tb2_time", "title": "timebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "tb2_price", "title": "addtime_price", "default": 1, "min": 1, "max": 10000000, "type": "input", "style": "sub-text=chip", "group": "group1" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "default": false, "type": "active_toggle", "true_group": "extra_group" },
+    {
+      "key": "extra_blind",
+      "title": "extra_blind",
+      "default": 50,
+      "min": 1,
+      "max": 5000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "extra_group",
+      "group_1": "eb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "type": "space" },
+    { "key": "buyin_min", "title": "buyin_min", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "buyin_max", "title": "buyin_max", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "rake", "title": "rake", "default": true, "type": "active_toggle", "true_group": "group22", "style": "sub-text=bb" },
+    {
+      "key": "rake_2",
+      "title": "rake_1",
+      "default": 4,
+      "type": "radio_slider",
+      "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 48, 50],
+      "data_type": "int",
+      "style": "unit={0:#,##0}%",
+      "group": "group22"
+    },
+    { "key": "rakecap", "title": "rakecap", "default": 10, "min": 1, "max": 5000, "type": "input", "style": "sub-text=bb", "group": "group22" },
+    {
+      "key": "jackpot_fund",
+      "title": "jackpot_fund",
+      "default": 0.1,
+      "min": 0.1,
+      "max": 10,
+      "type": "input",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group22"
+    },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "default": true, "type": "active_toggle", "true_group": "active" },
+    { "default": [100, 366, 366], "type": "link", "data": ["passive_radio", "group2", "group26"], "group": "active" },
+    { "key": "passive_rake_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "passive_radio" },
+    { "key": "pr1", "title": "passive_rake_1", "default": 1, "min": 1, "max": 100, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr2", "title": "passive_rake_2", "default": 10, "min": 10, "max": 999, "type": "input2", "group": "group26" },
+    { "key": "pr3", "title": "passive_rake_3", "default": 1, "min": 1, "max": 100, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr4", "title": "passive_rake_4", "default": 10, "min": 10, "max": 999, "type": "input2", "group": "group26" },
+    { "type": "line" },
+    {
+      "key": "game_length",
+      "title": "game_length",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "style": "unit={0:0.#} hours"
+    },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "default": true, "type": "active_toggle", "true_group": "group3" },
+    {
+      "key": "insurance_house_commission",
+      "title": "insurance_house_commission",
+      "default": 1,
+      "min": 1,
+      "max": 10,
+      "type": "input",
+      "style": "sub-text=%",
+      "group": "group3"
+    },
+    { "type": "line" },
+    {
+      "key": "autostart_condition1",
+      "title": "autostart_condition1",
+      "type": "radio_slider",
+      "data": [2, 3, 4, 5, 6, 7, 8, 9],
+      "group": "group4",
+      "group_1": "autostart_condition1",
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "default": true, "type": "active_toggle", "true_group": "group5" },
+    { "default": [100, 366, 366], "type": "link", "data": ["removal", "group55", "stack_link"], "group": "group5" },
+    { "key": "stack_removal_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "removal" },
+    { "key": "stack_removal_bb1", "title": "bb", "default": 50, "min": 0, "max": 5000, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option1",
+      "title": "stack_removal_option1",
+      "default": 10,
+      "min": 1,
+      "max": 200,
+      "type": "input2",
+      "style": "sub-text=hand",
+      "group": "stack_link"
+    },
+    { "key": "stack_removal_bb2", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option2",
+      "title": "stack_removal_option2",
+      "default": 10,
+      "min": 1,
+      "max": 200,
+      "type": "input2",
+      "style": "sub-text=min_2",
+      "group": "stack_link"
+    },
+    { "default": "stack_removal_option3", "type": "text", "group": "group5" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "default": true, "type": "toggle" },
+    { "key": "nolook_allin", "title": "nolook_allin", "default": true, "type": "toggle" },
+    { "key": "run_it_multi", "title": "run_it_multi", "default": true, "type": "toggle" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "default": false, "type": "toggle" },
+    { "key": "anonymous", "title": "anonymous", "default": false, "type": "toggle" },
+    { "key": "community_ban", "title": "community_ban", "default": false, "type": "toggle" },
+    { "key": "spectator_ban", "title": "spectator_ban", "default": false, "type": "toggle" },
+    { "key": "device_ban", "title": "device_ban", "default": false, "type": "toggle" },
+    { "type": "ui", "style": "title=table_edit;align=center" },
+    { "default": "sng", "type": "text", "style": "font-size=34;color=#ffffff" },
+    {
+      "key": "total_player",
+      "title": "total_player",
+      "type": "radio_slider",
+      "data": [
+        9, 18, 27, 36, 45, 54, 63, 72, 81, 90, 99, 108, 117, 126, 135, 144, 153, 162, 171, 180, 189, 198, 207, 216, 225, 234, 243, 252, 261, 270, 279, 288, 297,
+        306, 315, 324, 333, 342, 351, 360, 369, 378, 387, 396, 405, 414, 423, 432, 441, 450, 459, 468, 477, 486, 495, 504, 513, 522, 531, 540, 549, 558, 567,
+        576, 585, 594, 603, 612, 621, 630, 639, 648, 657, 666, 675, 684, 693, 702, 711, 720, 729, 738, 747, 756, 765, 774, 783, 792, 801, 810, 819, 828, 837,
+        846, 855, 864, 873, 882, 891, 900, 909, 918, 927, 936, 945, 954, 963, 972, 981, 990, 999
+      ]
+    },
+    {
+      "key": "personnel",
+      "title": "personal",
+      "type": "radio_slider",
+      "data": [2, 6, 8, 9],
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "key": "late_registration", "title": "late_registration", "min": 1, "max": 38, "type": "input" },
+    { "key": "rebuy", "title": "rebuy", "default": true, "type": "toggle" },
+    {
+      "key": "action_time",
+      "title": "action_time",
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0} sec"
+    },
+    { "key": "ticketprice_rake", "title": "ticketprice_rake", "min": 0, "max": 1000000, "type": "input", "style": "sub-text=ticket" },
+    { "key": "ticketprice_chip", "title": "ticketprice_chip", "min": 0, "max": 1000000, "type": "input", "style": "sub-text=chip" },
+    { "key": "startingstack", "title": "startingstack", "default": 10000, "min": 1, "max": 10000, "type": "input", "style": "sub-text=chip" },
+    { "key": "blind_Structure", "title": "blind_Structure", "type": "radio", "data": ["normal", "turbo", "hyper"] },
+    { "key": "blinds_up", "title": "blinds_up", "min": 2, "max": 45, "type": "input" },
+    { "key": "timebankgiven", "title": "timebankgiven", "type": "radio_slider", "data": [1, 2, 3, 4, 5, 6, 7, 8, 9] },
+    { "key": "timebanklength", "title": "timebanklength", "min": 1, "max": 999, "type": "input", "style": "sub-text=sec" },
+    { "key": "payout", "title": "payout", "type": "radio", "data": ["defalt", "custom"] },
+    { "key": "radom_sit_in", "title": "radom_sit_in", "default": false, "type": "toggle" },
+    { "key": "create_gameroom", "title": "create_gameroom", "default": false, "type": "toggle" },
+    { "key": "community_ban", "title": "community_ban", "default": false, "type": "toggle" },
+    { "key": "spectator_ban", "title": "spectator_ban", "default": false, "type": "toggle" },
+    { "key": "device_ban", "title": "device_ban", "default": false, "type": "toggle" },
+    { "key": "gps_location", "title": "gps_location", "default": false, "type": "toggle" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"] },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "edit_table", "game_type": "sng" }] }
+    },
+    { "title": "delete", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "delete_table" }] } },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": true }] } },
+    { "title": "t_start_time", "default": true, "type": "active_toggle", "true_group": "late" },
+    { "default": "sng", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "title": "t_start_time", "default": true, "type": "active_toggle", "true_group": "late" },
+    { "default": "t_start_time", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "key": "t_start_time", "title": "t_start_time", "default": "t_start_time", "max": 1000, "type": "date", "group": "late" },
+    { "title": "t_reentry_count", "default": true, "type": "active_toggle", "true_group": "reentry" },
+    {
+      "title": "t_reentry_count",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "group": "reentry"
+    },
+    { "title": "t_reentry_count_des" },
+    { "type": "link", "data": ["prize5", "prize6"] },
+    { "default": "total_buyin", "type": "text", "group": "prize5" },
+    { "title": "total_buyin", "type": "info", "group": "prize6" },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "key": "personnel",
+      "title": "personal",
+      "default": 3,
+      "type": "radio_slider",
+      "data": [2, 6, 8, 9],
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "key": "timebank", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "default": 0, "min": 0, "max": 10000000, "type": "input", "style": "sub-text=bb", "group": "group1" },
+    { "key": "tb2", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "tb2_time", "title": "timebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "tb2_price", "title": "addtime_price", "default": 1, "min": 1, "max": 10000000, "type": "input", "style": "sub-text=chip", "group": "group1" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "default": false, "type": "active_toggle", "true_group": "extra_group" },
+    {
+      "key": "extra_blind",
+      "title": "extra_blind",
+      "default": 50,
+      "min": 1,
+      "max": 5000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "extra_group",
+      "group_1": "eb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "type": "space" },
+    { "key": "buyin_min", "title": "buyin_min", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "buyin_max", "title": "buyin_max", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "rake", "title": "rake", "default": true, "type": "active_toggle", "true_group": "group22", "style": "sub-text=bb" },
+    {
+      "key": "rake_2",
+      "title": "rake_1",
+      "default": 4,
+      "type": "radio_slider",
+      "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 48, 50],
+      "data_type": "int",
+      "style": "unit={0:#,##0}%",
+      "group": "group22"
+    },
+    { "key": "rakecap", "title": "rakecap", "default": 10, "min": 1, "max": 5000, "type": "input", "style": "sub-text=bb", "group": "group22" },
+    {
+      "key": "jackpot_fund",
+      "title": "jackpot_fund",
+      "default": 0.1,
+      "min": 1,
+      "max": 99999999,
+      "type": "input",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group22"
+    },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "default": true, "type": "active_toggle", "true_group": "active" },
+    { "default": [100, 366, 366], "type": "link", "data": ["passive_radio", "group2", "group26"], "group": "active" },
+    { "key": "passive_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "passive_radio" },
+    { "key": "pr1", "title": "passive_rake_1", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr2", "title": "passive_rake_2", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    { "key": "pr3", "title": "passive_rake_3", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr4", "title": "passive_rake_4", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    {
+      "key": "autostart_condition1",
+      "title": "autostart_condition1",
+      "type": "radio_slider",
+      "data": [2, 3, 4, 5, 6, 7, 8, 9],
+      "group": "group4",
+      "group_1": "autostart_condition1",
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "default": true, "type": "active_toggle", "true_group": "group5" },
+    { "default": [100, 366, 366], "type": "link", "data": ["removal", "group55", "stack_link"], "group": "group5" },
+    { "key": "stack_removal_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "removal" },
+    { "key": "stack_removal_bb1", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option1",
+      "title": "stack_removal_option1",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=hand",
+      "group": "stack_link"
+    },
+    { "key": "stack_removal_bb2", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option2",
+      "title": "stack_removal_option2",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=min_2",
+      "group": "stack_link"
+    },
+    { "key": "nolook_allin", "title": "nolook_allin", "default": true, "type": "toggle" },
+    { "key": "spectator_ban", "title": "spectator_ban", "default": false, "type": "toggle" },
+    { "key": "device_ban", "title": "device_ban", "default": false, "type": "toggle" },
+    { "key": "timebank", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "default": 0, "min": 0, "max": 10000000, "type": "input", "style": "sub-text=bb", "group": "group1" },
+    { "key": "tb2", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "tb2_time", "title": "timebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "tb2_price", "title": "addtime_price", "default": 1, "min": 1, "max": 10000000, "type": "input", "style": "sub-text=chip", "group": "group1" },
+    {
+      "key": "small_blind",
+      "title": "small_blind",
+      "default": 10,
+      "min": 1,
+      "max": 1000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "sb"
+    },
+    { "key": "tripsBeatStraight", "title": "tripsBeatStraight", "default": false, "type": "toggle" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "default": false, "type": "active_toggle", "true_group": "extra_group" },
+    {
+      "key": "extra_blind",
+      "title": "extra_blind",
+      "default": 50,
+      "min": 1,
+      "max": 5000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "extra_group",
+      "group_1": "eb"
+    },
+    { "type": "space" },
+    { "key": "buyin_min", "title": "buyin_min", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "buyin_max", "title": "buyin_max", "min": 1, "max": 99999999, "type": "input", "style": "sub-text=bb" },
+    { "key": "ante", "title": "ante", "default": 0, "min": 0, "max": 2, "type": "input", "data_type": "float", "style": "sub-text=bb" },
+    { "key": "rake", "title": "rake", "default": true, "type": "active_toggle", "true_group": "group22", "style": "sub-text=bb" },
+    {
+      "key": "rake_2",
+      "title": "rake_1",
+      "default": 4,
+      "type": "radio_slider",
+      "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 48, 50],
+      "data_type": "int",
+      "style": "unit={0:#,##0}%",
+      "group": "group22"
+    },
+    { "key": "rakecap", "title": "rakecap", "default": 10, "min": 1, "max": 5000, "type": "input", "style": "sub-text=bb", "group": "group22" },
+    {
+      "key": "jackpot_fund",
+      "title": "jackpot_fund",
+      "default": 0.1,
+      "min": 1,
+      "max": 99999999,
+      "type": "input",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group22"
+    },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "default": true, "type": "active_toggle", "true_group": "active" },
+    { "default": [100, 366, 366], "type": "link", "data": ["passive_radio", "group2", "group26"], "group": "active" },
+    { "key": "passive_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "passive_radio" },
+    { "key": "pr1", "title": "passive_rake_1", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr2", "title": "passive_rake_2", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    { "key": "pr3", "title": "passive_rake_3", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr4", "title": "passive_rake_4", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    {
+      "key": "autostart_condition1",
+      "title": "autostart_condition1",
+      "type": "radio_slider",
+      "data": [2, 3, 4, 5, 6, 7, 8, 9],
+      "group": "group4",
+      "group_1": "autostart_condition1"
+    },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "default": true, "type": "active_toggle", "true_group": "group5" },
+    { "default": [100, 366, 366], "type": "link", "data": ["removal", "group55", "stack_link"], "group": "group5" },
+    { "key": "stack_removal_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "removal" },
+    { "key": "stack_removal_bb1", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option1",
+      "title": "stack_removal_option1",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=hand",
+      "group": "stack_link"
+    },
+    { "key": "stack_removal_bb2", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option2",
+      "title": "stack_removal_option2",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=min_2",
+      "group": "stack_link"
+    },
+    { "key": "nolook_allin", "title": "nolook_allin", "default": true, "type": "toggle" },
+    { "key": "spectator_ban", "title": "spectator_ban", "default": false, "type": "toggle" },
+    { "key": "device_ban", "title": "device_ban", "default": false, "type": "toggle" },
+    { "key": "timebank", "title": "timebank", "type": "info", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "type": "info", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "type": "info", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "type": "info", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "type": "info", "style": "sub-text=bb", "group": "group1" },
+    { "key": "time_price", "title": "time_price", "type": "info", "style": "sub-text=bb" },
+    { "key": "time_extension", "title": "time_extension", "type": "info", "style": "sub-text=sec" },
+    { "key": "tb2", "title": "timebank", "type": "info", "true_group": "tb2" },
+    { "key": "tb2_time", "title": "timebank", "type": "info", "style": "sub-text=sec", "group": "tb2" },
+    { "key": "tb2_price", "title": "addtime_price", "type": "info", "style": "sub-text=chip", "group": "tb2" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "type": "info", "true_group": "extra_blind_option" },
+    { "key": "extra_blind", "title": "extra_blind", "type": "info", "data_type": "int", "style": "sub-text=chip", "group": "extra_blind_option" },
+    { "key": "buyin", "title": "buyin", "type": "info", "data_type": "int", "style": "unit={0:0} bb", "group": "buyin_group" },
+    { "key": "jackpot_fund", "title": "jackpot_fund", "type": "info", "data_type": "float", "style": "sub-text=bb", "group": "rake" },
+    { "key": "passive_rake", "title": "passive_rake", "type": "info" },
+    { "type": "link", "data": ["passive_rake_state1", "", "passive_rake_state2"], "group": "passive_rake_select1", "group_1": "passive_rake_selects" },
+    { "key": "pr1", "title": "passive_rake_1", "type": "info", "style": "sub-text=bb", "group": "passive_rake_state1" },
+    { "key": "pr2", "title": "passive_rake_2", "type": "info", "group": "passive_rake_state2" },
+    { "type": "link", "data": ["passive_rake_state3", "", "passive_rake_state4"], "group": "passive_rake_select2", "group_1": "passive_rake_selects" },
+    { "key": "pr3", "title": "passive_rake_3", "type": "info", "style": "sub-text=bb", "group": "passive_rake_state3" },
+    { "key": "pr4", "title": "passive_rake_4", "type": "info", "group": "passive_rake_state4" },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "type": "info", "true_group": "insurance" },
+    { "key": "insurance_house_commission", "title": "insurance_house_commission", "type": "info", "style": "sub-text=%", "group": "insurance" },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "type": "info" },
+    { "type": "link", "data": ["stack_removal_state1", "", "stack_removal_state2"], "group": "stack_removal_select1", "group_1": "stack_removal_selects" },
+    { "key": "stack_removal_bb1", "title": "bb", "type": "info", "style": "sub-text=bb", "group": "stack_removal_state1" },
+    { "key": "stack_removal_option1", "title": "stack_removal_option1", "type": "info", "style": "sub-text=hand", "group": "stack_removal_state2" },
+    { "type": "link", "data": ["stack_removal_state3", "", "stack_removal_state4"], "group": "stack_removal_select2", "group_1": "stack_removal_selects" },
+    { "key": "stack_removal_bb2", "title": "bb", "type": "info", "style": "sub-text=bb", "group": "stack_removal_state3" },
+    { "key": "stack_removal_option2", "title": "stack_removal_option2", "type": "info", "style": "sub-text=min_2", "group": "stack_removal_state4" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "type": "info" },
+    { "key": "nolook_allin", "title": "nolook_allin", "type": "info" },
+    { "key": "run_it_multi", "title": "run_it_multi", "type": "info" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "type": "info" },
+    { "key": "anonymous", "title": "anonymous", "type": "info" },
+    { "key": "community_ban", "title": "community_ban", "type": "info" },
+    { "key": "spectator_ban", "title": "spectator_ban", "type": "info" },
+    { "key": "device_ban", "title": "device_ban", "type": "info" },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "scene_change", "param": "nlh_edit" }] }
+    },
+    { "type": "ui", "style": "title=sng_info;align=center" },
+    { "key": "total_player", "title": "total_player", "type": "info" },
+    { "key": "personnel", "title": "personal", "type": "info" },
+    { "key": "late_registration", "title": "late_registration", "type": "info" },
+    { "key": "rebuy", "title": "rebuy", "type": "info" },
+    { "key": "action_time", "title": "action_time", "type": "info", "style": "unit={0:0} sec" },
+    { "key": "ticketprice_rake", "title": "ticketprice_rake", "type": "info", "style": "sub-text=ticket" },
+    { "key": "ticketprice_chip", "title": "ticketprice_chip", "type": "info", "style": "sub-text=chip" },
+    { "key": "startingstack", "title": "startingstack", "type": "info", "style": "sub-text=chip" },
+    { "key": "blind_Structure", "title": "blind_Structure", "type": "info" },
+    { "key": "blinds_up", "title": "blinds_up", "type": "info" },
+    { "key": "timebankgiven", "title": "timebankgiven", "type": "info" },
+    { "key": "timebanklength", "title": "timebanklength", "type": "info", "style": "sub-text=sec" },
+    { "key": "payout", "title": "payout", "type": "info" },
+    { "key": "radom_sit_in", "title": "radom_sit_in", "type": "info" },
+    { "key": "create_gameroom", "title": "create_gameroom", "type": "info" },
+    { "key": "community_ban", "title": "community_ban", "type": "info" },
+    { "key": "spectator_ban", "title": "spectator_ban", "type": "info" },
+    { "key": "device_ban", "title": "device_ban", "type": "info" },
+    { "key": "gps_location", "title": "gps_location", "type": "info" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"], "event": { "load_end": [{ "event": "show_only_in_cafe" }] } },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "scene_change", "param": "nlh_edit" }] }
+    },
+    { "title": "enter_1", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "enter_table" }] } },
+    {
+      "title": "enter_1",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "enter_table" }], "load_end": [{ "event": "show_only_in_play" }] }
+    },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": false }] } },
+    { "type": "ui", "style": "title=mtt_info;title-align=center" },
+    { "key": "total_player", "title": "total_player", "type": "info" },
+    { "key": "personnel", "title": "personal", "type": "info" },
+    { "key": "schedule", "title": "schedule", "type": "info", "true_group": "group6" },
+    { "key": "resrvationtime", "title": "resrvationtime", "type": "info", "group": "group6" },
+    { "key": "start_time", "title": "start_time", "type": "info", "group": "group6" },
+    { "key": "resrvationdeadline", "title": "resrvationdeadline", "type": "info", "group": "group6" },
+    { "key": "break_schedule", "title": "break_schedule", "type": "info", "group": "group6" },
+    { "key": "break_time", "title": "break_time", "type": "info", "style": "sub-text=min", "group": "group6" },
+    { "key": "late_registration", "title": "late_registration", "type": "info", "group": "group6" },
+    { "key": "rebuy", "title": "rebuy", "type": "info", "true_group": "group7" },
+    { "key": "rebuy_limit", "title": "rebuy_limit", "type": "info", "group": "group7" },
+    { "key": "action_time", "title": "action_time", "type": "info", "style": "unit={0:0 } sec" },
+    { "key": "ticketprice_rake", "title": "ticketprice_rake", "type": "info", "style": "sub-text=ticket" },
+    { "key": "ticketprice_chip", "title": "ticketprice_chip", "type": "info", "style": "sub-text=bb" },
+    { "key": "guarantee", "title": "guarantee", "type": "info", "true_group": "group8" },
+    { "key": "prizepool", "title": "prizepool", "type": "info", "style": "sub-text=bb", "group": "group8" },
+    { "key": "startingstack", "title": "startingstack", "type": "info", "style": "sub-text=bb" },
+    { "key": "blind_Structure", "title": "blind_Structure", "type": "info" },
+    { "key": "blinds_up", "title": "blinds_up", "type": "info", "style": "sub-text=bb" },
+    { "key": "timebankgiven", "title": "timebankgiven", "type": "info" },
+    { "key": "timebanklength", "title": "timebanklength", "type": "info", "style": "sub-text=sec" },
+    { "key": "payout", "title": "payout", "type": "info" },
+    { "key": "radom_sit_in", "title": "radom_sit_in", "type": "info" },
+    { "key": "community_ban", "title": "community_ban", "type": "info" },
+    { "key": "device_ban", "title": "device_ban", "type": "info" },
+    { "key": "gps_location", "title": "gps_location", "type": "info" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"], "event": { "load_end": [{ "event": "show_only_in_cafe" }] } },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "scene_change", "param": "nlh_edit" }] }
+    },
+    { "title": "enter_1", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "enter_table" }] } },
+    {
+      "title": "enter_1",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "enter_table" }], "load_end": [{ "event": "show_only_in_play" }] }
+    },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": false }] } },
+    { "key": "timebank", "title": "timebank", "type": "info", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "type": "info", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "type": "info", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "type": "info", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "type": "info", "style": "sub-text=bb", "group": "group1" },
+    { "key": "time_price", "title": "time_price", "type": "info", "style": "sub-text=bb" },
+    { "key": "time_extension", "title": "time_extension", "type": "info", "style": "sub-text=sec" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "type": "info", "true_group": "extra_blind_option" },
+    { "key": "extra_blind", "title": "extra_blind", "type": "info", "data_type": "int", "style": "sub-text=chip", "group": "extra_blind_option" },
+    { "key": "buyin", "title": "buyin", "type": "info", "data_type": "int", "style": "unit={0:0} bb", "group": "buyin_group" },
+    { "key": "nolook_allin", "title": "nolook_allin", "type": "info" },
+    { "key": "device_ban", "title": "device_ban", "type": "info" },
+    { "key": "timebank", "title": "timebank", "type": "info", "true_group": "group1" },
+    { "key": "starttimebank", "title": "starttimebank", "type": "info", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addthandbank_1", "title": "addthandbank_1", "type": "info", "style": "sub-text=hand", "group": "group1" },
+    { "key": "addtimebank_2", "title": "addtimebank_2", "type": "info", "style": "sub-text=sec", "group": "group1" },
+    { "key": "addtime_price", "title": "addtime_price", "type": "info", "style": "sub-text=bb", "group": "group1" },
+    { "key": "time_price", "title": "time_price", "type": "info", "style": "sub-text=bb" },
+    { "key": "time_extension", "title": "time_extension", "type": "info", "style": "sub-text=sec" },
+    { "key": "small_blind", "title": "small_blind", "type": "info", "data_type": "int", "style": "sub-text=chip;font-size=42;color=#efc600", "group": "sb" },
+    { "key": "tbs", "title": "tripsBeatStraight", "type": "info" },
+    { "key": "extra_blind_option", "title": "extra_blind_option", "type": "info", "true_group": "extra_blind_option" },
+    { "key": "extra_blind", "title": "extra_blind", "type": "info", "data_type": "int", "style": "sub-text=chip", "group": "extra_blind_option" },
+    { "key": "buyin", "title": "buyin", "type": "info", "data_type": "int", "style": "unit={0:0} bb", "group": "buyin_group" },
+    { "key": "ante", "title": "ante", "type": "info", "data_type": "float", "style": "sub-text=bb" },
+    { "key": "nolook_allin", "title": "nolook_allin", "type": "info" },
+    { "key": "device_ban", "title": "device_ban", "type": "info" },
+    { "key": "t_game_type", "title": "t_game_type", "type": "info", "group": "group1" },
+    { "key": "t_close_time", "title": "t_close_time", "type": "info", "group": "group1" },
+    { "key": "reentry_select", "title": "reentry_select", "type": "info", "group": "group1" },
+    { "key": "t_min_player", "title": "t_min_player", "type": "info", "group": "group1" },
+    { "key": "t_max_player", "title": "t_max_player", "type": "info", "group": "group1" },
+    { "key": "t_action_time", "title": "t_action_time", "type": "info", "group": "group1" },
+    { "key": "tb2", "title": "tb2", "type": "info", "group": "group1" },
+    { "key": "t_time_bank_sec", "title": "t_time_bank_sec", "type": "info", "group": "group1" },
+    { "key": "gtd_select", "title": "gtd_select", "type": "info", "group": "group1" },
+    { "key": "ticket_in_rank", "title": "ticket_in_rank", "type": "info", "group": "group1" },
+    { "key": "t_reward_all_chip", "title": "t_reward_all_chip", "type": "info", "group": "group1" },
+    { "key": "t_blind_up_structure", "title": "blind_structure", "type": "info", "group": "group1" },
+    { "key": "t_is_hide_nickname", "title": "t_is_hide_nickname", "type": "info", "group": "group1" },
+    { "key": "t_is_allow_chat", "title": "t_is_allow_chat", "type": "info", "group": "group1" },
+    { "key": "mtt_live", "title": "mtt_live", "default": false, "type": "active_toggle3", "true_group": "group2", "group": "toggle_group1" },
+    { "key": "blind_level", "title": "blind_level", "type": "info", "group": "group2" },
+    { "key": "next_blind_up_time", "title": "next_blind_up_time", "type": "info", "group": "group2" },
+    { "key": "apply_count", "title": "apply_count", "type": "info", "group": "group2" },
+    { "key": "rank", "title": "rank", "type": "info", "group": "group2" },
+    { "key": "payout_user_count", "title": "payout_user_count", "type": "info", "group": "group2" },
+    { "key": "mtt_payout", "title": "mtt_payout", "default": false, "type": "active_toggle2", "true_group": "group3" },
+    { "key": "mtt_payout_module", "title": "", "default": "mtt_payout_structure", "type": "image", "style": "width=708;height=864", "group": "group3" },
+    { "key": "scale", "title": "buyin_scale", "type": "input", "event": { "changed": [{ "event": "BuyinScaleChanged" }] } },
+    { "title": "confirm", "type": "button", "style": "width=424;height=124" },
+    { "key": "t_start_time", "title": "t_start_time", "type": "info", "group": "group1" }
+  ],
+  "cafe_tier": [
+    { "type": "ui", "style": "title=cafe_tier;title-align=center;height=1100" },
+    { "default": "cafe_tier2", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space", "style": "height=0" }
+  ],
+  "cafe_tier_confirm": [
+    { "type": "ui", "style": "title=cafe_tier;title-align=center;height=1100" },
+    { "default": "cafe_tier2", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space", "style": "height=0" }
+  ],
+  "cafe_list": [
+    {
+      "cmt": "카페 옵션",
+      "title": "mm",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cafe_list_mm" }] }
+    },
+    {
+      "title": "ac",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "load_end": [{ "event": "show_only_manager" }], "clicked": [{ "event": "scene_change", "param": "cafe_list_ac" }] }
+    },
+    {
+      "title": "cho",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "load_end": [{ "event": "show_only_owner" }], "clicked": [{ "event": "scene_change", "param": "cafe_list_cho" }] }
+    },
+    {
+      "title": "cafe_branding",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_edit;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "load_end": [{ "event": "show_only_manager" }], "clicked": [{ "event": "popup_open", "param": "cafe_confirm" }] }
+    },
+    {
+      "title": "cafe_noti",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_edit;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "load_end": [{ "event": "show_only_manager" }], "clicked": [{ "event": "popup_open", "param": "cafe_noti" }] }
+    },
+    {
+      "title": "lc",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_edit;icon-align=right",
+      "group": "cafe_list_2",
+      "event": { "clicked": [{ "event": "popup_open", "param": "cafe_list_lc" }] }
+    },
+    {
+      "title": "cafe_disbandcafe",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_edit;icon-align=right",
+      "group": "cafe_list_2",
+      "event": {
+        "load_end": [{ "event": "condition_active", "formula": "{reserveRemove} = 0" }, { "event": "show_only_owner" }],
+        "clicked": [{ "event": "popup_open", "param": "cafe_del" }]
+      }
+    },
+    {
+      "title": "cafe_deletecancel",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=90;text-align=left;icon=icon_edit;icon-align=right",
+      "group": "cafe_list_2",
+      "event": {
+        "load_end": [{ "event": "condition_active", "formula": "{reserveRemove} > 0" }, { "event": "show_only_owner" }],
+        "clicked": [{ "event": "popup_open", "param": "cafe_cancel" }]
+      }
+    }
+  ],
+  "cafe_list_ac": [
+    {
+      "cmt": "가입승인",
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_list" }] }
+        ]
+      }
+    },
+    { "key": "ac", "type": "cafe_join_module", "group": "ac" }
+  ],
+  "cafe_list_mm": [
+    {
+      "cmt": "카페 멤버",
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_list" }] }
+        ]
+      }
+    },
+    { "key": "mm", "type": "table_list", "group": "mm" }
+  ],
+  "cafe_cancel": [
+    { "type": "ui", "style": "title=cafe_deletecancel;title-align=center;height=500" },
+    { "default": "cafe_deletecancel_des", "type": "text", "style": "font-size=34;align=left" },
+    {
+      "key": "cafe_deletecancel",
+      "title": "cafe_deletecancel",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "CP_CAFE_RESERVE_REMOVE", "reserveRemove": 0 }] }
+    }
+  ],
+  "cafe_list_lc": [
+    { "type": "ui", "style": "title=lc;title-align=center;height=500" },
+    { "default": "leave_cafe_des", "type": "text", "style": "font-size=34;color=#ffffff", "group": "lc" },
+    { "type": "space" },
+    {
+      "key": "leave",
+      "title": "leave",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "lc",
+      "event": { "clicked": [{ "event": "CP_CAFE_LEAVE" }] }
+    }
+  ],
+  "cafe_list_cho": [
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_list" }] }
+        ]
+      }
+    },
+    { "key": "cho", "type": "cafe_cho_module", "group": "cho" }
+  ],
+  "cafe_confirm": [
+    { "type": "ui", "style": "title=cafe_option1;title-align=center;height=1400" },
+    { "type": "space" },
+    {
+      "type": "image_button",
+      "data": [""],
+      "style": "width=124;height=124",
+      "event": {
+        "load_end": [{ "event": "subscribe_logo_selector" }],
+        "clicked": [{ "event": "selector_open" }],
+        "clear": [{ "event": "unsubscribe_logo_selector" }]
+      }
+    },
+    { "type": "space" },
+    { "key": "name", "default": "", "max": 16, "type": "input3", "style": "placeholder=cafe_characters" },
+    { "type": "space" },
+    { "title": "line", "type": "line" },
+    { "type": "space" },
+    { "type": "link", "data": ["cafe_tier", "cafe_button1"] },
+    { "default": "cafe_tier", "type": "text", "style": "font-size=34;color=#ffffff", "group": "cafe_tier" },
+    {
+      "title": "",
+      "type": "image_button",
+      "data": ["icon_infor"],
+      "group": "cafe_button1",
+      "event": { "clicked": [{ "event": "popup_open", "param": "cafe_tier_confirm" }] }
+    },
+    { "type": "space" },
+    { "type": "link", "data": ["cafetier1", "cafetier2"] },
+    {
+      "key": "tier",
+      "default": 4,
+      "names": ["diamond", "platinum", "gold", "silver", "bronze"],
+      "type": "radio_v1",
+      "data": [5, 4, 3, 2, 1],
+      "style": "align=left",
+      "group": "cafetier1"
+    },
+    { "default": "cafe_zuice_diamond", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_platinum", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_gold", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_sliver", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "default": "cafe_zuice_bronze", "type": "icon_text", "data": "icon_zuice", "style": "icon_scale=0.5", "group": "cafetier2" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "override_cafe_data" }] } },
+    { "type": "sub_start" },
+    { "title": "cafe_confirm", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "CP_CAFE_UPDATE" }] } },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": "`" }
+  ],
+  "cafe_host": [
+    { "type": "ui", "style": "title=cafe_hosting;title-align=center" },
+    { "default": [240, 130, 160, 160, 160, 50], "type": "link", "data": ["host1", "host2", "host3", "host4", "host5", ""] },
+    { "default": "", "type": "text", "style": "font-size=34;align=center", "group": "host1" },
+    { "default": "owner", "type": "text", "style": "font-size=34;align=center", "group": "host2" },
+    { "default": "super_manager", "type": "text", "style": "font-size=34;align=center", "group": "host3" },
+    { "default": "manager", "type": "text", "style": "font-size=34;align=center", "group": "host4" },
+    { "default": "member", "type": "text", "style": "font-size=34;align=center", "group": "host5" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text2", "text3", ""] },
+    { "default": "cafe_hosting_1", "type": "text", "style": "font-size=34;align=center", "group": "text2" },
+    { "key": "cafe_hosting_1", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text3" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text4", "text5", ""] },
+    { "default": "cafe_confirm", "type": "text", "style": "font-size=34;align=center", "group": "text4" },
+    { "key": "cafe_confirm", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text5" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text6", "text7", ""] },
+    { "default": "cafe_delete_popup", "type": "text", "style": "font-size=34;align=center", "group": "text6" },
+    { "key": "cafe_delete_popup", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text7" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text8", "text9", ""] },
+    { "default": "approve_1", "type": "text", "style": "font-size=34;align=center", "group": "text8" },
+    { "key": "ac", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text9" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text10", "text11", ""] },
+    { "default": "cafe_option4", "type": "text", "style": "font-size=34;align=center", "group": "text10" },
+    { "key": "cafe_option4", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text11" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text12", "text13", ""] },
+    { "default": "room_create", "type": "text", "style": "font-size=34;align=center", "group": "text12" },
+    { "key": "room_create", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text13" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text14", "text15", ""] },
+    { "default": "table_edit", "type": "text", "style": "font-size=34;align=center", "group": "text14" },
+    { "key": "table_edit", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text15" },
+    { "type": "space" },
+    { "default": [3, 207, 305, 100], "type": "link", "data": ["", "text16", "text17", ""] },
+    { "default": "table_delete", "type": "text", "style": "font-size=34;align=center", "group": "text16" },
+    { "key": "table_delete", "default": [true, false, false, false], "names": ["", "", "", ""], "type": "multi_toggle", "group": "text17" },
+    { "type": "space" },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cafe_list" }] }
+        ]
+      }
+    }
+  ],
+  "cafe_del": [
+    { "type": "ui", "style": "title=cafe_disbandcafe;title-align=center;height=520" },
+    { "default": "cafe_delete_popup1", "type": "text", "style": "font-size=34;align=left" },
+    {
+      "key": "cafe_delete",
+      "title": "cafe_delete",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "CP_CAFE_RESERVE_REMOVE", "reserveRemove": 1 }] }
+    }
+  ],
+  "cafe_noti": [
+    { "type": "ui", "style": "title=cafe_noti;title-align=center;height=500" },
+    { "key": "cafe_noti_1000", "default": "", "max": 1000, "type": "input3", "event": "창을 크게" },
+    { "type": "space" },
+    { "key": "cafe_noticonfirm", "title": "cafe_noticonfirm_1", "type": "button", "style": "width=424;height=124" }
+  ],
+  "cashier_chip": [
+    { "title": "cashier_trade", "type": "ui", "style": "top=75" },
+    {
+      "cmt": 0,
+      "title": "sbb",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=1000;height=90;text-align=left;icon=icon_arrow_small_00",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cashier_chip_1" }] },
+      "": "cashier_chip"
+    },
+    {
+      "title": "confirmsbb",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=1000;height=90;text-align=left;icon=icon_arrow_small_00",
+      "event": { "load_end": [{ "event": "show_only_manager" }], "clicked": [{ "event": "scene_change", "param": "cashier_chip_2" }] },
+      "": "cashier_chip"
+    }
+  ],
+  "cashier_chip_1": [
+    { "cmt": "카페 캐셔", "default": [10, 20, 5, 10], "type": "link", "data": ["", "sum1", "sum2", ""] },
+    {
+      "title": "balance_cashier",
+      "type": "info",
+      "style": "font-size=42;align=right;format={0:#,##0.##}",
+      "group": "sum1",
+      "event": { "load_end": [{ "event": "calculate_value", "formula": "{balance}" }] }
+    },
+    { "default": "icon_chip", "type": "image", "style": "width=50;height=50", "group": "sum2" },
+    { "type": "space" },
+    { "default": [10, 20, 5, 10], "type": "link", "data": ["", "sum3", "sum4", ""] },
+    {
+      "title": "debt_cashier",
+      "type": "info",
+      "style": "font-size=42;align=right;format={0:#,##0.##}",
+      "group": "sum3",
+      "event": { "load_end": [{ "event": "calculate_value", "formula": "{debt}" }] }
+    },
+    { "default": "icon_chip_yellow", "type": "image", "style": "width=70;height=70", "group": "sum4" },
+    { "type": "space" },
+    { "type": "line" },
+    { "type": "link" },
+    {
+      "title": "chip_history_cashier",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=1000;height=90;text-align=left;icon=icon_history;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "chip_history" }] }
+    },
+    { "type": "line" },
+    { "type": "space", "style": "height=15" },
+    { "type": "link", "data": ["sell", "buy", "loan"] },
+    {
+      "title": "sell_cashier",
+      "type": "button",
+      "style": "width=324;height=124;text-align=center",
+      "group": "sell",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cashier_sell" }] }
+    },
+    {
+      "title": "buy_cashier",
+      "type": "button",
+      "style": "width=324;height=124;text-align=center",
+      "group": "buy",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cashier_buy" }] }
+    },
+    {
+      "title": "borrow_cashier",
+      "type": "button",
+      "style": "width=324;height=124;text-align=center",
+      "group": "loan",
+      "event": { "clicked": [{ "event": "scene_change", "param": "cashier_loan" }] }
+    },
+    { "type": "space", "style": "height=15" },
+    { "title": "pending", "type": "my_cashier_order" },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cashier_chip" }] }
+        ]
+      }
+    },
+    { "type": "cafe_cachier_my_order" }
+  ],
+  "cashier_trans": [
+    {
+      "type": "space",
+      "style": "height=50",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          {
+            "event": "btn_back_set",
+            "on_click": [
+              { "event": "scene_change", "param": "cashier_chip_1" },
+              { "event": "condition_active", "formula": "{amount} > 0", "target": "input_completed" }
+            ]
+          }
+        ]
+      }
+    },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "trans", ""] },
+    { "default": "transfer_cashier", "type": "text", "style": "font-size=42;color=#DAA520", "group": "trans" },
+    { "type": "space", "style": "height=50" },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "trans_amount", ""] },
+    {
+      "title": "transferable",
+      "type": "info",
+      "style": "font-size=42;align=right;format={0:#,##0.##}",
+      "group": "trans_amount",
+      "event": { "load_end": [{ "event": "calculate_value", "formula": "{balance}-{debt}" }] }
+    },
+    { "type": "space", "style": "height=100" },
+    { "title": "cafe", "default": [1, 1.8, 0.2, 1], "type": "link", "data": ["", "tran1", "tran2", ""] },
+    { "type": "space", "style": "height=50" },
+    {
+      "key": "amount",
+      "title": "",
+      "min": 0,
+      "type": "input3",
+      "style": "font-size=42;color=#2B2B2B",
+      "group": "tran1",
+      "event": {
+        "load_end": [{ "event": "set_max", "formula": "{balance}-{debt}" }],
+        "changed": [{ "event": "condition_active", "formula": "{amount} > 0", "target": "input_completed" }]
+      }
+    },
+    { "type": "space", "style": "height=22", "group": "tran2" },
+    { "default": "icon_chip", "type": "image", "style": "width=50;height=50", "group": "tran2" },
+    { "type": "line", "group": "tran1" },
+    { "type": "space", "style": "height=0" },
+    {
+      "default": "target_cashier",
+      "type": "text",
+      "style": "font-size=42;color=#DAA520",
+      "group": "input_completed",
+      "event": { "load_end": [{ "event": "condition_active", "formula": "{amount} > 0" }] }
+    },
+    { "key": "toCafeMemberIdx", "type": "transfer_target", "group": "input_completed" },
+    { "type": "space" },
+    {
+      "title": "transfer_cashier",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "input_completed",
+      "event": { "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER", "status": "transfer" }] }
+    }
+  ],
+  "cashier_sell": [
+    {
+      "type": "space",
+      "style": "height=50",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cashier_chip_1" }] }
+        ]
+      }
+    },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "sell", ""] },
+    { "default": "sell_cashier", "type": "text", "style": "font-size=42;color=#DAA520", "group": "sell" },
+    { "type": "space", "style": "height=50" },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "sell_amount", ""] },
+    {
+      "title": "balance_cashier",
+      "type": "info",
+      "style": "font-size=42;align=right;format={0:#,##0.##}",
+      "group": "sell_amount",
+      "event": { "load_end": [{ "event": "calculate_value", "formula": "{balance}" }] }
+    },
+    { "type": "space", "style": "height=100" },
+    { "default": [1, 1.8, 0.2, 1], "type": "link", "data": ["", "sell1", "sell2", ""] },
+    { "type": "space", "style": "height=50" },
+    {
+      "key": "amount",
+      "title": "",
+      "min": 0,
+      "type": "input3",
+      "style": "font-size=42;color=#DAA520",
+      "group": "sell1",
+      "event": { "load_end": [{ "event": "set_max", "formula": "{balance}" }] }
+    },
+    { "type": "space", "style": "height=22", "group": "sell2" },
+    { "default": "icon_chip_blue", "type": "image", "style": "width=50;height=50", "group": "sell2" },
+    { "type": "line", "group": "sell1" },
+    { "type": "space", "style": "height=300" },
+    { "title": "request", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER", "status": "sell" }] } }
+  ],
+  "cashier_buy": [
+    {
+      "type": "space",
+      "style": "height=50",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cashier_chip_1" }] }
+        ]
+      }
+    },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "buy", ""] },
+    { "default": "buy_cashier", "type": "text", "style": "font-size=42;color=#DAA520", "group": "buy" },
+    { "type": "space", "style": "height=50" },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "buy_amount", ""] },
+    {
+      "title": "balance_cashier",
+      "type": "info",
+      "style": "font-size=42;align=right;format={0:#,##0.##}",
+      "group": "buy_amount",
+      "event": { "load_end": [{ "event": "calculate_value", "formula": "{balance}" }] }
+    },
+    { "type": "space", "style": "height=100" },
+    { "default": [1, 1.8, 0.2, 1], "type": "link", "data": ["", "buy1", "buy2", ""] },
+    { "type": "space", "style": "height=50" },
+    { "key": "amount", "title": "", "min": 0, "type": "input3", "style": "font-size=42;color=#2B2B2B", "group": "buy1" },
+    { "type": "space", "style": "height=22", "group": "buy2" },
+    { "default": "icon_chip_red", "type": "image", "style": "width=50;height=50", "group": "buy2" },
+    { "type": "line", "group": "buy1" },
+    { "type": "space", "style": "height=300" },
+    { "title": "request", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER", "status": "buy" }] } }
+  ],
+  "cashier_loan": [
+    {
+      "type": "space",
+      "style": "height=50",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cashier_chip_1" }] }
+        ]
+      }
+    },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "loan", ""] },
+    { "default": "borrow_cashier", "type": "text", "style": "font-size=42;color=#DAA520", "group": "loan" },
+    { "type": "space", "style": "height=50" },
+    { "default": [0.5, 2, 0.5], "type": "link", "data": ["", "loan_amount", ""] },
+    {
+      "title": "balance_cashier",
+      "type": "info",
+      "style": "font-size=42;align=right;format={0:#,##0.##}",
+      "group": "loan_amount",
+      "event": { "load_end": [{ "event": "calculate_value", "formula": "{balance}" }] }
+    },
+    { "type": "space", "style": "height=100" },
+    { "default": [1, 1.8, 0.2, 1], "type": "link", "data": ["", "loan1", "loan2", ""] },
+    { "type": "space", "style": "height=50" },
+    { "key": "amount", "title": "", "min": 0, "type": "input3", "style": "font-size=42; color=#2B2B2B", "group": "loan1" },
+    { "type": "space", "style": "height=22", "group": "loan2" },
+    { "default": "icon_chip_yellow", "type": "image", "style": "width=50;height=50", "group": "loan2" },
+    { "type": "line", "group": "loan1" },
+    { "type": "space", "style": "height=300" },
+    { "title": "request", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "CP_CAFE_MEMBER_ORDER", "status": "borrow" }] } }
+  ],
+  "chip_history": [
+    { "key": "cashier_transation", "title": "cashier_transation", "type": "trans_history", "group": "tradeh" },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": { "load_end": [{ "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cashier_chip_1" }] }] }
+    }
+  ],
+  "cashier_chip_2": [
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": { "load_end": [{ "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "cashier_chip" }] }] }
+    },
+    { "title": "cashier_id", "type": "trade_module", "group": "cb", "group_1": "cashier_id" },
+    { "type": "link", "data": "[\"cashier_id\",\"cashier_money\",\"cashier_currdebt\",\"cashier_accept,cashier_decline]", "group": "cb" }
+  ],
+  "cbh": [
+    { "default": "confirmsbb", "type": "text" },
+    { "type": "link", "data": ["cashier_id", "cashier_money", "cashier_dept"] },
+    { "key": "cashier_id", "title": "cashier_id", "type": "list", "group": "cashier_id" },
+    { "key": "cashier_money", "title": "cashier_money", "type": "list", "group": "cashier_money" },
+    { "key": "cashier_debt", "title": "cashier_debt", "type": "list", "group": "cashier_debt" },
+    { "default": "confirmsbh", "type": "text" },
+    { "type": "link", "data": ["cashier_time", "cashier_borrowing_1", "cashier_totaldebt"] },
+    { "key": "cashier_time", "title": "cashier_time", "type": "list", "group": "cashier_time" },
+    { "key": "cashier_borrowing_1", "title": "confirmsbh", "type": "list", "group": "cashier_borrowing_2" },
+    { "key": "cashier_totaldebt", "title": "cashier_totaldebt", "type": "list", "group": "cashier_totaldebt" }
+  ],
+  "game_t": [
+    { "type": "ui", "style": "title=type_text;title-align=center;height=700" },
+    {
+      "key": "game_type",
+      "default": 0,
+      "names": ["nlh", "plo", "sng", "mtt", "shortdeck_1"],
+      "active_groups": ["nlh", "plo", "sng", "mtt", "short_deck"],
+      "type": "radio_v1",
+      "data": ["nlh", "plo", "sng", "mtt", "short_deck"],
+      "style": "align=left"
+    },
+    { "type": "sub_start" },
+    {
+      "key": "room_create",
+      "title": "room_create",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "create_game_scene_change" }] }
+    },
+    { "type": "sub_end" }
+  ],
+  "nlh": [
+    { "type": "ui", "style": "title=nlh;title-align=center" },
+    {
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "popup_open", "param": "game_t" }] }
+        ]
+      }
+    },
+    { "key": "title", "title": "room_title", "default": "", "type": "input", "data_type": "string" },
+    {
+      "key": "personnel",
+      "title": "personal",
+      "default": 4,
+      "type": "radio_slider",
+      "data": [2, 6, 8, 9],
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "space" },
+    {
+      "key": "action_time",
+      "title": "action_time",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0 } sec"
+    },
+    { "type": "space" },
+    { "type": "line" },
+    { "type": "line" },
+    {
+      "key": "small_blind",
+      "title": "small_blind",
+      "default": 10,
+      "min": 1,
+      "max": 1000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "sb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    {
+      "key": "blind",
+      "title": "blind",
+      "default": 20,
+      "min": 1,
+      "max": 2000,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "bb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "key": "ante", "title": "ante", "default": 0, "min": 0, "max": 2, "type": "input", "data_type": "float", "style": "sub-text=bb" },
+    { "type": "line" },
+    {
+      "key": "buyin",
+      "title": "buyin",
+      "default": [1, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1000000000],
+      "data_type": "int",
+      "style": "unit={0:0} bb",
+      "group": "buyin_group",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "type": "line" },
+    { "key": "rake", "title": "rake", "default": true, "type": "active_toggle", "true_group": "group22", "style": "sub-text=bb" },
+    {
+      "key": "rake_2",
+      "title": "rake_1",
+      "default": 4,
+      "type": "radio_slider",
+      "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 48, 50],
+      "data_type": "int",
+      "style": "unit={0:#,##0}%",
+      "group": "group22"
+    },
+    { "key": "rakecap", "title": "rakecap", "default": 10, "min": 1, "max": 5000, "type": "input", "style": "sub-text=bb", "group": "group22" },
+    {
+      "key": "game_length",
+      "title": "game_length",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "style": "unit={0:0.#} hours"
+    },
+    { "type": "line" },
+    {
+      "cmt": "플레이 최소 인원수",
+      "key": "autostart_condition1",
+      "title": "autostart_condition1",
+      "default": 1,
+      "type": "radio_slider",
+      "data": [2, 3, 4, 5, 6, 7, 8, 9],
+      "group": "group4",
+      "group_1": "autostart_condition1",
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "line" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    {
+      "title": "room_create",
+      "type": "button",
+      "style": "width=424;height=124;anchor=center,center",
+      "event": { "clicked": [{ "event": "CP_CAFE_GAME_CREATE", "game_type": "nlh" }] }
+    },
+    { "type": "sub_end" }
+  ],
+  "mtt": [
+    { "type": "ui", "style": "title=mtt;title-align=center" },
+    {
+      "key": "t_game_type",
+      "default": 0,
+      "names": ["nlh", "plo", "shortdeck_1"],
+      "active_groups": ["nlh", "plo", "shortdeck_1"],
+      "type": "radio_h1",
+      "data": ["nlh", "plo", "shortdeck_1"]
+    },
+    { "default": "t_open_time", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "key": "t_open_time", "title": "t_open_time", "default": "t_open_time", "max": 1000, "type": "date" },
+    { "default": "t_start_time", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "key": "t_start_time", "title": "t_start_time", "default": "t_start_time", "max": 1000, "type": "date", "group": "late" },
+    { "key": "t_close_time", "title": "t_close_time", "default": 50, "min": 0, "max": 100, "type": "slider", "style": "unit={0:0.#} min_2", "group": "late" },
+    { "title": "t_reentry_count", "default": true, "type": "active_toggle", "true_group": "reentry" },
+    {
+      "title": "t_reentry_count",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "group": "reentry"
+    },
+    { "title": "t_reentry_count_des" },
+    {
+      "key": "t_min_max_player",
+      "title": "t_min_player_1",
+      "default": [0, 7],
+      "type": "radio_dual_slider",
+      "data": [5, 10, 30, 50, 100, 150, 200, 1500],
+      "data_type": "int",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "title": "t_min_player_des" },
+    { "type": "link", "data": ["prize2", "prize3", "prize4"] },
+    { "key": "t_buyin", "title": "t_buyin", "default": 50, "min": 0, "max": 5000, "type": "input", "group": "prize2" },
+    { "default": "btn_01e_plus", "type": "image", "style": "width=50;height=50", "group": "prize3" },
+    { "key": "t_buyin_fee", "title": "t_buyin_fee", "default": 10, "min": 1, "max": 200, "type": "input", "group": "prize4" },
+    {
+      "key": "t_action_time",
+      "title": "t_action_time",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0 } sec"
+    },
+    { "key": "tb2", "title": "tb2", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "t_time_bank_sec", "title": "t_time_bank_sec", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "default": "timebank_des", "type": "text" },
+    { "key": "t_starting_chip", "title": "t_starting_chip", "default": 1000, "min": 1, "max": 10000, "type": "input", "style": "sub-text=chip" },
+    { "key": "guarantee", "title": "t_guarantee", "default": true, "type": "active_toggle", "true_group": "group8" },
+    {
+      "key": "t_reward_all_chip",
+      "title": "t_reward_all_chip",
+      "default": 1000,
+      "min": 1,
+      "max": 9999999,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "group8"
+    },
+    { "default": "prizepool_des", "type": "text" },
+    { "default": "blind_Structure", "type": "text" },
+    { "key": "t_blind_up_structure", "title": "t_blind_up_structure", "default": 0, "type": "radio_h1", "data": ["normal", "turbo", "hyper"] },
+    { "key": "t_is_hide_nickname", "title": "t_is_hide_nickname", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_chat", "title": "t_is_allow_chat", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_observer", "title": "t_is_allow_observer", "default": false, "type": "toggle" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    {
+      "title": "room_create",
+      "type": "button",
+      "style": "width=424;height=124;anchor=center,center",
+      "event": { "clicked": [{ "event": "CP_TNMT_CREATE", "t_type": "mtt" }] }
+    },
+    { "type": "sub_end" }
+  ],
+  "sng": [
+    { "type": "ui", "style": "title=game_type_1;title-align=center" },
+    {
+      "key": "t_game_type",
+      "default": 0,
+      "names": ["nlh", "plo", "shortdeck_1"],
+      "active_groups": ["nlh", "plo", "shortdeck_1"],
+      "type": "radio_h1",
+      "data": ["nlh", "plo", "shortdeck_1"]
+    },
+    { "default": "t_open_time", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "key": "t_open_time", "title": "t_open_time", "default": "t_open_time", "max": 1000, "type": "date" },
+    { "key": "t_close_time", "title": "t_close_time", "default": 50, "min": 1, "max": 100, "type": "slider", "style": "unit={0:0.#} min_2", "group": "late" },
+    {
+      "key": "t_min_max_player",
+      "title": "t_min_player_1",
+      "default": [0, 7],
+      "type": "radio_dual_slider",
+      "data": [5, 10, 30, 50, 100, 150, 200, 1500],
+      "data_type": "int",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "title": "t_min_player_des" },
+    { "type": "link", "data": ["prize2", "prize3", "prize4"] },
+    { "key": "t_buyin", "title": "t_buyin", "default": 50, "min": 0, "max": 5000, "type": "input", "group": "prize2" },
+    { "default": "btn_01e_plus", "type": "image", "style": "width=50;height=50", "group": "prize3" },
+    { "key": "t_buyin_fee", "title": "t_buyin_fee", "default": 10, "min": 1, "max": 200, "type": "input", "group": "prize4" },
+    {
+      "key": "t_action_time",
+      "title": "t_action_time",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0 } sec"
+    },
+    { "key": "tb2", "title": "tb2", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "t_time_bank_sec", "title": "t_time_bank_sec", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "default": "timebank_des", "type": "text" },
+    { "key": "t_starting_chip", "title": "t_starting_chip", "default": 1000, "min": 1, "max": 10000, "type": "input", "style": "sub-text=chip" },
+    { "key": "guarantee", "title": "t_guarantee", "default": true, "type": "active_toggle", "true_group": "group8" },
+    {
+      "key": "t_reward_all_chip",
+      "title": "t_reward_all_chip",
+      "default": 1000,
+      "min": 1,
+      "max": 9999999,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "group8"
+    },
+    { "default": "prizepool_des", "type": "text" },
+    { "default": "blind_Structure", "type": "text" },
+    { "key": "t_blind_up_structure", "title": "t_blind_up_structure", "default": 0, "type": "radio_h1", "data": ["normal", "turbo", "hyper"] },
+    { "key": "t_is_hide_nickname", "title": "t_is_hide_nickname", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_chat", "title": "t_is_allow_chat", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_observer", "title": "t_is_allow_observer", "default": false, "type": "toggle" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    {
+      "title": "room_create",
+      "type": "button",
+      "style": "width=424;height=124;anchor=center,center",
+      "event": { "clicked": [{ "event": "CP_TNMT_CREATE", "t_type": "sng" }] }
+    },
+    { "type": "sub_end" }
+  ],
+  "plo": [
+    { "type": "ui", "style": "title=plo;title-align=center" },
+    { "default": "plo", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space" },
+    {
+      "key": "personnel",
+      "title": "personal",
+      "default": 3,
+      "type": "radio_slider",
+      "data": [2, 6, 8, 9],
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "space" },
+    {
+      "key": "action_time",
+      "title": "action_time",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0} sec"
+    },
+    { "key": "tb2", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "tb2_time", "title": "timebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "tb2_price", "title": "addtime_price", "default": 1, "min": 1, "max": 10000000, "type": "input", "style": "sub-text=chip", "group": "group1" },
+    { "type": "line" },
+    {
+      "key": "small_blind",
+      "title": "small_blind",
+      "default": 10,
+      "min": 1,
+      "max": 1000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "sb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    {
+      "key": "blind",
+      "title": "blind",
+      "default": 20,
+      "min": 1,
+      "max": 2000,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "bb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "type": "line" },
+    {
+      "key": "buyin",
+      "title": "buyin",
+      "default": [1, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1000000000],
+      "data_type": "int",
+      "style": "unit={0:0} bb",
+      "group": "buyin_group",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "key": "ante", "title": "ante", "default": 0, "min": 0, "max": 2, "type": "input", "data_type": "float", "style": "sub-text=bb" },
+    { "type": "line" },
+    { "key": "rake", "title": "rake", "default": true, "type": "active_toggle", "true_group": "group22", "style": "sub-text=bb" },
+    {
+      "key": "rake_2",
+      "title": "rake_1",
+      "default": 4,
+      "type": "radio_slider",
+      "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 48, 50],
+      "data_type": "int",
+      "style": "unit={0:#,##0}%",
+      "group": "group22"
+    },
+    { "key": "rakecap", "title": "rakecap", "default": 10, "min": 1, "max": 5000, "type": "input", "style": "sub-text=bb", "group": "group22" },
+    {
+      "key": "jackpot_fund",
+      "title": "jackpot_fund",
+      "default": 0.1,
+      "min": 1,
+      "max": 99999999,
+      "type": "input",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group22"
+    },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "default": true, "type": "active_toggle", "true_group": "active" },
+    { "default": [100, 366, 366], "type": "link", "data": ["passive_radio", "group2", "group26"], "group": "active" },
+    { "key": "passive_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "passive_radio" },
+    { "key": "pr1", "title": "passive_rake_1", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr2", "title": "passive_rake_2", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    { "key": "pr3", "title": "passive_rake_3", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr4", "title": "passive_rake_4", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    { "type": "line" },
+    {
+      "key": "game_length",
+      "title": "game_length",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "style": "unit={0:0.#} hours"
+    },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "default": true, "type": "active_toggle", "true_group": "group3" },
+    {
+      "key": "insurance_house_commission",
+      "title": "insurance_house_commission",
+      "default": 1,
+      "min": 0,
+      "max": 10,
+      "type": "input",
+      "style": "sub-text=%",
+      "group": "group3"
+    },
+    { "type": "line" },
+    {
+      "key": "autostart_condition1",
+      "title": "autostart_condition1",
+      "type": "radio_slider",
+      "data": [2, 3, 4, 5, 6, 7, 8, 9],
+      "group": "group4",
+      "group_1": "autostart_condition1",
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "default": true, "type": "active_toggle", "true_group": "group5" },
+    { "default": [100, 366, 366], "type": "link", "data": ["removal", "group55", "stack_link"], "group": "group5" },
+    { "key": "stack_removal_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "removal" },
+    { "key": "stack_removal_bb1", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option1",
+      "title": "stack_removal_option1",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=hand",
+      "group": "stack_link"
+    },
+    { "key": "stack_removal_bb2", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option2",
+      "title": "stack_removal_option2",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=min_2",
+      "group": "stack_link"
+    },
+    { "default": "stack_removal_option3", "type": "text", "group": "group5" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "default": true, "type": "toggle" },
+    { "key": "run_it_multi", "title": "run_it_multi", "default": true, "type": "toggle" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "default": false, "type": "toggle" },
+    { "key": "anonymous", "title": "anonymous", "default": false, "type": "toggle" },
+    { "key": "community_ban", "title": "community_ban", "default": false, "type": "toggle" },
+    { "key": "spectator_ban", "title": "spectator_ban", "default": false, "type": "toggle" },
+    { "type": "line" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    {
+      "title": "room_create",
+      "type": "button",
+      "style": "width=424;height=124;anchor=center,center",
+      "event": { "clicked": [{ "event": "CP_CAFE_GAME_CREATE", "game_type": "plo" }] }
+    },
+    { "type": "sub_end" }
+  ],
+  "short_deck": [
+    { "type": "ui", "style": "title=game_type_1;title-align=center" },
+    { "default": "shortdeck_1", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space" },
+    {
+      "key": "personnel",
+      "title": "personal",
+      "default": 3,
+      "type": "radio_slider",
+      "data": [2, 6, 8, 9],
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "space" },
+    {
+      "key": "action_time",
+      "title": "action_time",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0} sec"
+    },
+    { "type": "space" },
+    { "type": "line" },
+    { "key": "tb2", "title": "timebank", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "tb2_time", "title": "timebank", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "key": "tb2_price", "title": "addtime_price", "default": 1, "min": 1, "max": 10000000, "type": "input", "style": "sub-text=chip", "group": "group1" },
+    { "type": "line" },
+    {
+      "key": "blind",
+      "title": "button_blind",
+      "default": 20,
+      "min": 1,
+      "max": 2000,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "bb",
+      "event": { "changed": [{ "event": "ButtonBlindChange" }] }
+    },
+    { "type": "line" },
+    {
+      "key": "buyin",
+      "title": "buyin",
+      "default": [1, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1000000000],
+      "data_type": "int",
+      "style": "unit={0:0} bb",
+      "group": "buyin_group",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "type": "line" },
+    { "key": "rake", "title": "rake", "default": true, "type": "active_toggle", "true_group": "group22", "style": "sub-text=bb" },
+    {
+      "key": "rake_2",
+      "title": "rake_1",
+      "default": 4,
+      "type": "radio_slider",
+      "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 48, 50],
+      "data_type": "int",
+      "style": "unit={0:#,##0}%",
+      "group": "group22"
+    },
+    { "key": "rakecap", "title": "rakecap", "default": 10, "min": 1, "max": 5000, "type": "input", "style": "sub-text=bb", "group": "group22" },
+    {
+      "key": "jackpot_fund",
+      "title": "jackpot_fund",
+      "default": 0.1,
+      "min": 1,
+      "max": 99999999,
+      "type": "input",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group22"
+    },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "default": true, "type": "active_toggle", "true_group": "active" },
+    { "default": [100, 366, 366], "type": "link", "data": ["passive_radio", "group2", "group26"], "group": "active" },
+    { "key": "passive_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "passive_radio" },
+    { "key": "pr1", "title": "passive_rake_1", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr2", "title": "passive_rake_2", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    { "key": "pr3", "title": "passive_rake_3", "default": 1, "min": 1, "max": 9999, "type": "input2", "style": "sub-text=bb", "group": "group2" },
+    { "key": "pr4", "title": "passive_rake_4", "default": 10, "min": 1, "max": 99999999, "type": "input2", "group": "group26" },
+    { "type": "line" },
+    {
+      "key": "game_length",
+      "title": "game_length",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "style": "unit={0:0.#} hours"
+    },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "default": true, "type": "active_toggle", "true_group": "group3" },
+    {
+      "key": "insurance_house_commission",
+      "title": "insurance_house_commission",
+      "default": 1,
+      "min": 0,
+      "max": 10,
+      "type": "input",
+      "style": "sub-text=%",
+      "group": "group3"
+    },
+    { "type": "line" },
+    {
+      "key": "autostart_condition1",
+      "title": "autostart_condition1",
+      "type": "radio_slider",
+      "data": [2, 3, 4, 5, 6, 7, 8, 9],
+      "group": "group4",
+      "group_1": "autostart_condition1",
+      "event": { "changed": [{ "event": "limit_player_count", "group": "autostart_condition1" }] }
+    },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "default": true, "type": "active_toggle", "true_group": "group5" },
+    { "default": [100, 366, 366], "type": "link", "data": ["removal", "group55", "stack_link"], "group": "group5" },
+    { "key": "stack_removal_select", "names": ["", ""], "type": "radio_v1", "data": [0, 1], "group": "removal" },
+    { "key": "stack_removal_bb1", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option1",
+      "title": "stack_removal_option1",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=hand",
+      "group": "stack_link"
+    },
+    { "key": "stack_removal_bb2", "title": "bb", "default": 50, "min": 1, "max": 99999999, "type": "input2", "style": "sub-text=bb", "group": "group55" },
+    {
+      "key": "stack_removal_option2",
+      "title": "stack_removal_option2",
+      "default": 10,
+      "min": 1,
+      "max": 99999999,
+      "type": "input2",
+      "style": "sub-text=min_2",
+      "group": "stack_link"
+    },
+    { "default": "stack_removal_option3", "type": "text", "group": "group5" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "default": true, "type": "toggle" },
+    { "key": "run_it_multi", "title": "run_it_multi", "default": true, "type": "toggle" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "default": false, "type": "toggle" },
+    { "key": "anonymous", "title": "anonymous", "default": false, "type": "toggle" },
+    { "key": "community_ban", "title": "community_ban", "default": false, "type": "toggle" },
+    { "key": "spectator_ban", "title": "spectator_ban", "default": false, "type": "toggle" },
+    { "type": "line" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    {
+      "title": "room_create",
+      "type": "button",
+      "style": "width=424;height=124;anchor=center,center",
+      "event": { "clicked": [{ "event": "CP_CAFE_GAME_CREATE", "game_type": "short_deck" }] }
+    },
+    { "type": "sub_end" }
+  ],
+  "cafe_join_1": [
+    { "type": "ui", "style": "title=cafe_join_1;title-align=center;height=650" },
+    { "type": "space", "style": "height=50" },
+    { "type": "link", "data": ["join1", "join2"] },
+    { "default": "cafecode", "type": "text", "group": "join1" },
+    {
+      "key": "cafeCode",
+      "title": "",
+      "default": "",
+      "max": 12,
+      "type": "input3",
+      "group": "join2",
+      "event": {
+        "load_end": [
+          { "event": "load_deep_link", "key": "cafeCode" },
+          { "event": "delete_deep_link", "key": "cafeCode" }
+        ]
+      }
+    },
+    { "default": "cafe_join_text", "type": "text" },
+    { "type": "space" },
+    { "title": "cafe_join_password_3", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "CP_CAFE_JOIN" }] } }
+  ],
+  "cafe_join_2": [
+    { "type": "ui", "style": "title=cafe_join_2;title-align=center;height=650" },
+    { "type": "space", "style": "height=50" },
+    { "type": "link", "data": ["join3", "join4"] },
+    { "default": "auto_join_code", "type": "text", "group": "join3" },
+    {
+      "key": "autoJoinCode",
+      "title": "",
+      "default": "",
+      "max": 36,
+      "type": "input3",
+      "group": "join4",
+      "event": {
+        "load_end": [
+          { "event": "load_deep_link", "key": "autoJoinCode" },
+          { "event": "delete_deep_link", "key": "autoJoinCode" }
+        ]
+      }
+    },
+    { "default": "cafe_join_text", "type": "text" },
+    { "type": "space" },
+    { "title": "cafe_join_password_3", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "CP_CAFE_JOIN" }] } }
+  ],
+  "handlog": [{ "type": "handlog" }],
+  "my_handlog": [
+    { "type": "ui", "style": "title=handlog;title-align=center" },
+    {
+      "type": "space",
+      "style": "height=0;",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    { "type": "space" },
+    { "type": "handlog" }
+  ],
+  "my_ingame": [
+    { "type": "ui", "style": "title=;title-align=center" },
+    {
+      "type": "space",
+      "style": "height=0;",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": false },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    {
+      "title": "account_setting",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "account_setting" }] }
+    },
+    {
+      "title": "hand_history",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "my_handlog" }] }
+    },
+    {
+      "title": "ingame_setting",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "my_ingame_1" }] }
+    },
+    {
+      "title": "about_us",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "about_us" }] }
+    },
+    {
+      "title": "customer_service",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "scene_change", "param": "customer_service" }] }
+    },
+    {
+      "title": "open_recom",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=955;height=120;text-align=left;icon=icon_arrow_small_00;icon-align=right",
+      "event": { "clicked": [{ "event": "open_recom" }] }
+    },
+    {
+      "title": "version_info",
+      "type": "info",
+      "style": "text-align=left;font-size=32;color=#DAA520",
+      "group": "version2",
+      "event": { "load_end": [{ "event": "version" }] }
+    }
+  ],
+  "push": [
+    { "type": "ui", "style": "title=notification_setting;title-align=center" },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "set_push" },
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    {
+      "key": "mute_all_push",
+      "title": "mute_all_push",
+      "default": true,
+      "type": "active_toggle",
+      "true_group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    { "key": "nightly_noti_push", "title": "nightly_noti_push", "default": true, "type": "toggle", "event": { "changed": [{ "event": "edit_push" }] } },
+    { "type": "line", "group": "group1" },
+    { "default": "Cafe", "type": "text", "style": "text-align=left;font-size=40;color=#DAA520", "group": "group1" },
+    {
+      "key": "cafe_noti_push",
+      "title": "cafe_noti_push",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    {
+      "key": "approve_push",
+      "title": "approve_push",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    {
+      "key": "chip_approve_push",
+      "title": "chip_approve_push",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    {
+      "key": "create_delete_push",
+      "title": "create_delete_push",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    {
+      "key": "tournament_push",
+      "title": "tournament_push",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    {
+      "key": "stop_operation_push",
+      "title": "stop_operation_push",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    { "default": "manager", "type": "text", "style": "text-align=left;font-size=36;color=#DAA520", "group": "group1" },
+    {
+      "key": "approve_push_2",
+      "title": "approve_push_2",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    },
+    { "key": "chip_push", "title": "chip_push", "default": true, "type": "toggle", "group": "group1", "event": { "changed": [{ "event": "edit_push" }] } },
+    { "default": "owner", "type": "text", "style": "text-align=left;font-size=36;color=#DAA520", "group": "group1" },
+    {
+      "key": "stop_operation_owner_push",
+      "title": "stop_operation_owner_push",
+      "default": true,
+      "type": "toggle",
+      "group": "group1",
+      "event": { "changed": [{ "event": "edit_push" }] }
+    }
+  ],
+  "customer_service": [
+    { "type": "ui", "style": "title=customer_service;title-align=center" },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    {
+      "title": "cafe_privacy",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=120;text-align=left;icon=set_icon_privacy;icon-align=right",
+      "event": { "clicked": [{ "event": "open_url", "url": "https://kingspoker.s3.ap-northeast-2.amazonaws.com/notice/kingspoker_terms.txt" }] }
+    },
+    {
+      "title": "agreement_1",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=120;text-align=left;icon=icon_set_agree_terms;icon-align=right",
+      "event": { "clicked": [{ "event": "open_url", "url": "https://kingspoker.s3.ap-northeast-2.amazonaws.com/notice/kingspoker_privacy.txt" }] }
+    }
+  ],
+  "my_ingame_1": [
+    { "type": "ui", "style": "title=ingame_setting;title-align=center" },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    { "type": "space" },
+    {
+      "title": "buyinsize",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "type": "slider",
+      "style": "unit={0:#,##0}%",
+      "event": { "load_end": [{ "event": "load_prefs", "key": "buyinsize" }], "changed": [{ "event": "save_prefs", "key": "buyinsize" }] }
+    },
+    { "default": "autorebuy_desc_1", "type": "text" },
+    { "default": "bet_setting", "type": "text", "style": "font-size=38;color=#ffffff" },
+    { "default": "betsize1", "type": "text" },
+    { "type": "link", "data": ["group70", "group71", "group72", "group73"] },
+    {
+      "key": "betsizepreflop_1",
+      "title": "bb",
+      "default": 2,
+      "min": 0,
+      "max": 1000,
+      "type": "input2",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group70",
+      "event": {
+        "load_end": [{ "event": "load_prefs", "key": "betsizepreflop_1" }],
+        "changed": [{ "event": "betsize_limit" }, { "event": "save_prefs", "key": "betsizepreflop_1" }]
+      }
+    },
+    {
+      "key": "betsizepreflop_2",
+      "title": "bb",
+      "default": 3,
+      "min": 0,
+      "max": 1000,
+      "type": "input2",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group71",
+      "event": {
+        "load_end": [{ "event": "load_prefs", "key": "betsizepreflop_2" }],
+        "changed": [{ "event": "betsize_limit" }, { "event": "save_prefs", "key": "betsizepreflop_2" }]
+      }
+    },
+    {
+      "key": "betsizepreflop_3",
+      "title": "bb",
+      "default": 4,
+      "min": 0,
+      "max": 1000,
+      "type": "input2",
+      "data_type": "float",
+      "style": "sub-text=bb",
+      "group": "group72",
+      "event": {
+        "load_end": [{ "event": "load_prefs", "key": "betsizepreflop_3" }],
+        "changed": [{ "event": "betsize_limit" }, { "event": "save_prefs", "key": "betsizepreflop_3" }]
+      }
+    },
+    {
+      "key": "betsizepreflop_4",
+      "title": "bb",
+      "default": "ingame_holdem_allin",
+      "type": "text",
+      "data_type": "float",
+      "style": "font-size=38;color=#ffffff;align=center",
+      "group": "group73"
+    },
+    { "default": "betsize2", "type": "text" },
+    { "type": "link", "data": ["group75", "group76", "group77", "group78"] },
+    {
+      "key": "betsizeafter_1",
+      "title": "rake_2",
+      "default": 33,
+      "min": 1,
+      "max": 999,
+      "type": "input2",
+      "style": "sub-text=%",
+      "group": "group75",
+      "event": { "load_end": [{ "event": "load_prefs", "key": "betsizeafter_1" }], "changed": [{ "event": "save_prefs", "key": "betsizeafter_1" }] }
+    },
+    {
+      "key": "betsizeafter_2",
+      "title": "rake_2",
+      "default": 50,
+      "min": 1,
+      "max": 999,
+      "type": "input2",
+      "style": "sub-text=%",
+      "group": "group76",
+      "event": { "load_end": [{ "event": "load_prefs", "key": "betsizeafter_2" }], "changed": [{ "event": "save_prefs", "key": "betsizeafter_2" }] }
+    },
+    {
+      "key": "betsizeafter_3",
+      "title": "rake_2",
+      "default": 75,
+      "min": 1,
+      "max": 999,
+      "type": "input2",
+      "style": "sub-text=%",
+      "group": "group77",
+      "event": { "load_end": [{ "event": "load_prefs", "key": "betsizeafter_3" }], "changed": [{ "event": "save_prefs", "key": "betsizeafter_3" }] }
+    },
+    {
+      "key": "betsizeafter_4",
+      "title": "rake_2",
+      "default": "ingame_holdem_allin",
+      "type": "text",
+      "style": "font-size=38;color=#ffffff;align=center",
+      "group": "group78"
+    },
+    { "type": "line" },
+    {
+      "key": "bb_text",
+      "title": "bb_text",
+      "type": "toggle",
+      "event": {
+        "load_end": [{ "event": "load_prefs", "key": "bb_text", "default": "false" }],
+        "changed": [{ "event": "save_prefs", "key": "bb_text" }, { "event": "bb_text" }]
+      }
+    },
+    {
+      "key": "sound",
+      "title": "sound",
+      "type": "toggle",
+      "event": {
+        "load_end": [{ "event": "load_prefs", "key": "sound", "default": "true" }],
+        "changed": [{ "event": "save_prefs", "key": "sound" }, { "event": "mute" }]
+      }
+    },
+    {
+      "key": "vive",
+      "title": "vive",
+      "type": "toggle",
+      "event": {
+        "load_end": [{ "event": "load_prefs", "key": "vive", "default": "true" }],
+        "changed": [{ "event": "save_prefs", "key": "vive" }, { "event": "vive" }]
+      }
+    }
+  ],
+  "my_language": [
+    { "type": "ui", "style": "title=language_setting;title-align=center" },
+    {
+      "type": "space",
+      "data_type": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    {
+      "default": 0,
+      "names": ["eng", "kor"],
+      "active_groups": ["eng", "kor"],
+      "type": "radio_v1",
+      "data": ["English", "Korean"],
+      "event": { "load_end": [{ "event": "set_radio_with_prefs", "type": "string", "key": "languageKey" }], "changed": [{ "event": "set_local_key" }] }
+    }
+  ],
+  "account_setting": [
+    { "type": "ui", "style": "title=account_setting;title-align=center" },
+    {
+      "type": "space",
+      "data_type": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    {
+      "title": "account_email",
+      "type": "info",
+      "style": "text-align=left;font-size=32;color=#DAA520",
+      "event": { "load_end": [{ "event": "account_email" }] }
+    },
+    {
+      "title": "logout",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=120;text-align=left;icon=icon_set_log_out;icon-align=right",
+      "event": { "clicked": [{ "event": "logout" }] }
+    },
+    {
+      "title": "change_nick",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=120;text-align=left;icon=icon_set_change-nick;icon-align=right",
+      "event": { "clicked": [{ "event": "change_nick" }] }
+    },
+    {
+      "title": "delete_account",
+      "type": "image_button",
+      "data": ["transparent"],
+      "style": "width=950;height=120;text-align=left;icon=set_icon_delete-account;icon-align=right",
+      "event": { "clicked": [{ "event": "delete_account" }] }
+    }
+  ],
+  "invite_popup": [
+    { "type": "ui", "style": "title=invite_popup;title-align=center;height=700" },
+    {
+      "key": "invite_type",
+      "title": "",
+      "default": 0,
+      "names": ["cafecodename_1", "cafecodename_2", "cafecodename_3"],
+      "type": "radio_v1",
+      "data": [0, 1, 2],
+      "style": "align=left"
+    },
+    { "type": "space" },
+    { "title": "invite", "type": "button", "style": "width=424;height=124", "event": { "clicked": [{ "event": "invite_cafe" }] } }
+  ],
+  "nlh_edit": [
+    { "type": "ui", "style": "title=table_edit;title-align=center" },
+    { "default": "nlh", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space" },
+    { "key": "title", "title": "room_title", "default": "", "type": "input", "data_type": "string" },
+    {
+      "key": "action_time",
+      "title": "action_time",
+      "default": 0,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0 } sec"
+    },
+    { "type": "space" },
+    { "type": "line" },
+    { "type": "line" },
+    {
+      "key": "small_blind",
+      "title": "small_blind",
+      "default": 10,
+      "min": 1,
+      "max": 1000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "sb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    {
+      "key": "blind",
+      "title": "blind",
+      "default": 20,
+      "min": 1,
+      "max": 2000,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "bb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "key": "ante", "title": "ante", "default": 0, "min": 0, "max": 2, "type": "input", "data_type": "float", "style": "sub-text=bb" },
+    { "type": "line" },
+    {
+      "key": "buyin",
+      "title": "buyin",
+      "default": [1, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1000000000],
+      "data_type": "int",
+      "style": "unit={0:0} bb",
+      "group": "buyin_group",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "type": "line" },
+    { "type": "line" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"] },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "edit_table", "game_type": "nlh" }] }
+    },
+    { "title": "delete", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "delete_table" }] } },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": true }] } }
+  ],
+  "mtt_edit": [
+    { "type": "ui", "style": "title=mtt;title-align=center" },
+    {
+      "key": "t_game_type",
+      "default": 0,
+      "names": ["nlh", "plo", "shortdeck_1"],
+      "active_groups": ["nlh", "plo", "shortdeck_1"],
+      "type": "radio_h1",
+      "data": ["nlh", "plo", "shortdeck_1"]
+    },
+    { "key": "t_open_time", "title": "t_open_time", "default": "t_open_time", "max": 1000, "type": "date" },
+    { "key": "t_start_time", "title": "t_start_time", "default": "t_start_time", "max": 1000, "type": "date", "group": "late" },
+    {
+      "key": "t_close_time",
+      "title": "t_close_time",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "type": "slider",
+      "style": "unit={0:0.#} start_after_min",
+      "group": "late"
+    },
+    { "title": "reentry_select", "default": true, "type": "active_toggle", "true_group": "reentry" },
+    {
+      "title": "t_reentry_count",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "group": "reentry"
+    },
+    { "title": "t_reentry_count_des" },
+    {
+      "key": "t_min_max_player",
+      "title": "t_min_player_1",
+      "default": [0, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200],
+      "data_type": "int",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "title": "t_min_player_des" },
+    { "type": "link", "data": ["prize2", "prize3", "prize4"] },
+    { "key": "t_buyin", "title": "t_buyin", "default": 50, "min": 0, "max": 5000, "type": "input", "group": "prize2" },
+    { "default": "btn_01e_plus", "type": "image", "style": "width=50;height=50", "group": "prize3" },
+    { "key": "t_buyin_fee", "title": "t_buyin_fee", "default": 10, "min": 1, "max": 200, "type": "input", "group": "prize4" },
+    { "type": "link", "data": ["prize5", "prize6"] },
+    { "default": "total_buyin", "type": "text", "group": "prize5" },
+    { "title": "total_buyin", "type": "info", "group": "prize6" },
+    {
+      "key": "t_action_time",
+      "title": "t_action_time",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0 } sec"
+    },
+    { "key": "tb2", "title": "tb2", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "t_time_bank_sec", "title": "t_time_bank_sec", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "default": "timebank_des", "type": "text" },
+    { "key": "t_starting_chip", "title": "t_starting_chip", "default": 1000, "min": 1, "max": 10000, "type": "input", "style": "sub-text=chip" },
+    { "title": "gtd_select", "default": true, "type": "active_toggle", "true_group": "group8" },
+    {
+      "key": "t_reward_all_chip",
+      "title": "t_reward_all_chip",
+      "default": 1000,
+      "min": 1,
+      "max": 9999999,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "group8"
+    },
+    { "default": "prizepool_des", "type": "text" },
+    { "default": "blind_Structure", "type": "text" },
+    { "key": "t_blind_up_structure", "title": "t_blind_up_structure", "default": 0, "type": "radio_h1", "data": ["normal", "turbo", "hyper"] },
+    { "default": "t_payout__structure", "type": "text" },
+    { "key": "t_is_hide_nickname", "title": "t_is_hide_nickname", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_chat", "title": "t_is_allow_chat", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_observer", "title": "t_is_allow_observer", "default": false, "type": "toggle" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"] },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "edit_table", "game_type": "mtt" }] }
+    },
+    { "title": "delete", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "delete_table" }] } },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": true }] } }
+  ],
+  "sng_edit": [
+    { "type": "ui", "style": "title=game_type_1;title-align=center" },
+    {
+      "key": "t_game_type",
+      "default": 0,
+      "names": ["nlh", "plo", "shortdeck_1"],
+      "active_groups": ["nlh", "plo", "shortdeck_1"],
+      "type": "radio_h1",
+      "data": ["nlh", "plo", "shortdeck_1"]
+    },
+    { "default": "t_open_time", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "key": "t_open_time", "title": "t_open_time", "default": "t_open_time", "max": 1000, "type": "date" },
+    { "key": "t_close_time", "title": "t_close_time", "default": 50, "min": 1, "max": 100, "type": "slider", "style": "unit={0:0.#} min_2", "group": "late" },
+    {
+      "key": "t_min_max_player",
+      "title": "t_min_player_1",
+      "default": [0, 7],
+      "type": "radio_dual_slider",
+      "data": [5, 10, 30, 50, 100, 150, 200, 1500],
+      "data_type": "int",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "title": "t_min_player_des" },
+    { "type": "link", "data": ["prize2", "prize3", "prize4"] },
+    { "key": "t_buyin", "title": "t_buyin", "default": 50, "min": 0, "max": 5000, "type": "input", "group": "prize2" },
+    { "default": "btn_01e_plus", "type": "image", "style": "width=50;height=50", "group": "prize3" },
+    { "key": "t_buyin_fee", "title": "t_buyin_fee", "default": 10, "min": 1, "max": 200, "type": "input", "group": "prize4" },
+    {
+      "key": "t_action_time",
+      "title": "t_action_time",
+      "default": 5,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0 } sec"
+    },
+    { "key": "tb2", "title": "tb2", "default": true, "type": "active_toggle", "true_group": "group1" },
+    { "key": "t_time_bank_sec", "title": "t_time_bank_sec", "default": 30, "min": 1, "max": 200, "type": "input", "style": "sub-text=sec", "group": "group1" },
+    { "default": "timebank_des", "type": "text" },
+    { "key": "t_starting_chip", "title": "t_starting_chip", "default": 1000, "min": 1, "max": 10000, "type": "input", "style": "sub-text=chip" },
+    { "key": "guarantee", "title": "t_guarantee", "default": true, "type": "active_toggle", "true_group": "group8" },
+    {
+      "key": "t_reward_all_chip",
+      "title": "t_reward_all_chip",
+      "default": 1000,
+      "min": 1,
+      "max": 9999999,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "group8"
+    },
+    { "default": "prizepool_des", "type": "text" },
+    { "default": "blind_Structure", "type": "text" },
+    { "key": "t_blind_up_structure", "title": "t_blind_up_structure", "default": 0, "type": "radio_h1", "data": ["normal", "turbo", "hyper"] },
+    { "key": "t_is_hide_nickname", "title": "t_is_hide_nickname", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_chat", "title": "t_is_allow_chat", "default": false, "type": "toggle" },
+    { "key": "t_is_allow_observer", "title": "t_is_allow_observer", "default": false, "type": "toggle" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    {
+      "title": "room_create",
+      "type": "button",
+      "style": "width=424;height=124;anchor=center,center",
+      "event": { "clicked": [{ "event": "CP_TNMT_CREATE", "t_type": "sng" }] }
+    },
+    { "type": "sub_end" }
+  ],
+  "plo_edit": [
+    { "type": "ui", "style": "title=table_edit;title-align=center" },
+    { "default": "plo", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space" },
+    { "type": "space" },
+    {
+      "key": "action_time",
+      "title": "action_time",
+      "default": 0,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0} sec"
+    },
+    { "type": "line" },
+    {
+      "key": "small_blind",
+      "title": "small_blind",
+      "default": 10,
+      "min": 1,
+      "max": 1000,
+      "type": "input",
+      "data_type": "int",
+      "style": "sub-text=chip",
+      "group": "sb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    {
+      "key": "blind",
+      "title": "blind",
+      "default": 20,
+      "min": 1,
+      "max": 2000,
+      "type": "input",
+      "style": "sub-text=chip",
+      "group": "bb",
+      "event": { "changed": [{ "event": "BlindChange" }] }
+    },
+    { "type": "line" },
+    {
+      "key": "buyin",
+      "title": "buyin",
+      "default": [1, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1000000000],
+      "data_type": "int",
+      "style": "unit={0:0} bb",
+      "group": "buyin_group",
+      "event": { "changed": [{ "event": "dual_limit", "max_minimum": 16 }] }
+    },
+    { "key": "ante", "title": "ante", "default": 0, "min": 0, "max": 2, "type": "input", "data_type": "float", "style": "sub-text=bb" },
+    { "type": "line" },
+    { "type": "line" },
+    {
+      "key": "game_length",
+      "title": "game_length",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "style": "unit={0:0.#} hours"
+    },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "default": true, "type": "active_toggle", "true_group": "group3" },
+    {
+      "key": "insurance_house_commission",
+      "title": "insurance_house_commission",
+      "default": 1,
+      "min": 0,
+      "max": 10,
+      "type": "input",
+      "style": "sub-text=%",
+      "group": "group3"
+    },
+    { "type": "line" },
+    { "default": "stack_removal_option3", "type": "text", "group": "group5" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "default": true, "type": "toggle" },
+    { "key": "run_it_multi", "title": "run_it_multi", "default": true, "type": "toggle" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "default": false, "type": "toggle" },
+    { "key": "anonymous", "title": "anonymous", "default": false, "type": "toggle" },
+    { "key": "community_ban", "title": "community_ban", "default": false, "type": "toggle" },
+    { "type": "line" },
+    { "type": "space" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"] },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "edit_table", "game_type": "plo" }] }
+    },
+    { "title": "delete", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "delete_table" }] } },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": true }] } }
+  ],
+  "short_deck_edit": [
+    { "type": "ui", "style": "title=table_edit;title-align=center" },
+    { "default": "shortdeck_1", "type": "text", "style": "font-size=34;color=#ffffff" },
+    { "type": "space" },
+    { "key": "personnel", "title": "personal", "default": 3, "type": "radio_slider", "data": [2, 6, 8, 9] },
+    { "type": "space" },
+    {
+      "key": "action_time",
+      "title": "action_time",
+      "default": 0,
+      "type": "radio_slider",
+      "data": [10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 120, 240, 360, 420, 480, 540, 600],
+      "style": "unit={0:0} sec"
+    },
+    { "type": "space" },
+    { "type": "line" },
+    { "type": "line" },
+    { "key": "blind", "title": "button_blind", "default": 20, "min": 1, "max": 2000, "type": "input", "style": "sub-text=chip", "group": "bb" },
+    { "type": "line" },
+    {
+      "key": "buyin",
+      "title": "buyin",
+      "default": [1, 6],
+      "type": "radio_dual_slider",
+      "data": [20, 40, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1000000000],
+      "data_type": "int",
+      "style": "unit={0:0} bb",
+      "group": "buyin_group"
+    },
+    { "type": "line" },
+    { "type": "line" },
+    {
+      "key": "game_length",
+      "title": "game_length",
+      "default": 7,
+      "type": "radio_slider",
+      "data": [0.5, 1, 2, 3, 5, 7, 12, 24, 48, 72, 120, 240, 1000000000],
+      "style": "unit={0:0.#} hours"
+    },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "default": true, "type": "active_toggle", "true_group": "group3" },
+    {
+      "key": "insurance_house_commission",
+      "title": "insurance_house_commission",
+      "default": 1,
+      "min": 0,
+      "max": 10,
+      "type": "input",
+      "style": "sub-text=%",
+      "group": "group3"
+    },
+    { "type": "line" },
+    { "default": "stack_removal_option3", "type": "text", "group": "group5" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "default": true, "type": "toggle" },
+    { "key": "run_it_multi", "title": "run_it_multi", "default": true, "type": "toggle" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "default": false, "type": "toggle" },
+    { "key": "anonymous", "title": "anonymous", "default": false, "type": "toggle" },
+    { "key": "community_ban", "title": "community_ban", "default": false, "type": "toggle" },
+    { "type": "line" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"] },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "edit_table", "game_type": "short_deck" }] }
+    },
+    { "title": "delete", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "delete_table" }] } },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": true }] } }
+  ],
+  "nlh_info": [
+    { "type": "ui", "style": "title=nlh_info;title-align=center" },
+    { "key": "title", "title": "room_title", "type": "info" },
+    { "key": "personnel", "title": "personal", "type": "info" },
+    { "key": "action_time", "title": "action_time", "type": "info", "style": "unit={0:0 } sec" },
+    { "type": "line" },
+    { "type": "line" },
+    { "key": "small_blind", "title": "small_blind", "type": "info", "data_type": "int", "style": "sub-text=chip;font-size=42;color=#efc600", "group": "sb" },
+    { "key": "blind", "title": "blind", "type": "info", "style": "sub-text=chip;font-size=42;color=#efc600", "group": "bb" },
+    { "type": "line" },
+    { "key": "buyin_min", "title": "buyin_min", "type": "info", "style": "sub-text=bb;font-size=42;color=#ffffff" },
+    { "key": "buyin_max", "title": "buyin_max", "type": "info", "style": "sub-text=bb" },
+    { "key": "ante", "title": "ante", "type": "info", "data_type": "float", "style": "sub-text=bb" },
+    { "type": "line" },
+    { "key": "rake", "title": "rake", "type": "info", "true_group": "rake" },
+    { "key": "rake_2", "title": "rake_1", "type": "info", "data_type": "int", "style": "sub-text=%", "group": "rake" },
+    { "key": "rakecap", "title": "rakecap", "type": "info", "style": "sub-text=bb", "group": "rake" },
+    { "type": "line" },
+    { "key": "game_length", "title": "game_length", "type": "info", "style": "unit={0:0.#} hours" },
+    { "type": "line" },
+    { "key": "autostart_condition1", "title": "autostart_condition1", "type": "info", "group": "group4" },
+    { "type": "line" },
+    { "type": "line" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"], "event": { "load_end": [{ "event": "show_only_in_cafe" }] } },
+    { "title": "enter_1", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "enter_table" }] } },
+    {
+      "title": "enter_1",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "enter_table" }], "load_end": [{ "event": "show_only_in_play" }] }
+    },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": false }] } }
+  ],
+  "plo_info": [
+    { "type": "ui", "style": "title=plo_info;title-align=center" },
+    { "key": "personnel", "title": "personal", "type": "info" },
+    { "key": "action_time", "title": "action_time", "type": "info", "style": "unit={0:0 } sec" },
+    { "type": "line" },
+    { "key": "tb2", "title": "timebank", "type": "info", "true_group": "tb2" },
+    { "key": "tb2_time", "title": "timebank", "type": "info", "style": "sub-text=sec", "group": "tb2" },
+    { "key": "tb2_price", "title": "addtime_price", "type": "info", "style": "sub-text=chip", "group": "tb2" },
+    { "type": "line" },
+    { "key": "small_blind", "title": "small_blind", "type": "info", "data_type": "int", "style": "sub-text=chip;font-size=42;color=#efc600", "group": "sb" },
+    { "key": "blind", "title": "blind", "type": "info", "style": "sub-text=chip;font-size=42;color=#efc600", "group": "bb" },
+    { "type": "line" },
+    { "key": "buyin_min", "title": "buyin_min", "type": "info", "style": "sub-text=bb;font-size=42;color=#ffffff" },
+    { "key": "buyin_max", "title": "buyin_max", "type": "info", "style": "sub-text=bb" },
+    { "key": "ante", "title": "ante", "type": "info", "data_type": "float", "style": "sub-text=bb" },
+    { "type": "line" },
+    { "key": "rake", "title": "rake", "type": "info", "true_group": "rake" },
+    { "key": "rake_2", "title": "rake_1", "type": "info", "data_type": "int", "style": "sub-text=%", "group": "rake" },
+    { "key": "rakecap", "title": "rakecap", "type": "info", "style": "sub-text=bb", "group": "rake" },
+    { "key": "jackpot_fund", "title": "jackpot_fund", "type": "info", "data_type": "float", "style": "sub-text=bb", "group": "rake" },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "type": "info", "true_group": "active" },
+    { "type": "link", "data": ["passive_rake_select1", "", "passive_rake_select2"], "group": "active" },
+    { "key": "pr1", "title": "passive_rake_1", "type": "info", "style": "sub-text=bb", "group": "passive_rake_select1" },
+    { "key": "pr2", "title": "passive_rake_2", "type": "info", "group": "passive_rake_select2" },
+    { "type": "link", "data": ["passive_rake_select3", "", "passive_rake_select4"] },
+    { "key": "pr3", "title": "passive_rake_3", "type": "info", "style": "sub-text=bb", "group": "passive_rake_select3" },
+    { "key": "pr4", "title": "passive_rake_4", "type": "info", "group": "passive_rake_select4" },
+    { "type": "line" },
+    { "key": "game_length", "title": "game_length", "type": "info", "style": "unit={0:0.#} hours" },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "type": "info", "true_group": "insurance" },
+    { "key": "insurance_house_commission", "title": "insurance_house_commission", "type": "info", "style": "sub-text=%", "group": "insurance" },
+    { "type": "line" },
+    { "key": "autostart_condition1", "title": "autostart_condition1", "type": "info", "group": "group4" },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "type": "info" },
+    { "type": "link", "data": ["stack_removal_select1", "", "stack_removal_select2"] },
+    { "key": "stack_removal_bb1", "title": "bb", "type": "info", "style": "sub-text=bb", "group": "stack_removal_select1" },
+    { "key": "stack_removal_option1", "title": "stack_removal_option1", "type": "info", "style": "sub-text=hand", "group": "stack_removal_select2" },
+    { "type": "link", "data": ["stack_removal_select3", "", "stack_removal_select4"] },
+    { "key": "stack_removal_bb2", "title": "bb", "type": "info", "style": "sub-text=bb", "group": "stack_removal_select3" },
+    { "key": "stack_removal_option2", "title": "stack_removal_option2", "type": "info", "style": "sub-text=min_2", "group": "stack_removal_select4" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "type": "info" },
+    { "key": "run_it_multi", "title": "run_it_multi", "type": "info" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "type": "info" },
+    { "key": "anonymous", "title": "anonymous", "type": "info" },
+    { "key": "community_ban", "title": "community_ban", "type": "info" },
+    { "key": "spectator_ban", "title": "spectator_ban", "type": "info" },
+    { "type": "line" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"], "event": { "load_end": [{ "event": "show_only_in_cafe" }] } },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "scene_change", "param": "plo_edit" }] }
+    },
+    { "title": "enter_1", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "enter_table" }] } },
+    {
+      "title": "enter_1",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "enter_table" }], "load_end": [{ "event": "show_only_in_play" }] }
+    },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": false }] } }
+  ],
+  "short_deck_info": [
+    { "type": "ui", "style": "title=shortdeck_info;title-align=center" },
+    { "key": "personnel", "title": "personal", "type": "info" },
+    { "key": "action_time", "title": "action_time", "type": "info", "style": "unit={0:0 } sec" },
+    { "type": "line" },
+    { "key": "tb2", "title": "timebank", "type": "info", "true_group": "tb2" },
+    { "key": "tb2_time", "title": "timebank", "type": "info", "style": "sub-text=sec", "group": "tb2" },
+    { "key": "tb2_price", "title": "addtime_price", "type": "info", "style": "sub-text=chip", "group": "tb2" },
+    { "type": "line" },
+    { "key": "blind", "title": "button_blind", "type": "info", "style": "sub-text=chip", "group": "bb" },
+    { "type": "line" },
+    { "key": "buyin_min", "title": "buyin_min", "type": "info", "style": "sub-text=bb;font-size=42;color=#ffffff" },
+    { "key": "buyin_max", "title": "buyin_max", "type": "info", "style": "sub-text=bb" },
+    { "type": "line" },
+    { "key": "rake", "title": "rake", "type": "info", "true_group": "rake" },
+    { "key": "rake_2", "title": "rake_1", "type": "info", "data_type": "int", "style": "sub-text=%", "group": "rake" },
+    { "key": "rakecap", "title": "rakecap", "type": "info", "style": "sub-text=bb", "group": "rake" },
+    { "key": "jackpot_fund", "title": "jackpot_fund", "type": "info", "data_type": "float", "style": "sub-text=bb", "group": "rake" },
+    { "type": "line" },
+    { "key": "passive_rake", "title": "passive_rake", "type": "info", "true_group": "active" },
+    { "type": "link", "data": ["passive_rake_select1", "", "passive_rake_select2"], "group": "active" },
+    { "key": "pr1", "title": "passive_rake_1", "type": "info", "style": "sub-text=bb", "group": "passive_rake_select1" },
+    { "key": "pr2", "title": "passive_rake_2", "type": "info", "group": "passive_rake_select2" },
+    { "type": "link", "data": ["passive_rake_select3", "", "passive_rake_select4"] },
+    { "key": "pr3", "title": "passive_rake_3", "type": "info", "style": "sub-text=bb", "group": "passive_rake_select3" },
+    { "key": "pr4", "title": "passive_rake_4", "type": "info", "group": "passive_rake_select4" },
+    { "type": "line" },
+    { "key": "game_length", "title": "game_length", "type": "info", "style": "unit={0:0.#} hours" },
+    { "type": "line" },
+    { "key": "insurance", "title": "insurance_title", "type": "info", "true_group": "insurance" },
+    { "key": "insurance_house_commission", "title": "insurance_house_commission", "type": "info", "style": "sub-text=%", "group": "insurance" },
+    { "type": "line" },
+    { "key": "autostart_condition1", "title": "autostart_condition1", "type": "info", "group": "group4" },
+    { "type": "line" },
+    { "key": "stack_removal", "title": "stack_removal", "type": "info" },
+    { "type": "link", "data": ["stack_removal_select1", "", "stack_removal_select2"] },
+    { "key": "stack_removal_bb1", "title": "bb", "type": "info", "style": "sub-text=bb", "group": "stack_removal_select1" },
+    { "key": "stack_removal_option1", "title": "stack_removal_option1", "type": "info", "style": "sub-text=hand", "group": "stack_removal_select2" },
+    { "type": "link", "data": ["stack_removal_select3", "", "stack_removal_select4"] },
+    { "key": "stack_removal_bb2", "title": "bb", "type": "info", "style": "sub-text=bb", "group": "stack_removal_select3" },
+    { "key": "stack_removal_option2", "title": "stack_removal_option2", "type": "info", "style": "sub-text=min_2", "group": "stack_removal_select4" },
+    { "type": "line" },
+    { "key": "straddle", "title": "straddle", "type": "info" },
+    { "key": "run_it_multi", "title": "run_it_multi", "type": "info" },
+    { "key": "random_sit_in", "title": "radom_sit_in", "type": "info" },
+    { "key": "anonymous", "title": "anonymous", "type": "info" },
+    { "key": "community_ban", "title": "community_ban", "type": "info" },
+    { "key": "spectator_ban", "title": "spectator_ban", "type": "info" },
+    { "type": "line" },
+    { "type": "sub_start" },
+    { "type": "link", "data": ["edit1", "edit2"], "event": { "load_end": [{ "event": "show_only_in_cafe" }] } },
+    {
+      "title": "edit",
+      "type": "button",
+      "style": "width=424;height=124",
+      "group": "edit1",
+      "event": { "clicked": [{ "event": "scene_change", "param": "short_deck_edit" }] }
+    },
+    { "title": "enter_1", "type": "button", "style": "width=424;height=124", "group": "edit2", "event": { "clicked": [{ "event": "enter_table" }] } },
+    {
+      "title": "enter_1",
+      "type": "button",
+      "style": "width=424;height=124",
+      "event": { "clicked": [{ "event": "enter_table" }], "load_end": [{ "event": "show_only_in_play" }] }
+    },
+    { "type": "sub_end" },
+    { "type": "space", "style": "height=0", "event": { "load_end": [{ "event": "show_game_info", "edit_mode": false }] } }
+  ],
+  "about_us": [
+    { "type": "ui", "style": "title=about_us;title-align=center" },
+    {
+      "type": "space",
+      "style": "height=0",
+      "event": {
+        "load_end": [
+          { "event": "btn_back_active", "active": true },
+          { "event": "btn_back_set", "on_click": [{ "event": "scene_change", "param": "my_ingame" }] }
+        ]
+      }
+    },
+    { "key": "bussiness_name", "default": "bussiness_name", "type": "text" },
+    { "key": "company", "default": "company", "type": "text", "style": "font-size=32;color=#ffffff" },
+    { "type": "line" },
+    { "key": "ceo", "default": "ceo", "type": "text" },
+    { "key": "donggun_jung", "default": "donggun_jung", "type": "text", "style": "font-size=32;color=#ffffff" },
+    { "type": "line" },
+    { "key": "address_1", "default": "address_1", "type": "text" },
+    { "key": "address_2", "default": "address_2", "type": "text", "style": "font-size=32;color=#ffffff" },
+    { "type": "line" },
+    { "key": "homepage_1", "default": "homepage_1", "type": "text" },
+    { "key": "homepage_2", "default": "homepage_2", "type": "text", "style": "font-size=32;color=#ffffff" },
+    { "type": "line" },
+    { "key": "center_number_1", "default": "center_number_1", "type": "text" },
+    { "key": "center_number_2", "default": "center_number_2", "type": "text", "style": "font-size=32;color=#ffffff" },
+    { "type": "line" },
+    { "key": "business_registration", "default": "business_registration", "type": "text" },
+    { "key": "business_registration_number", "default": "business_registration_number", "type": "text", "style": "font-size=32;color=#ffffff" },
+    { "type": "line" },
+    { "key": "e-commerce_1", "default": "e-commerce_1", "type": "text" },
+    { "key": "e-commerce_2", "default": "e-commerce_2", "type": "text", "style": "font-size=32;color=#ffffff" }
+  ],
+  "mtt_nlh_info": [
+    { "type": "ui", "style": "title=mtt_info;title-align=center" },
+    { "type": "top_start" },
+    { "default": true, "type": "toggle_group", "data": ["toggle_group1"] },
+    { "type": "top_end" },
+    { "key": "mtt_option", "title": "mtt_option", "default": true, "type": "active_toggle3", "true_group": "group1", "group": "toggle_group1" },
+    { "key": "t_open_time", "title": "t_open_time", "type": "info", "style": "height=100;font-size=32;line=true;line-color=#5B6372", "group": "group1" },
+    { "key": "t_start_time", "title": "t_start_time", "type": "info", "style": "height=100;font-size=32;line=true;line-color=#5B6373", "group": "group1" },
+    {
+      "key": "t_close_blind_up_level",
+      "title": "t_close_blind_up_level",
+      "type": "info",
+      "style": "height=100;font-size=32;line=true;line-color=#5B6372",
+      "group": "group1"
+    },
+    {
+      "key": "t_minmax_player",
+      "title": "t_minmax_player",
+      "type": "info",
+      "style": "height=100;font-size=32;line=true;line-color=#5B6372",
+      "group": "group1"
+    },
+    { "key": "apply_count", "title": "apply_count", "type": "info", "style": "height=100;font-size=32;line=true;line-color=#5B6372", "group": "group1" },
+    { "key": "t_buyin", "title": "t_buyin", "type": "info", "style": "height=100;font-size=32;line=true;line-color=#5B6372", "group": "group1" },
+    {
+      "key": "t_starting_chip",
+      "title": "t_starting_chip",
+      "type": "info",
+      "style": "height=100;font-size=32;line=true;line-color=#5B6372",
+      "group": "group1"
+    },
+    {
+      "key": "t_reentry_count",
+      "title": "t_reentry_count",
+      "type": "info",
+      "style": "height=100;font-size=32;line=true;line-color=#5B6372",
+      "group": "group1"
+    },
+    { "key": "t_reentry_cost", "title": "t_reentry_cost", "type": "info", "style": "height=100;font-size=32;line=true;line-color=#5B6372", "group": "group1" },
+    { "key": "t_reentry_chip", "title": "t_reentry_chip", "type": "info", "style": "height=100;font-size=32;line=true;line-color=#5B6372", "group": "group1" },
+    { "key": "t_buyin_fee", "title": "t_buyin_fee", "type": "info", "style": "height=100;font-size=32;line=true;line-color=#5B6372", "group": "group1" },
+    { "key": "ticket_type", "title": "ticket_type", "type": "info", "group": "group1" },
+    { "key": "ticket_count", "title": "ticket_count", "type": "info", "group": "group1" },
+    { "key": "reward_ticket_type", "title": "reward_ticket_type", "type": "info", "group": "group1" },
+    { "key": "mtt_blind", "title": "mtt_blind", "default": false, "type": "active_toggle3", "true_group": "group4", "group": "toggle_group1" },
+    { "key": "mtt_blind_1", "title": "", "type": "blind_table", "group": "group4" },
+    { "key": "mtt_list", "title": "mtt_list", "default": false, "type": "active_toggle3", "true_group": "group5", "group": "toggle_group1" },
+    { "key": "mtt_list_1", "title": "", "type": "rank_list", "group": "group5" },
+    { "key": "mtt_reward", "title": "mtt_reward", "default": false, "type": "active_toggle3", "true_group": "group6", "group": "toggle_group1" },
+    { "key": "mtt_reward_1", "title": "", "type": "reward_list", "group": "group6" },
+    { "key": "mtt_ob_table", "title": "mtt_ob_table", "default": false, "type": "active_toggle3", "true_group": "group7", "group": "toggle_group1" },
+    { "key": "mtt_ob_table_1", "title": "", "type": "ob_table_list", "group": "group7" },
+    { "type": "sub_start" },
+    { "key": "enter_request", "title": "enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_APPLY" }] } },
+    { "key": "cancel_enter_request", "title": "cancel_enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_UNAPPLY" }] } },
+    { "key": "tnmt_room_enter", "title": "tnmt_room_enter", "type": "button", "event": { "clicked": [{ "event": "tnmt_room_enter" }] } },
+    { "key": "tnmt_btn_space", "type": "space", "style": "height=100" },
+    { "key": "tnmt_cancel", "title": "tnmt_cancel", "type": "button", "style": "color=#892a31", "event": { "clicked": [{ "event": "CP_TNMT_FIX" }] } },
+    { "type": "sub_end" },
+    { "title": "event_caller", "type": "space", "event": { "load_end": [{ "event": "show_tnmt_info", "edit_mode": false }] } }
+  ],
+  "mtt_result": [
+    { "type": "ui", "style": "title=mtt_result;title-align=center" },
+    { "default": "rank_text", "type": "text", "style": "font-size=40;color=#ffffff;title-align=center" },
+    { "key": "rank_data", "title": "rank_data", "type": "text", "style": "font-size=40;color=#ffffff;title-align=center" },
+    { "default": "congratulations", "type": "text", "style": "font-size=40;color=#ffffff;title-align=center" },
+    { "key": "my_rank", "title": "my_rank", "default": "my_rank", "type": "info" },
+    { "key": "my_money", "title": "my_money", "default": "my_money", "type": "info" },
+    { "title": "event_caller", "type": "space", "event": { "load_end": [{ "event": "show_tnmt_result" }] } }
+  ],
+  "sng_nlh_info": [
+    { "type": "ui", "style": "title=sng_info;title-align=center" },
+    { "key": "sng_option", "title": "sng_option", "default": 0, "type": "active_toggle2", "true_group": "group1" },
+    { "key": "t_game_type", "title": "t_game_type", "type": "info", "group": "group1" },
+    { "key": "t_open_time", "title": "t_open_time", "type": "info", "group": "group1" },
+    { "key": "t_close_time", "title": "t_close_time", "type": "info", "group": "group1" },
+    { "title": "reentry_select", "type": "info", "group": "group1" },
+    { "key": "t_reentry_count", "title": "t_reentry_count", "type": "info", "group": "group1" },
+    { "key": "t_min_player", "title": "t_min_player", "type": "info", "group": "group1" },
+    { "key": "t_max_player", "title": "t_max_player", "type": "info", "group": "group1" },
+    { "key": "t_buyin", "title": "t_buyin", "type": "info", "group": "group1" },
+    { "key": "t_buyin_fee", "title": "t_buyin_fee", "type": "info", "group": "group1" },
+    { "key": "t_action_time", "title": "t_action_time", "type": "info", "group": "group1" },
+    { "key": "tb2", "title": "tb2", "type": "info", "group": "group1" },
+    { "key": "t_time_bank_sec", "title": "t_time_bank_sec", "type": "info", "group": "group1" },
+    { "key": "t_starting_chip", "title": "t_starting_chip", "type": "info", "group": "group1" },
+    { "title": "gtd_select", "type": "info", "group": "group1" },
+    { "key": "t_reward_all_chip", "title": "t_reward_all_chip", "type": "info", "group": "group1" },
+    { "key": "t_blind_structure", "title": "blind_structure", "type": "info", "group": "group1" },
+    { "key": "t_is_hide_nickname", "title": "t_is_hide_nickname", "type": "info", "group": "group1" },
+    { "key": "t_is_allow_chat", "title": "t_is_allow_chat", "type": "info", "group": "group1" },
+    { "key": "sng_live", "title": "sng_live", "default": 0, "type": "active_toggle2", "true_group": "group2" },
+    { "key": "blind_level", "title": "blind_level", "type": "info", "group": "group2" },
+    { "key": "next_blind_up_time", "title": "next_blind_up_time", "type": "info", "group": "group2" },
+    { "key": "apply_count", "title": "apply_count", "type": "info", "group": "group2" },
+    { "key": "rank", "title": "rank", "type": "info", "group": "group2" },
+    { "key": "payout_user_count", "title": "payout_user_count", "type": "info", "group": "group2" },
+    { "key": "sng_payout", "title": "sng_payout", "default": 0, "type": "active_toggle2", "true_group": "group3" },
+    { "key": "sng_payout_module", "title": "", "default": "mtt_payout_structure", "type": "image", "style": "width=708;height=864", "group": "group3" },
+    { "key": "sng_blind", "title": "sng_blind", "default": 0, "type": "active_toggle2", "true_group": "group4" },
+    { "key": "sng_blind_1", "title": "", "type": "info", "group": "group4" },
+    { "key": "sng_list", "title": "mtt_list", "default": 0, "type": "active_toggle2", "true_group": "group5" },
+    { "key": "sng_list_1", "title": "", "type": "info", "group": "group5" },
+    { "key": "enter_request", "title": "enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_APPLY" }] } },
+    { "key": "cancel_enter_request", "title": "cancel_enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_UNAPPLY" }] } },
+    { "title": "event_caller", "type": "space", "event": { "load_end": [{ "event": "show_tnmt_info", "edit_mode": false }] } }
+  ]
+}

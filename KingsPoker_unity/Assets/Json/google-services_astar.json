@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "451037412032",
+    "firebase_url": "https://astar-poker.firebaseio.com",
+    "project_id": "astar-poker",
+    "storage_bucket": "astar-poker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451037412032:android:9dacbb11dc94f58cee4b25",
+        "android_client_info": {
+          "package_name": "com.pogino.astar.playstore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451037412032-s9qucjp6e7j5bb5si8uo15dn1t6kqthn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pogino.astar.playstore",
+            "certificate_hash": "a2fe0803aa4579be75f48737f8f0f5077f41e447"
+          }
+        },
+        {
+          "client_id": "451037412032-m4lf9los5s39082p4bmpo8sdn6vlsonv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP-B2iqGIfzMDRGVkk9tltn28DuUcfTW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451037412032-m4lf9los5s39082p4bmpo8sdn6vlsonv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "451037412032-t5472rr2vrbgs6b7pip7nliuc4cvp98e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pogino.astar.appstore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

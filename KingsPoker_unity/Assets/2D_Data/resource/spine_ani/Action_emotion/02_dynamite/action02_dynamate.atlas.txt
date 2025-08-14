@@ -1,0 +1,146 @@
+
+action02_dynamate.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dynamate_d_eff_01
+  rotate: false
+  xy: 643, 214
+  size: 179, 174
+  orig: 179, 174
+  offset: 0, 0
+  index: -1
+dynamate_d_eff_02
+  rotate: false
+  xy: 2, 69
+  size: 184, 183
+  orig: 184, 183
+  offset: 0, 0
+  index: -1
+dynamate_d_eff_03
+  rotate: false
+  xy: 188, 51
+  size: 189, 185
+  orig: 189, 185
+  offset: 0, 0
+  index: -1
+dynamate_d_eff_05
+  rotate: false
+  xy: 379, 24
+  size: 195, 191
+  orig: 195, 191
+  offset: 0, 0
+  index: -1
+dynamate_d_eff_06
+  rotate: false
+  xy: 781, 7
+  size: 205, 203
+  orig: 205, 203
+  offset: 0, 0
+  index: -1
+dynamate_smoke_02
+  rotate: false
+  xy: 1032, 209
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_03
+  rotate: false
+  xy: 1240, 209
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_04
+  rotate: false
+  xy: 1448, 209
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_05
+  rotate: false
+  xy: 1656, 209
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_06
+  rotate: true
+  xy: 1864, 182
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_07
+  rotate: false
+  xy: 824, 212
+  size: 206, 176
+  orig: 206, 176
+  offset: 0, 0
+  index: -1
+dynamate_wave_01
+  rotate: true
+  xy: 467, 217
+  size: 171, 174
+  orig: 171, 174
+  offset: 0, 0
+  index: -1
+dynamate_wave_02
+  rotate: true
+  xy: 1195, 3
+  size: 204, 205
+  orig: 204, 205
+  offset: 0, 0
+  index: -1
+dynamate_wave_03
+  rotate: false
+  xy: 988, 4
+  size: 205, 203
+  orig: 205, 203
+  offset: 0, 0
+  index: -1
+dynamate_wave_04
+  rotate: false
+  xy: 576, 10
+  size: 203, 202
+  orig: 203, 202
+  offset: 0, 0
+  index: -1
+dynamite_body
+  rotate: false
+  xy: 265, 238
+  size: 200, 150
+  orig: 200, 150
+  offset: 0, 0
+  index: -1
+dynamite_bodya
+  rotate: false
+  xy: 113, 254
+  size: 150, 134
+  orig: 150, 134
+  offset: 0, 0
+  index: -1
+dynamite_bodyb
+  rotate: true
+  xy: 24, 310
+  size: 78, 87
+  orig: 78, 87
+  offset: 0, 0
+  index: -1
+dynuamate_wick01
+  rotate: false
+  xy: 2, 379
+  size: 20, 9
+  orig: 20, 9
+  offset: 0, 0
+  index: -1
+icon_oth_emo_02_dyna
+  rotate: false
+  xy: 1402, 2
+  size: 205, 205
+  orig: 205, 205
+  offset: 0, 0
+  index: -1

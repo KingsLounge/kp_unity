@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "821107625765",
+    "project_id": "kingspoker-dbe08",
+    "storage_bucket": "kingspoker-dbe08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821107625765:android:665cc51cfa7fead7ae14cc",
+        "android_client_info": {
+          "package_name": "com.kingslounge.kingspoker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821107625765-agq76mbunruiti0h9kr91p6lmcircn39.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kingslounge.kingspoker",
+            "certificate_hash": "f97b971e9ca2d818f74dfd849b85da8bdbc7cf61"
+          }
+        },
+        {
+          "client_id": "821107625765-e7q86ale7u0ic9mbb0a1chdmoogqvkvk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kingslounge.kingspoker",
+            "certificate_hash": "c3b2a506f1d915bd7d792f6f716a4f0eb41d8877"
+          }
+        },
+        {
+          "client_id": "821107625765-pceuq1rjoeljpr2o7s0flb955gn72l17.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kingslounge.kingspoker",
+            "certificate_hash": "019f7c522291974ec7411baffd7361dc39ac70d4"
+          }
+        },
+        {
+          "client_id": "821107625765-5c055j2v9vsqups5l9tk84m8mvda5u43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpbH0ixS9sZHzz-znbeZT4Rst_evcNLm4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "821107625765-5c055j2v9vsqups5l9tk84m8mvda5u43.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "821107625765-fpi9d5ujlf8naapogepnnbelkhki5i4o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kingslounge.kingspoker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

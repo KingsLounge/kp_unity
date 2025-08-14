@@ -1,0 +1,184 @@
+﻿
+
+enum ERR
+{
+	OK			= 0,
+	FAIL,
+
+	REQ_PARAMETER_WRONG,
+	REQ_PARAMETER_NOT_EXIST,
+
+	DISCONNECTED,
+
+	# db, redis
+	SQL_FAIL 					= 10,   # mysql 관련된 에러
+	SQL_FAIL_SELECT,
+	SQL_FAIL_INSERT,
+	SQL_FAIL_UPDATE,
+	CACHE_FAIL,                    		# redis 관련된 에러
+	CACHE_FAIL_READ,                    # redis 관련된 에러 - HGETALL 등과 같이 읽는 도중에 에러
+	CACHE_FAIL_WRITE,                   # redis 관련된 에러 - HMSET  등과 같이 쓰는 도중에 에러
+	SQL_FAIL_TRANSACTION_ROLLBACK,     # mySQL TRANSACTION ROLLBACK
+
+    # game setting 값
+	GAME_SET__WRONG_VARIABLES = 20,
+
+
+	# CAFE  ****************************************************************************************************************
+	# CAFE  ****************************************************************************************************************
+	# CAFE  ****************************************************************************************************************
+	# CAFE  ****************************************************************************************************************
+	# CAFE  ****************************************************************************************************************
+	# CAFE  ****************************************************************************************************************
+	NO_CAFE = 30,				# cafe.idx 가 없다. 
+	NOT_CAFE_MEMBER,			# 카페 멤버가 아니다.
+	NOT_CAFE_MEMBER_PERMIT,		# 카페 멤버 퍼밋이 없다. 
+
+
+	CAFE_NOT_ENOUGH_ZUICE,		# 카페 생성을 위한 zuice가 부족하다.
+	CAFE_NOT_ENOUGH_CHIP,		# 카페 생성을 위한 zuice가 부족하다.
+
+	CAFE_JOIN_ALREADY_JOINED,	# 이미 카페에 가입 되어있음.
+	CAFE_JOIN_ALREADY_APPLIED,	# 이미 카페에 가입 신청중 
+	CAFE_JOIN_PW_WRONG,			# 카페 가입시 입력하는 코드 
+	CAFE_JOIN_REJECTED,			# 카페 가입 거부 되었음. 
+	CAFE_JOIN_UPDATE_FAIL,		# 카페 가입 거부 되었음. 
+
+	CAFE_TRANSFER_CHIP_FAIL,			
+
+	CAFE_GAME_CREATE_FAIL,
+	CAFE_CREATE_FAIL,
+	CAFE_CREATE_FAIL_ALREADY_CODE, 		# 이미 같은 코드가 있습니다. 
+	CAFE_TOO_MANY_IN_THIS_ROOM,	
+
+	CAFE_STATUS_NOT_NORMAL,
+
+	CAFE_LEAVE_FAIL_CHIP_BORROWED, 		# 카페 탈퇴 실패: 빌린 칩이 있다.
+	CAFE_LEAVE_FAIL_CHIP, 				# 카페 탈퇴 실패: 칩이 있다. 
+	CAFE_LEAVE_FAIL_PLAYING, 			# 카페 탈퇴 실패: 게임중이다. 
+	CAFE_LEAVE_FAIL, 					# 카페 탈퇴 실패:
+
+	CAFE_GAME_UPDATE_FAIL,
+	CAFE_REMOVE_FAIL,
+
+	CAFE_FAIL_NAME_DUPLICATE,
+	
+	DB_EXCEPTION	=	100,
+	CACHE_EXCEPTION,
+	INVALID_SESSION,		# 세션정보가 비정상인경우
+	INVALID_ACCOUNT,		# 비밀번호나 provider가 일치 하지 않을때
+	INVALID_AUTHKEY,		# 인증키가 일치하지 않을때
+	NOT_AUTHENTICATED,		# 인증되지 않은 세션
+	ALREADY_LOGGEDIN,		# 106 - 이미 로그인한 유져
+	UNDER_MAINTENANCE,      # 유지보수 시간입니다. 
+	USER_STATUS__BLOCKED,	# 블럭된 유저 
+	ANOTHER_LOGIN,			# 다른곳에서 로그인했다.
+
+
+	NO_PUBLISHER_ACCOUNT				= 120    # 그런 api access id는 없습니다.
+	PUBLISHER_PASSWORD_WRONG,                    # 암호가 틀렸습니다.
+	PUBLISHER_ACCOUNT_EXPIRED,                   # 사용기한 만료되었습니다.
+	PUBLISHER_ACCOUNT_API_ACCESS_TOKOEN_WRONG,		# 권한 이 잘못되었거나, 
+	PUBLISHER_ACCOUNT_API_ACCESS_TOKOEN_EXPIRED,
+	PUBLISHER_ACCOUNT_API_ACCESS_TOKOEN_NO_PERMIT,
+	PUBLISHER_ACCOUNT_NOT_ALLOWED,
+
+
+	CAN_NOT_FIND_LOCALUSER,                   # 게임 유저 생성중 에러 (table bs.LocalUsers )
+	CAN_NOT_FIND_PROMISE,                     # 게임 유저 생성중 에러 (table bs.Promises )
+	CAN_NOT_FIND_USERID,                      # 게임 유저 생성중 에러 (table share.Users )
+
+	NO_USER_ID,                    				# 게임 유저 생성중 에러 (table bs.LocalUsers )
+	WRONG_PASSWORD,                    			# 게임 유저 패스워드 에러
+	USER_NOT_ENOUGH_CHIP,                    	# 돈이 없어
+
+
+	CREATE_LOCALUSER_ERR__ALREADY_USERID,
+	CREATE_USER_ERR__ALREADY_NICK,              #  134 인지 체크....
+
+     # deposit , withdraw
+	PUBLISHER_NOT_ENOUGH_CREDIT 		= 150,  # publisher_account의 credit이 부족하여 game_id의 deposit 요청을 받을수 없다.
+	USER_ID_NOT_ENOUGH_CREDIT,                 	# game_id의 credit이 부족하여 game_id의 withdraw 요청을 받을수 없다.
+
+	GM__NO_ACCOUNT,                    			# 그런 GM  account가 없습니다.
+	GM__WRONG_PASSWORD,                    		# PASSWORD가 틀립니다.
+	GM__ALREADY_ACCOUNT,                    	# 이미 존재하는 아이디입니다.
+	GM__NO_PERMIT,                    			# permit이 부족한니다.
+	GM__NO_GAME_GLOBAL_VARIABLES,               # 그런 game global variables 가 없습니다.
+	GM__NOT_NORMAL_STATUS,                    	# 상태가 정상이 아닙니다.
+
+
+	EXCEEDED_CHIP_HOLDING_AMOUNT,
+	MOVE_ROOM,
+	CANCEL_TNMT,
+	
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+# ROOM POKER_HOUSE  ************************************************************************************************************************
+
+	ROOM_BASE							= 200,
+	NO_ROOM_NUMBER,
+	NO_SEAT_IN_ROOM,
+	USER_IN_ROOM_ALREADY,
+	CANT_ENTER_ROOM,
+
+  	USER_NOT_IN_ROOM,		# 아직 포커하우스(HOC)에 안 들어왔습니다 .
+  	
+  	NOT_CHIP_ENOUGH_ENTER,
+  	NOT_CHIP_ENOUGH_PLAY,
+
+
+  	NO_MORE_REBUY,					# ( >= tnmt.rebuyCount) 더이상 rebuy 못함. 
+  	NOT_CHIP_ENOUGH_REBUY,			# rebuy할 돈이 없음. 
+  	NOT_REBUY_COZ_HAVE_CHIP,		# 칩이 ante이상 가지고 있으면 rebuy못함. 
+  	NO_MORE_ADDON,					# ( >= tnmt.addOnCount) 더이상 addOn 못함. 
+  	NOT_CHIP_ENOUGH_ADDON,			# addOn할 돈이 없음. 
+  	TOO_MUCH_CHIP_ENTER,			# 입장하기에 너무 돈이 많음.
+
+  	NOT_YET_SEATED,					# 아직 자리에 앚지 않았다. 
+
+
+# DVP GAME HALL ************************************************************************************************************************
+
+	NOT_TIME  							= 250,
+	CANT_ENTER_HALL,
+	EXCESS_BET_MAX,					# 이 이상 베팅 못해
+	CANT_SIT,						# 그 자리에 앉지 못한다. 
+	NOT_IN_THIS_TABLE,				# 이 테이블에 없다. 
+
+# TOURNAMENT  ************************************************************************************************************************
+# TOURNAMENT  ************************************************************************************************************************
+# TOURNAMENT  ************************************************************************************************************************
+
+    
+    TNMT_FAIL = 300,                  
+    TNMT_NO_TN,                  	# 해당 토너먼트가 없음
+    TNMT_USER_REGIST_CLOSED,      # 해당 토너먼트는 등록 마감됨
+    TNMT_APPLY_ALREADY,          	# 다른 토너먼트에 참가중
+    TNMT_CHIP_NOT_ENOUGH,         # 돈이 부족함
+    TNMT_OUT_OF_ROOM_NO_REASON,		# 방에서 나감. 
+    TNMT_APPLY_ALREADY_IN,        # 해당 토너먼트에 이미 들어와있음
+		TNMT_UNAPPLY,
+		TNMT_NOT_OPEN_CANT_REGIST,   	# 토너먼트 등록 시간이 아님.
+		TNMT_TICKET_NOT_ENOUGH,       # 티켓이 없음.
+		TNMT_NO_MORE_REENTRY,
+		TNMT_NO_MORE_REGIST,
+		TNMT_ALREADY_ELIMINATED,      # 탈락해서 더이상 방에 들어갈수 없음. 리엔트리 하던지.. 
+
+	KINGSHILL_ERR_ALREADY_LINK = 350,
+	KINGSHILL_ERR_NO_USERINFO,
+	KINGSHILL_OK_USER_LINK__SEND_CODE,
+	KINGSHILL_ERR_NO_CODE,
+	KINGSHILL_OK_USER_LINK__SUCCESS,
+	KINGSHILL_ERR_ALREADY_PHONE_USED,
+
+
+}
+
+
+

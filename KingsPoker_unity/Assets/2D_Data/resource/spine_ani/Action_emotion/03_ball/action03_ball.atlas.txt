@@ -1,0 +1,76 @@
+
+action03_ball.png
+size: 2048,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ball_00
+  rotate: false
+  xy: 2, 3
+  size: 205, 205
+  orig: 205, 205
+  offset: 0, 0
+  index: -1
+dynamate_smoke_02
+  rotate: true
+  xy: 824, 2
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_03
+  rotate: true
+  xy: 1005, 2
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_04
+  rotate: true
+  xy: 1186, 2
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_05
+  rotate: true
+  xy: 1367, 2
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_06
+  rotate: true
+  xy: 1548, 2
+  size: 206, 179
+  orig: 206, 179
+  offset: 0, 0
+  index: -1
+dynamate_smoke_07
+  rotate: true
+  xy: 1729, 2
+  size: 206, 176
+  orig: 206, 176
+  offset: 0, 0
+  index: -1
+dynamate_wave_02
+  rotate: false
+  xy: 209, 3
+  size: 204, 205
+  orig: 204, 205
+  offset: 0, 0
+  index: -1
+dynamate_wave_03
+  rotate: true
+  xy: 415, 3
+  size: 205, 203
+  orig: 205, 203
+  offset: 0, 0
+  index: -1
+dynamate_wave_04
+  rotate: true
+  xy: 620, 5
+  size: 203, 202
+  orig: 203, 202
+  offset: 0, 0
+  index: -1

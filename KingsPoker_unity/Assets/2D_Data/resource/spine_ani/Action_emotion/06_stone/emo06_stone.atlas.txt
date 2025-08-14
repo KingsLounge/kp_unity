@@ -1,0 +1,90 @@
+
+emo06_stone.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+other_emo_06_stone
+  rotate: false
+  xy: 1612, 331
+  size: 128, 115
+  orig: 128, 115
+  offset: 0, 0
+  index: -1
+remove_00001
+  rotate: false
+  xy: 1612, 249
+  size: 92, 80
+  orig: 92, 80
+  offset: 0, 0
+  index: -1
+remove_00003
+  rotate: false
+  xy: 1399, 67
+  size: 166, 156
+  orig: 166, 156
+  offset: 0, 0
+  index: -1
+remove_00005
+  rotate: false
+  xy: 1190, 2
+  size: 207, 221
+  orig: 207, 221
+  offset: 0, 0
+  index: -1
+remove_00006
+  rotate: false
+  xy: 1410, 225
+  size: 200, 221
+  orig: 200, 221
+  offset: 0, 0
+  index: -1
+remove_00007
+  rotate: false
+  xy: 1190, 225
+  size: 218, 221
+  orig: 218, 221
+  offset: 0, 0
+  index: -1
+remove_00008
+  rotate: false
+  xy: 2, 225
+  size: 394, 221
+  orig: 394, 221
+  offset: 0, 0
+  index: -1
+remove_00009
+  rotate: false
+  xy: 2, 2
+  size: 394, 221
+  orig: 394, 221
+  offset: 0, 0
+  index: -1
+remove_00010
+  rotate: false
+  xy: 398, 225
+  size: 394, 221
+  orig: 394, 221
+  offset: 0, 0
+  index: -1
+remove_00011
+  rotate: false
+  xy: 398, 2
+  size: 394, 221
+  orig: 394, 221
+  offset: 0, 0
+  index: -1
+remove_00012
+  rotate: false
+  xy: 794, 225
+  size: 394, 221
+  orig: 394, 221
+  offset: 0, 0
+  index: -1
+remove_00013
+  rotate: false
+  xy: 794, 2
+  size: 394, 221
+  orig: 394, 221
+  offset: 0, 0
+  index: -1

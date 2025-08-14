@@ -1,0 +1,496 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a4d97056839842c68eb7afecdcf7ffa, type: 3}
+  m_Name: EmoticonData
+  m_EditorClassIdentifier: 
+  emoticons:
+  - key: 1
+    moveable: 0
+    includeList: 0
+    iconTexture: {fileID: 21300000, guid: 7cf015a281e148e4684f5078097da803, type: 3}
+    description: run_it_twice
+    soundEnumKey: voice_runitonce
+    texture: {fileID: 21300000, guid: 7cf015a281e148e4684f5078097da803, type: 3}
+    playTime: 3
+    spine: {fileID: 7278370613833776878, guid: 1e3fb63916dfca44fb069f20358681a0, type: 3}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 2
+    moveable: 0
+    includeList: 0
+    iconTexture: {fileID: 21300000, guid: df59fa7f37bd06b4db4dbce91ac035ce, type: 3}
+    description: run_it_twice
+    soundEnumKey: voice_runitonce
+    texture: {fileID: 21300000, guid: df59fa7f37bd06b4db4dbce91ac035ce, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 3
+    moveable: 0
+    includeList: 0
+    iconTexture: {fileID: 21300000, guid: 52ca60f33d926f54cbee4937c8aa5e3d, type: 3}
+    description: run_it_twice
+    soundEnumKey: voice_runittwice
+    texture: {fileID: 21300000, guid: 52ca60f33d926f54cbee4937c8aa5e3d, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 4
+    moveable: 0
+    includeList: 0
+    iconTexture: {fileID: 21300000, guid: a09ea65456afa8e408cb30b1d90584ff, type: 3}
+    description: run_it_twice
+    soundEnumKey: voice_runittwice
+    texture: {fileID: 21300000, guid: a09ea65456afa8e408cb30b1d90584ff, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 5
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: ca3044e03ba05437384a4ac9d447be4a, type: 3}
+    description: emo_01_bad_beat
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: ca3044e03ba05437384a4ac9d447be4a, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 6
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 322a4170873924ff48ef436969f6e12a, type: 3}
+    description: emo_02_come_on
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 322a4170873924ff48ef436969f6e12a, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 7
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 6f45c70f1cf894badbb9e23619f174fc, type: 3}
+    description: emo_03_good_game
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 6f45c70f1cf894badbb9e23619f174fc, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 8
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: e67c8d019f9434df58e5d7aabd4c5272, type: 3}
+    description: emo_04_good_luck
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: e67c8d019f9434df58e5d7aabd4c5272, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 9
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 8f0ef79e1ddc04e4e97a95ef62bbe94d, type: 3}
+    description: emo_05_good_play
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 8f0ef79e1ddc04e4e97a95ef62bbe94d, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 10
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 04b6c2477eedd4f38b26e9e31d2ced30, type: 3}
+    description: emo_06_good_buy
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 04b6c2477eedd4f38b26e9e31d2ced30, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 11
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: b51c8162880a042edad5a5951be34c29, type: 3}
+    description: emo_07_haha
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: b51c8162880a042edad5a5951be34c29, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 12
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 133d889d2ca2c41bf8f56b71637e108b, type: 3}
+    description: emo_08_hellow
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 133d889d2ca2c41bf8f56b71637e108b, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 13
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 4b2cf05df6ca744109d475738cb6db63, type: 3}
+    description: emo_09_hurry_up
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 4b2cf05df6ca744109d475738cb6db63, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 14
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 9887faf31891b4e92a793de5b5411d61, type: 3}
+    description: emo_010_iwant_to_call
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 9887faf31891b4e92a793de5b5411d61, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 15
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: edac5916f978e49269bc13f9000238ab, type: 3}
+    description: emo_011_iam_so_good
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: edac5916f978e49269bc13f9000238ab, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 16
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: a54c3d7b3030e45dc9a2d44d92be7bae, type: 3}
+    description: emo_012_just_one_time
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: a54c3d7b3030e45dc9a2d44d92be7bae, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 17
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: e54ea8188ce774e42a2d300aef095094, type: 3}
+    description: emo_013_my_last_hand
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: e54ea8188ce774e42a2d300aef095094, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 18
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: d003c3567d8ee4a6bb484e991af07e05, type: 3}
+    description: emo_014_nice_hand
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: d003c3567d8ee4a6bb484e991af07e05, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 19
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: a0378b6205d0048d7b306989e967c9d6, type: 3}
+    description: emo_015_not_sure_if
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: a0378b6205d0048d7b306989e967c9d6, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 20
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: b2ab7f9ca309e40f8a3cf900572c5256, type: 3}
+    description: emo_016_omg
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: b2ab7f9ca309e40f8a3cf900572c5256, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 21
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 52daf797934b94472bb5e16daa06ff58, type: 3}
+    description: emo_017_running_hot
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 52daf797934b94472bb5e16daa06ff58, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 22
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 86e6283775b3e487baa1f14a21bdcc03, type: 3}
+    description: emo_018_running_cold
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 86e6283775b3e487baa1f14a21bdcc03, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 23
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: a2f9b813d14d74855afda730c3dcc7a1, type: 3}
+    description: emo_019_ship_it
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: a2f9b813d14d74855afda730c3dcc7a1, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 24
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: cc0b2cab922e6405e82dd6d0bbf916c0, type: 3}
+    description: emo_020_so_confusing
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: cc0b2cab922e6405e82dd6d0bbf916c0, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 25
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 4a2a38af1afef4b1fa4eb90a149fa16d, type: 3}
+    description: emo_021_so_sick
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 4a2a38af1afef4b1fa4eb90a149fa16d, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 26
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: da23149f8b80e4b8c968e40d8a4e0623, type: 3}
+    description: emo_022_sorry
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: da23149f8b80e4b8c968e40d8a4e0623, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 27
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: c31dbc526094c4b8ea2b3b273302cacb, type: 3}
+    description: emo_023_thank_you
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: c31dbc526094c4b8ea2b3b273302cacb, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 28
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 7bfbccc61068c4d7a9f693a8546f0592, type: 3}
+    description: emo_024_tilt
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 7bfbccc61068c4d7a9f693a8546f0592, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 29
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 3f67314ad08c7480fb8023e378961c6f, type: 3}
+    description: emo_025_whap
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 3f67314ad08c7480fb8023e378961c6f, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 30
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 3003c9e4e9657497c9a33343b27388cd, type: 3}
+    description: emo_026_wtf
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 3003c9e4e9657497c9a33343b27388cd, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 31
+    moveable: 0
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    description: emo_027_you-suck
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    playTime: 3
+    spine: {fileID: 0}
+    startAnim: 
+    moveAnim: 
+    endAnim: 
+    speedScale: 0
+  - key: 32
+    moveable: 1
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 73f3ce5909d44a64eb9e93d386de1ba2, type: 3}
+    description: emo_028_tomato
+    soundEnumKey: sfx_tomato
+    texture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    playTime: 3
+    spine: {fileID: 7278370613833776878, guid: 1e3fb63916dfca44fb069f20358681a0, type: 3}
+    startAnim: oth_emo_01_start
+    moveAnim: oth_emo_01_move
+    endAnim: oth_emo_01_tboom
+    speedScale: 1
+  - key: 33
+    moveable: 1
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 44dde51efb0507d4b9f6b4117b4ce084, type: 3}
+    description: emo_029_Dynamite
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    playTime: 3
+    spine: {fileID: 7278370613833776878, guid: ce1e986dc7a82df48a5b4038c11a3a00, type: 3}
+    startAnim: oth_emo_02_start
+    moveAnim: oth_emo_02_dyna_move
+    endAnim: oth_emo_02_dyna_boom
+    speedScale: 1
+  - key: 34
+    moveable: 1
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 3b8944891f9feeb43ac7eb50f16cc085, type: 3}
+    description: emo_030_ball
+    soundEnumKey: 
+    texture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    playTime: 3
+    spine: {fileID: 7278370613833776878, guid: 8b11e06f7dc9ebe45bfb1117ff5a05e1, type: 3}
+    startAnim: oth_emo_03_start
+    moveAnim: oth_emo_03_move
+    endAnim: oth_emo_03_ballboom
+    speedScale: 1
+  - key: 35
+    moveable: 1
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 1bea2e4e8478626438225d4b55bf9f36, type: 3}
+    description: emo_031_Firework
+    soundEnumKey: sfx_firework
+    texture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    playTime: 3
+    spine: {fileID: 7278370613833776878, guid: 5fb68e7cfa5779d44931023532abc7a6, type: 3}
+    startAnim: oth_emo_04_start
+    moveAnim: oth_emo_04_move
+    endAnim: oth_emo_04_firework_boom
+    speedScale: 0
+  - key: 36
+    moveable: 1
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 03fa7ddfc3614d242a684d2ed69148c6, type: 3}
+    description: emo_032_Wine
+    soundEnumKey: sfx_wine
+    texture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    playTime: 3
+    spine: {fileID: 7278370613833776878, guid: 85922d3158416fe4faa9658fd5940629, type: 3}
+    startAnim: oth_emo_05_start
+    moveAnim: oth_emo_05_move
+    endAnim: oth_emo_05_wineboom
+    speedScale: 0
+  - key: 37
+    moveable: 1
+    includeList: 1
+    iconTexture: {fileID: 21300000, guid: 4d0034a514956214a8611d4ec1c13848, type: 3}
+    description: emo_033_Stone
+    soundEnumKey: sfx_stone
+    texture: {fileID: 21300000, guid: 17494cb8f53dd44b190a31662e5502f1, type: 3}
+    playTime: 3
+    spine: {fileID: 7278370613833776878, guid: bd36c5657ff68cb44bf5ea352a5681d1, type: 3}
+    startAnim: oth_emo_06_start
+    moveAnim: oth_emo_o6_move
+    endAnim: oth_emo_06_stone_boom
+    speedScale: 0

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c415bc2d1a1a63e48ae28df1f02bf2c4, type: 3}
+  m_Name: EnterButtonChipFontSpriteKH
+  m_EditorClassIdentifier: 
+  spriteInfo:
+  - key: 48
+    sprite: {fileID: 21300000, guid: f80d72ce65c211b408a08924b773c505, type: 3}
+  - key: 49
+    sprite: {fileID: 21300000, guid: 2ec9d248e40616a43b97fcf921520fb9, type: 3}
+  - key: 50
+    sprite: {fileID: 21300000, guid: da1eb98fb2a445c4d9870b4828836e12, type: 3}
+  - key: 51
+    sprite: {fileID: 21300000, guid: 370372df3cfd0ca48b7797d2969dc331, type: 3}
+  - key: 52
+    sprite: {fileID: 21300000, guid: 453b192d6d168e54b8a0c1f0331799c5, type: 3}
+  - key: 53
+    sprite: {fileID: 21300000, guid: 60b0c6d88fe56eb4ca435872c16be529, type: 3}
+  - key: 54
+    sprite: {fileID: 21300000, guid: b2dcebbce84a23e4c9e9139de997e9b6, type: 3}
+  - key: 55
+    sprite: {fileID: 21300000, guid: bdf4169a2de7a364ea6fe66eeba767da, type: 3}
+  - key: 56
+    sprite: {fileID: 21300000, guid: d9afe81991db99541bf79f44333772e0, type: 3}
+  - key: 57
+    sprite: {fileID: 21300000, guid: d9af8bf96c9b2e748bbef30145de51a6, type: 3}
+  - key: 47564
+    sprite: {fileID: 21300000, guid: ac496ba9215d90d478b9acf273071bad, type: 3}
+  - key: 50613
+    sprite: {fileID: 21300000, guid: 81ee0e4b7a7cd144da9998841fa76c52, type: 3}
+  - key: 51312
+    sprite: {fileID: 21300000, guid: ea8aa83829e525647bf497dbb2f4c3a5, type: 3}

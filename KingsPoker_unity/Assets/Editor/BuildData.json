@@ -1,0 +1,74 @@
+﻿{
+  "platform": [
+    {
+      "key": "Kings_Dev",
+      "KeystoreName": "KingsPoker.keystore",
+      "KeystorePass": "xNdUdW6cuLMYYHg",
+      "KeyaliasName": "kings",
+      "KeyaliasPass": "xNdUdW6cuLMYYHg",
+      "LastBuildDate": "20230830",
+      "BundleCode": 55,
+      "BuildNumber": 15,
+      "IconPath": "Assets/2D_Data/resource/appicon/App_icon.png",
+      "ProductName": "KINGS POKER",
+      "PackageName": "com.kingslounge.kingspoker",
+      "IOSPackageName": "com.kingslounge.kingspoker",
+      "naverClientId": "",
+      "naverClientSecret": "",
+      "naverClientName": "",
+      "storageUrl": "https://kingspoker.s3.ap-northeast-2.amazonaws.com",
+      "configPath": "/config/serverConfig.json",
+      "webClientId": "821107625765-v49usbbe56ssael743hk7d3atn9uj3c9.apps.googleusercontent.com",
+      "allowedAutorotateToPortrait": true,
+      "allowedAutorotateToPortraitUpsideDown": true,
+      "allowedAutorotateToLandscapeLeft": false,
+      "allowedAutorotateToLandscapeRight": false,
+      "scenes": [
+        "Assets/Scenes/KingsLounge/Start.unity",
+        "Assets/Scenes/KingsLounge/Login.unity",
+        "Assets/Scenes/KingsLounge/Lobby.unity"
+      ],
+      "copy": [
+        {
+          "from": "Assets/Json/google-services_kingspoker.json",
+          "to": "Assets/Json/google-services.json"
+        }
+      ]
+    },
+    {
+      "key": "Kings",
+      "KeystoreName": "KingsPoker.keystore",
+      "KeystorePass": "xNdUdW6cuLMYYHg",
+      "KeyaliasName": "kings",
+      "KeyaliasPass": "xNdUdW6cuLMYYHg",
+      "LastBuildDate": "20250521",
+      "BundleCode": 364,
+      "BuildNumber": 2,
+      "IconPath": "Assets/2D_Data/resource/appicon/App_icon.png",
+      "ProductName": "KINGS POKER",
+      "PackageName": "com.kingslounge.kingspoker",
+      "IOSPackageName": "com.kingslounge.kingspoker",
+      "naverClientId": "",
+      "naverClientSecret": "",
+      "naverClientName": "",
+      "storageUrl": "https://kingspoker.s3.ap-northeast-2.amazonaws.com",
+      "configPath": "/config/serverConfigDev.json",
+      "webClientId": "821107625765-v49usbbe56ssael743hk7d3atn9uj3c9.apps.googleusercontent.com",
+      "allowedAutorotateToPortrait": true,
+      "allowedAutorotateToPortraitUpsideDown": true,
+      "allowedAutorotateToLandscapeLeft": false,
+      "allowedAutorotateToLandscapeRight": false,
+      "scenes": [
+        "Assets/Scenes/KingsLounge/Start.unity",
+        "Assets/Scenes/KingsLounge/Login.unity",
+        "Assets/Scenes/KingsLounge/Lobby.unity"
+      ],
+      "copy": [
+        {
+          "from": "Assets/Json/google-services_kingspoker.json",
+          "to": "Assets/Json/google-services.json"
+        }
+      ]
+    }
+  ]
+}

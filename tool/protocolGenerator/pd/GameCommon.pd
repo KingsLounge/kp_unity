@@ -1,0 +1,534 @@
+
+typedef UserNumType = int;
+typedef MoneyType = LONGLONG;
+
+
+[NoPrefix]
+
+enum KICK_REASON
+{
+	UNKNOWN=0,					
+	JUST_KICK=1,					# 이유는 없지만 그냥 종료시키고 싶을때
+	ANOTHER_LOGIN=2,				# 또다른 로그인이 일어난 경우
+	BLOCK=3,						# 계정을 블럭 합니다. 
+	GAMEMONEY_LOSE_LIMIT=4,	   	# 게임 머니 소진량 초과
+	USER_LOGOUT=5,				# 유저에의한 로그아웃(  옵션메뉴에서 로그아웃을 눌렀다 )
+	NETWORK_STOP = 6,
+}
+
+enum USER_TYPE
+{
+    PLAYER = 0,
+    DEALER = 1,
+    OBSERVER = 2,
+    UNSEATED = 3,   	# gameTable에 들어왔지만 아직 자리에 앉지 못했다. 아마도 다음 게임에 자리에 앉게 될 듯.
+    BOT = 4,
+    BREAK_TIME = 5, 	# 플레이 도중에, 잠시 자리를 비웠다. 
+}
+
+enum USER_STATUS		#  DB.bs.LocalUser.status 유저의 상태에 따라 로그인 가능 여부를 처리한다.
+{     
+	USER=0,
+	OPERATOR=1,			# 운영자 패치 시간이라도 게임에 로그인 할수 있다. 
+	BLOCKED =2,
+}
+
+
+enum API_ACCESS_ROLE 	# framework API에 접근하는 role 
+{     
+	GAME  = 1,
+	ADMIN = 2,
+	PUBLISHER = 4,
+	ALL  = 255,
+}
+
+enum API_ACCESS_PERMIT  	# framework API에 접근하는 role 
+{     
+	LEVEL_0 = 0,	# 접근 권한 없음. 
+	LEVEL_1 = 1,      
+	LEVEL_2 = 2,      
+	LEVEL_3 = 3,      
+}
+
+
+
+enum GAME_TYPE 
+{
+    nothing = 0,
+    nlh = 1,
+    sng = 2,
+    plo = 3,
+    mtt = 4,
+    short_deck = 5,
+}
+
+enum CHIP_TYPE 
+{
+    nothing = 0,
+    zc = 1,
+    dc = 2,
+	cc = 3, 
+}
+
+enum TIER_RATE{
+    nothing = 0,
+    silver = 1,
+    gold = 2,
+    diamond = 3
+}
+
+
+
+[NoPrefix]
+enum NET_LENGTH
+{
+	STRING_4_LEN	= 4,
+	STRING_8_LEN	= 8,
+	STRING_16_LEN	= 16,
+	STRING_24_LEN	= 24,
+	STRING_32_LEN	= 32,
+	STRING_48_LEN	= 48,
+	STRING_64_LEN	= 64,
+	STRING_128_LEN	= 128,
+	STRING_256_LEN	= 256,
+	STRING_512_LEN	= 512,
+	STRING_2048_LEN	= 2048,
+
+	UUID_STRING_LEN = 36,
+	DATETIME_LEN = 64,
+	USER_SESSION_ID_LEN = 64,
+	BROADCAST_LEN = 64,
+
+	HALL_BC_BET_POSITIONS = 5
+
+}
+
+enum ROOM_COMMAND 
+{
+	none   				= 0,
+	just_room_created  	= 5,
+	waiting_player = 10,			# 플레이어가 들어오길 기다린다. 
+	ready_to_start = 15,			# 시작을 준비한다. 
+	wait_to_start_button = 16,		# 딜러의 스타트 버튼을 기다린다. 
+	check_to_start = 17, 			# 딜러가 스타트 버튼을 눌렀다. 체크할거 있으면 다시 체크하자. 
+	start = 20,						# 게임시작. 
+	playing = 22,					# 게임중  
+	make_results = 25,
+	calc_dividend = 30,				# 여기서  __POKER_GAMERESULT 를 보낸다. 
+
+	auto_rebuy_free_chip = 31,		# ( if tm == 0 ) 오토 리바이 또는 무료충전 
+
+	dividend_check = 35,
+
+	donation = 36,
+	break_time  = 37,
+
+
+	check_new_members = 40, 		# 나가는 유저와 새로 들어온 유저를 체크한다. 
+
+	check_tournament_deal = 41,		# 토너먼트 딜 확인
+
+	end = 49,
+}
+enum ROOM_USER_STATUS
+{
+	nothing = 0,
+    ingameTable = 1,
+	ingame = 2,				# 이제 게임에 참여한다. 
+	reserved_leave  = 3,	# 이제 나가려고 한다. 
+	die =  4,				# die했다. 
+	winner =  5,
+}
+
+enum ROOM_USER_STATUS_SEAT
+{
+	outofroom = 0,
+	standing = 1,				   # 서있다. 방에 들어왔다. 
+    seated = 2,                    # 자리에 앉아있다.
+	standing_up_after_round = 3,   # 이번판 뒤에 일어날거다. 
+	rest_after_round = 4,   	   # 앉아있지만, 다음판 부터 몇판 쉴거다. 
+}
+
+enum ROOM_CREATE_OPTION_DESC
+{
+    level	= 0,
+	ante	= 1,
+	bing	= 2, 
+	small_blind = 3,
+	blind 	= 4,
+	max		= 5,
+	buyin	= 6,
+	buyin_limit = 7,
+	buyin_min = 8,
+	buyin_max = 9,
+	chip_type = 10,
+	buyin_type = 11,
+	betting_board = 12, 
+	betting_count = 13, 
+	raise_count = 14,
+	max_seat = 15
+
+}
+
+enum POKER_BETTYPE
+{
+	none  		= 0x00000,  # ante 
+	
+	die 		= 0x00001,
+	bing 		= 0x00002,
+	dadang 		= 0x00004,
+	check 		= 0x00008, 
+
+	ante  		= 0x00010, 
+	insurance 				= 17,
+	run_it_twice 			= 18,
+	win 		 			= 19,
+	call 		= 0x00020,
+	half 		= 0x00040,
+	quarter 	= 0x00080,
+	max 		= 0x00100,
+	allin 		= 0x00200,
+	small 		= 0x00400,
+	big 		= 0x00800,
+
+	bet 		= 0x01000,
+	raise 		= 0x02000,
+
+	pass 		= 0x04000,
+	change 		= 0x08000,
+
+	full 		= 0x10000,	
+	pb 	 		= 0x20000,	
+	straddle 	= 0x40000,
+	extra 		= 0x80000,
+}
+enum POKER_USER_STATUS
+{
+	nothing 		=  0,
+	die 			= 10,			# die했다. 
+	winner 			= 20,			
+}
+
+enum POKER_FLOW
+{
+	none  = 0,
+
+	set_up 			= 2,  	# 시작 준비 
+	set_boss 		= 5,
+
+	ante 			= 10,  	# for holdem    
+
+	blind_bet 		= 11,
+	straddle		= 12,
+
+	draw_cards 		= 15,  	# for holdem = deal holecards
+
+	check_show_down	= 16,
+
+	bet  			= 20,
+	bet_start  		= 21,
+
+	betstage_up  	= 25,		# = chage_1 --> stage_flop
+	draw_comm_cards = 26,		# = --> flop_start 
+
+	show_down 			= 40,
+
+	run_it_twice_check	= 42,
+
+	run_it_twice		= 41,
+
+	insurance_check		= 50,
+	insurance 			= 51,
+
+	open_cards 			= 55,
+	end_of_game 		= 60,
+	goto_result 		= 65,
+
+	betstage_preflop 	= 70,
+	betstage_flop 		= 71,
+	betstage_turn 		= 72,
+	betstage_river 		= 73,
+
+	betstage_dawn = 80,
+	betstage_morning = 81,
+	betstage_afternoon = 82,
+	betstage_evening = 83,
+
+	betstage_4th = 90,
+	betstage_5th = 91,
+	betstage_6th = 92,
+	betstage_7th = 93,
+}
+
+
+enum TNMT_FLOW
+{
+    none = 0,
+    open = 10,  # registration_time 필요.
+    start = 20, 
+    close = 30,
+    end = 40,  # 마지막 유저에게 1등 상금을 지급하였다. 
+
+  	cancel = 97,
+    cancel_gmt = 98,
+    cancel_abnormal = 99,
+}
+
+enum TNMT_MAKE_TYPE {
+    auto = 1,
+    gmt = 2,
+    user = 3,
+}
+
+enum TNMT_REWARD_RANK_TYPE {
+    none = 0,
+    propotional = 1,
+    fixed_table = 2,
+}
+
+enum TNMT_GAME_TNMT_RESULT_STATE {
+    none = 0,
+    applied  = 1,
+    eliminated = 2,
+		canceled = 3,
+}
+
+
+
+
+
+############################ 카페 
+############################ 카페 
+############################ 카페 
+############################ 카페 
+############################ 카페 
+
+
+enum CAFE_STATUS 
+{
+	normal = 0,
+	suspended = 1,
+	delete_apply = 8,
+	deleted = 9,
+
+	op_on = 10,
+	op_off = 11,
+}
+
+enum CAFE_TIER
+{
+	bronze = 1,
+	silver = 2,
+	gold = 3,
+	platinum = 4,
+	diamond = 5,
+}
+
+enum CAFE_TIER_OPTION
+{
+	open_fee = 0,
+	table_max = 1,
+	member_max = 2,
+	fee_next_time = 3,	# HR
+	prepaid_time = 4,	# HR
+	cc = 5,				# 지급 cafe chip
+}
+
+enum CAFE_MEMBER_STATUS 
+{
+	none = 0,
+	applied = 1,
+	accepted = 2,
+	normal = 2,
+
+	not_accepted = 9,
+	suspended = 19,
+}
+
+enum CAFE_MEMBER_PERMIT 
+{
+	none = 0,
+	member = 1,
+	manager = 2,
+	owner = 3,
+}
+
+enum CAFE_JOIN_STATUS
+{
+	none = 0,
+	applied = 1,
+	rejected = 2,
+	accepted = 3,
+}
+
+
+enum CAFE_NOTICE_TYPE 
+{
+	none = 0,
+	cafe_join = 1,
+	cafe_chip_request = 2,
+}
+
+
+
+# Order 
+
+enum TRANSFER_TYPE 
+{
+	none=0,
+
+	send = 1,
+	receive = 2,
+
+	sell = 3,		# member 
+	buy = 4,
+	borrow = 5,
+
+	sold = 6,		#manager
+	bought = 7,
+	borrowed = 8,  	# debt 
+
+	sell_rejected = 9,	# manager 
+	buy_rejected = 10,
+	borrow_rejected = 11,
+
+	sell_cancel = 12,	# member 
+	buy_cancel = 13,
+	borrow_cancel = 14,
+
+	borrow_payback = 15,   #
+
+	all = 16,
+
+	game_buy_in = 17,
+	game_cash_out = 18,
+
+	transfer = 20,			# to cafe
+	transferred = 21,
+
+	transfer2 = 22,			# to cafeMember
+	transferred2 = 23,	
+
+}
+
+enum CHAT_TYPE
+{
+	simple = 0,
+	system = 1,
+	cafe_join = 2,
+	cafe_order_chip = 3,
+}
+
+enum SIT_OUT
+{
+	none = 0,
+	next_hand = 1,
+	next_blind = 2,
+}
+
+enum PLAYER_INFO_CHANGE
+{
+	none = 0,
+	player_info_change_passive_rake_hands = 1,
+	player_info_change_passive_rake_time = 2,
+	player_info_change_stack_removal_hands = 3,
+	player_info_change_stack_removal_time = 4,
+	player_info_change_time_bank_price = 5,
+	player_info_change_surplus_bet_chip = 6,
+}
+
+enum PLAYER_INSURANCE_CHOICE
+{
+	none = 0,
+	cancel = 1,
+	accept = 2,
+}
+
+
+
+enum TIME_BANK_COMMAND
+{
+	none = 0,
+	popup = 1,
+	count_down = 2,
+}
+
+enum TIME_BANK_MODE
+{
+	none = 0,
+	alwaysbank = 1, 
+	includingbank = 2, 
+	excludingbank = 3, 
+	neverbank = 4, 
+	on = 5, 
+	off = 6, 
+}
+
+enum USER_SHOW_CARDS
+{
+	none = 0,
+	left = 1, 
+	right = 2, 
+	all = 3, 
+}
+
+enum MESSAGE_TYPE
+{
+	none = 0,
+	simple = 1, 
+	notice = 2, 
+}
+
+
+
+
+enum NOTIFICATION_TYPE{
+    mute_all_push = 0,
+    nightly_noti_push = 1,
+    cafe_noti_push = 2,
+    approve_push = 3,
+    chip_approve_push = 4,
+    create_delete_push = 5,
+    tournament_push = 6,
+    stop_operation_push = 7,
+    approve_push_2 = 8,
+    chip_push = 9,
+    stop_operation_owner_push = 10
+}
+
+
+
+
+
+enum usedType
+{
+	notUsed = 0,
+	used = 1,
+	inUse = 2,
+}
+
+enum itemType
+{
+	none = 0,
+	free_chip = 1,
+	chip = 1,
+	gold = 1,
+	value_chip = 2,
+	point = 2,
+	silver = 2,
+	ruby = 3,
+	package = 10,
+	character = 11,
+	membership = 12,
+	ticket_tnmt = 13,
+	ticket_kickout = 14,
+	ticket_nick = 15,
+	card_front = 20,
+	card_back = 21,
+}
+
+
+
+
+
+

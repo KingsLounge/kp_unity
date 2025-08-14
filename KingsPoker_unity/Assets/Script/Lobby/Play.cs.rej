@@ -1,0 +1,92 @@
+diff a/jackpot_holdem_unity/Assets/Script/Lobby/Play.cs b/jackpot_holdem_unity/Assets/Script/Lobby/Play.cs	(rejected hunks)
+@@ -75,6 +75,90 @@
+         }
+     }
+ 
++    public void OpenPlay()
++    {
++        Packet p = new Packet((int)CPProtocol.CP_CAFE_LIST);
++        WebSocketManager.defaultCli.Send(p.ToJson());
++    }
++
++
++    public void ReceivePlayGameList(JObject c)
++    {
++        int ecode = (int)c["ecode"];
++        //int page= (int)c["page"];
++        //int per= (int)c["per"];
++        //string orderColumn = (string)c["orderColumn"];
++        //string orderDir= (string)c["orderDir"];
++        //int total= (int)c["total"];
++        //int totalFilter= (int)c["totalFiltered"];
++        JObject[] temp_playGameInfoList = JsonDataParser.Parse<JObject[]>(c["playGameList"]);
++
++        // 일단 모두 지우고 
++        if (playGameInfoList== null)
++        {
++            playGameInfoList= new List<PlayGameInfo>();
++        }
++        else
++        {
++            playGameInfoList.Clear();
++        }
++
++        if (playGameItemList == null)
++        {
++            playGameItemList= new List<PlayGameItem>();
++        }
++
++        // 게임 리스트 모두 삭제 
++        while (0 < playGameItemList.Count)  
++        {
++            var m = playGameItemList[playGameItemList.Count-1];
++            playGameItemList.RemoveAt(playGameItemList.Count-1);
++            // Destroy(m.gameObject);
++        }
++
++        // 다른것이 있으면 모두 삭제 
++        while (contentContainer.transform.childCount != 0)
++        {
++            var child = contentContainer.transform.GetChild(0);
++            child.SetParent(null);
++            Destroy(child.gameObject);
++        }
++
++        Instantiate(prefab_EventItem, contentContainer);
++
++        for (int i = 0; i < temp_playGameInfoList.Length; i++)
++        {
++            var temp_playInfo = temp_playGameInfoList[i];
++            Debug.Log(temp_playInfo);
++
++            
++            PlayGameInfo playInfo = new PlayGameInfo(temp_playInfo);
++            playGameInfoList.Add(playInfo);
++
++            PlayGameItem ci = Instantiate(prefab_PlayGameItem, contentContainer).GetComponent<PlayGameItem>();
++            ci.manager = this;
++            ci.Set(playInfo);
++            playGameItemList.Add(ci);
++        }
++    }
++
++
++    public void updatePlayGamePlayerCount(JObject c)
++    {
++        
++        JObject json = c;
++        long gtn = (long)json["gtn"];
++        int  playerCount = (int)json["player_count"];
++
++        var playGameItem= playGameItemList.Find((PlayGameItem i)=>{return (long)i.playGameInfo.info["gtn"]== gtn;});
++        if(playGameItem!= null)
++        {
++            playGameItem.updatePlayerCount(playerCount);
++        }
++    }
++
++
++    public void CreatePlay()
+     private void ReceivePlayGameList(JObject c)
+     {
+         gameList.GenerateGameList(JsonDataParser.Parse<JObject[]>(c["playGameList"]));
