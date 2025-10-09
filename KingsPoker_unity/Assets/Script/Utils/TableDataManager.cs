@@ -98,7 +98,8 @@ public class TableDataManager : MonoBehaviour
                 else
                 {
                     d = new JObject(t.Value as JObject);
-                    if (ticket_type > 0)
+                    var c_ticket_type = d.ValueOrDefault<int>("ticket_type", 0);
+                    if (ticket_type > 0 && c_ticket_type == 0)
                     {
                         d["ticket_type"] = ticket_type;
                     }

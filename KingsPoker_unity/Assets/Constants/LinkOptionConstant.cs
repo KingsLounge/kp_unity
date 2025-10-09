@@ -1,6 +1,6 @@
 ﻿public static class LinkOptionConstant
 {
-	public const string projectName = "Kings_Dev";
+	public const string projectName = "Kings";
 	public const string naverClientId = "";
 	public const string naverClientSecret = "";
 	public const string naverClientName = "";
