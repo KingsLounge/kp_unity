@@ -28,7 +28,7 @@ public class Chip : MonoBehaviour
 
     public void Throw(Vector3 targetPos) {
         Vector3 pos = targetPos - transform.position;
-        rigid.velocity = pos.normalized * pos.magnitude * rigid.drag;
+        rigid.linearVelocity = pos.normalized * pos.magnitude * rigid.linearDamping;
         StartCoroutine(ColliderDisable(3.0f * Random.Range(0.5f,1f)));
     }
 

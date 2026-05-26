@@ -5,6 +5,12 @@ EditorUserSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 4
   m_ConfigSettings:
+    QuickInstaller_com.unity.purchasing_installRecorded:
+      value: 37434103
+      flags: 0
+    QuickInstaller_com.unity.services.levelplay_installRecorded:
+      value: 2550581500
+      flags: 0
     RecentlyUsedSceneGuid-0:
       value: 5a0556525c000f5a5d5a087212200a441316487a7d7022602b7e4e6bbae56768
       flags: 0
@@ -27,10 +33,10 @@ EditorUserSettings:
       value: 0103035350050c0c595b0f7a43745e4417164b78292c76322f7a4a32b6e6373e
       flags: 0
     RecentlyUsedSceneGuid-7:
-      value: 5652525f00055e59595f5c26427b5944464e192e2a7d23692e714f62bab3316b
+      value: 5a075656570c0d0f5f0b5c7444270d4417151b7f2e787767297c4835b5b1666f
       flags: 0
     RecentlyUsedSceneGuid-8:
-      value: 5a075656570c0d0f5f0b5c7444270d4417151b7f2e787767297c4835b5b1666f
+      value: 5652525f00055e59595f5c26427b5944464e192e2a7d23692e714f62bab3316b
       flags: 0
     RecentlyUsedSceneGuid-9:
       value: 5557525606045d0a595b557148725a4412151b29742b70317e2b1f60b4b6323a
@@ -54,3 +60,4 @@ EditorUserSettings:
   m_VCAllowAsyncUpdate: 0
   m_VCScanLocalPackagesOnConnect: 1
   m_ArtifactGarbageCollection: 1
+  m_CompressAssetsOnImport: 1

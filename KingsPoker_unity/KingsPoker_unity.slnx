@@ -1,0 +1,14 @@
+﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="BestHTTP.csproj" />
+  <Project Path="spine-unity.csproj" />
+  <Project Path="AppleAuth.csproj" />
+  <Project Path="Assembly-CSharp-Editor-firstpass.csproj" />
+  <Project Path="spine-unity-editor.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="AppleAuth.Editor.csproj" />
+  <Project Path="MinMaxSlider.Editor.csproj" />
+  <Project Path="FirebaseMessagingActivityGenerator.csproj" />
+  <Project Path="MinMaxSlider.csproj" />
+</Solution>
