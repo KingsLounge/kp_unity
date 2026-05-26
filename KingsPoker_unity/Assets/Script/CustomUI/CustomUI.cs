@@ -123,6 +123,13 @@ public class CustomUI : MonoBehaviour
             {
                 style = "";
             }
+
+            // JSON 에 "default_active": false 가 있으면 생성 시점부터 GameObject 를 비활성화.
+            // Directive: fail-closed — 권한/상태 평가 코드가 도달하지 못해도 절대 노출되지 않음.
+            if (data.ContainsKey("default_active"))
+            {
+                gameObject.SetActive((bool)data["default_active"]);
+            }
         }
     }
 

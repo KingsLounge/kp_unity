@@ -1959,8 +1959,8 @@ public class CustomUIOpenerLobby : CustomUIOpener
             }
         }
         //root.GetChildUIWithKey("scale").gameObject.SetActive(false);
-        root.GetChildUIWithKey("enter_request").gameObject.SetActive(false);
-        root.GetChildUIWithKey("cancel_enter_request").gameObject.SetActive(false);
+        root.GetChildUIWithKey("enter_request")?.gameObject.SetActive(false);
+        root.GetChildUIWithKey("cancel_enter_request")?.gameObject.SetActive(false);
         root.GetChildUIWithKey("tnmt_room_enter")?.gameObject.SetActive(false);
         root.GetChildUIWithKey("tnmt_btn_space")?.gameObject.SetActive(false);
         root.GetChildUIWithKey("tnmt_cancel")?.gameObject.SetActive(false);
@@ -2035,7 +2035,7 @@ public class CustomUIOpenerLobby : CustomUIOpener
                 && selectedTnmt.countAllUser < selectedTnmt.info.ValueOrDefault("t_max_player", 0)
             )
             {
-                root.GetChildUIWithKey("enter_request").gameObject.SetActive(!applied);
+                root.GetChildUIWithKey("enter_request")?.gameObject.SetActive(!applied);
                 //root.GetChildUIWithKey("scale").gameObject.SetActive(!applied);
             }
 
@@ -2048,22 +2048,61 @@ public class CustomUIOpenerLobby : CustomUIOpener
             }
             if (selectedTnmt.state < (int)TNMT_FLOW.start)
             {
-                root.GetChildUIWithKey("cancel_enter_request").gameObject.SetActive(applied);
+                root.GetChildUIWithKey("cancel_enter_request")?.gameObject.SetActive(applied);
             }
+
             var cafeidx = selectedTnmt.info.ValueOrDefault("cafeIdx", 0);
             var cafe = Cafe.instance.GetCafeData(cafeidx);
-            var members = cafe.info.CastOrEmpty<JArray>("cafeMembers");
-            var member = members[0] as JObject;
-            var permit = member.ValueOrDefault("permit", CAFE_MEMBER_PERMIT.none);
-            if (
-                selectedTnmt.state < (int)TNMT_FLOW.cancel
-                && (permit == CAFE_MEMBER_PERMIT.manager || permit == CAFE_MEMBER_PERMIT.owner)
-            )
+
+            // 카페 정보/멤버가 누락이면 한 번 재요청해서 받아온다.
+            bool needRefetch = cafe == null
+                            || cafe.info == null
+                            || cafe.cafeMembers == null
+                            || cafe.cafeMembers.Count == 0;
+
+            if (needRefetch && cafeidx > 0)
             {
-                root.GetChildUIWithKey("tnmt_cancel")?.gameObject.SetActive(true);
-                root.GetChildUIWithKey("tnmt_btn_space")?.gameObject.SetActive(true);
+                Cafe.instance.GetCafeInfo(cafeidx);
+                var cafeWait = new WaitForPCProtocol(PCProtocol.PC_CAFE_INFO);
+                yield return cafeWait;
+                cafe = Cafe.instance.GetCafeData(cafeidx);
+            }
+
+            // 재요청 후에도 정보가 없으면 권한 의존 버튼을 모두 끄고 종료 — 잘못된 버튼이 노출되는 것보다 안전.
+            if (cafe == null || cafe.cafeMembers == null || cafe.cafeMembers.Count == 0)
+            {
+                ResetTnmtAuthButtons();
+                yield break;
+            }
+
+            try
+            {
+                var permit = (CAFE_MEMBER_PERMIT)cafe.cafeMembers[0].permit;
+                if (
+                    selectedTnmt.state < (int)TNMT_FLOW.cancel
+                    && (permit == CAFE_MEMBER_PERMIT.manager || permit == CAFE_MEMBER_PERMIT.owner)
+                )
+                {
+                    root.GetChildUIWithKey("tnmt_cancel")?.gameObject.SetActive(true);
+                    root.GetChildUIWithKey("tnmt_btn_space")?.gameObject.SetActive(true);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[TournamentApplyButtonToggle] permit eval failed: {ex}");
+                ResetTnmtAuthButtons();
             }
         }
+    }
+
+    // Directive: 가드를 모두 통과하지 못한 경우 권한·참가 의존 버튼을 모두 OFF — "잘못 노출되는 것 < 안 보이는 것".
+    private void ResetTnmtAuthButtons()
+    {
+        root.GetChildUIWithKey("enter_request")?.gameObject.SetActive(false);
+        root.GetChildUIWithKey("cancel_enter_request")?.gameObject.SetActive(false);
+        root.GetChildUIWithKey("tnmt_room_enter")?.gameObject.SetActive(false);
+        root.GetChildUIWithKey("tnmt_btn_space")?.gameObject.SetActive(false);
+        root.GetChildUIWithKey("tnmt_cancel")?.gameObject.SetActive(false);
     }
 
     private void RewardTableSet(int ticket_type = 0)

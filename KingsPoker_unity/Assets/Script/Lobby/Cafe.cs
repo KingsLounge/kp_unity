@@ -1333,12 +1333,34 @@ public class Cafe : WebsocketListenBehaviour
         var www = await PublisherApiManager.Instance.PostWithoutToken(
             Constant.GameConfig.KingshillUrl + Constant.GameConfig.bannerAPILink
         );
-        var result = JObject.Parse(www.downloadHandler.text);
-        int resultCode = result.ValueOrDefault("resultCode", 0);
-        if (resultCode == 0)
+
+        // 응답이 비정상(null / HTTP 에러 / HTML 응답)이면 파싱하지 않고 종료.
+        // Directive: 외부 서버가 403/HTML 을 반환할 때 JObject.Parse 가 터지지 않도록 명시 가드.
+        if (www == null
+            || www.result != UnityWebRequest.Result.Success
+            || www.downloadHandler == null
+            || string.IsNullOrEmpty(www.downloadHandler.text)
+            || www.downloadHandler.text.TrimStart().StartsWith("<"))
         {
-            bannerArr = result.CastOrEmpty<JArray>("bannerList");
-            StartBanner();
+            Debug.LogWarning(
+                $"[GetBanner] non-JSON response (skip): code={www?.responseCode}, result={www?.result}, err={www?.error}"
+            );
+            return;
+        }
+
+        try
+        {
+            var result = JObject.Parse(www.downloadHandler.text);
+            int resultCode = result.ValueOrDefault("resultCode", 0);
+            if (resultCode == 0)
+            {
+                bannerArr = result.CastOrEmpty<JArray>("bannerList");
+                StartBanner();
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[GetBanner] parse failed: {ex.Message}");
         }
     }
 

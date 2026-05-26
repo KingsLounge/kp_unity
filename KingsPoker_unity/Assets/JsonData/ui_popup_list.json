@@ -3746,11 +3746,11 @@
     { "key": "mtt_ob_table", "title": "mtt_ob_table", "default": false, "type": "active_toggle3", "true_group": "group7", "group": "toggle_group1" },
     { "key": "mtt_ob_table_1", "title": "", "type": "ob_table_list", "group": "group7" },
     { "type": "sub_start" },
-    { "key": "enter_request", "title": "enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_APPLY" }] } },
-    { "key": "cancel_enter_request", "title": "cancel_enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_UNAPPLY" }] } },
-    { "key": "tnmt_room_enter", "title": "tnmt_room_enter", "type": "button", "event": { "clicked": [{ "event": "tnmt_room_enter" }] } },
-    { "key": "tnmt_btn_space", "type": "space", "style": "height=100" },
-    { "key": "tnmt_cancel", "title": "tnmt_cancel", "type": "button", "style": "color=#892a31", "event": { "clicked": [{ "event": "CP_TNMT_FIX" }] } },
+    { "key": "enter_request", "title": "enter_request", "type": "button", "default_active": false, "event": { "clicked": [{ "event": "CP_TNMT_APPLY" }] } },
+    { "key": "cancel_enter_request", "title": "cancel_enter_request", "type": "button", "default_active": false, "event": { "clicked": [{ "event": "CP_TNMT_UNAPPLY" }] } },
+    { "key": "tnmt_room_enter", "title": "tnmt_room_enter", "type": "button", "default_active": false, "event": { "clicked": [{ "event": "tnmt_room_enter" }] } },
+    { "key": "tnmt_btn_space", "type": "space", "default_active": false, "style": "height=100" },
+    { "key": "tnmt_cancel", "title": "tnmt_cancel", "type": "button", "default_active": false, "style": "color=#892a31", "event": { "clicked": [{ "event": "CP_TNMT_FIX" }] } },
     { "type": "sub_end" },
     { "title": "event_caller", "type": "space", "event": { "load_end": [{ "event": "show_tnmt_info", "edit_mode": false }] } }
   ],
@@ -3796,8 +3796,8 @@
     { "key": "sng_blind_1", "title": "", "type": "info", "group": "group4" },
     { "key": "sng_list", "title": "mtt_list", "default": 0, "type": "active_toggle2", "true_group": "group5" },
     { "key": "sng_list_1", "title": "", "type": "info", "group": "group5" },
-    { "key": "enter_request", "title": "enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_APPLY" }] } },
-    { "key": "cancel_enter_request", "title": "cancel_enter_request", "type": "button", "event": { "clicked": [{ "event": "CP_TNMT_UNAPPLY" }] } },
+    { "key": "enter_request", "title": "enter_request", "type": "button", "default_active": false, "event": { "clicked": [{ "event": "CP_TNMT_APPLY" }] } },
+    { "key": "cancel_enter_request", "title": "cancel_enter_request", "type": "button", "default_active": false, "event": { "clicked": [{ "event": "CP_TNMT_UNAPPLY" }] } },
     { "title": "event_caller", "type": "space", "event": { "load_end": [{ "event": "show_tnmt_info", "edit_mode": false }] } }
   ]
 }
