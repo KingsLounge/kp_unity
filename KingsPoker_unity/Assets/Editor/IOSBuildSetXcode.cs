@@ -89,26 +89,81 @@ public class IOSBuildSetXcode
             // Write PBXProject object back to the file
             EditUnityAppController(pathToBuiltProject);
 
-            // Push Notifications capability + Background Modes(Remote notifications) 자동 추가
-            // Apple 로그인 후처리(SignInWithApplePostprocessor)와 같은 Entitlements.entitlements 파일을 쓰므로 병합된다
-            string pbxProjectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
-            ProjectCapabilityManager capabilityManager = new ProjectCapabilityManager(
-                pbxProjectPath,
-                "Entitlements.entitlements",
-                null,
-                proj.GetUnityMainTargetGuid()
-            );
-            // 개발 빌드면 aps-environment=development, 아니면 production (스토어 배포 시 재서명에서 production 적용)
-            capabilityManager.AddPushNotifications(EditorUserBuildSettings.development);
-            capabilityManager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
-            capabilityManager.WriteToFile();
-
 
             //string pbxProjectContent = File.ReadAllText(pbxProjectPath);
             //pbxProjectContent = pbxProjectContent.Replace(
             //    "PRODUCT_NAME_APP = ProductName;", "PRODUCT_NAME_APP = KlassicPoker;");
             //File.WriteAllText(pbxProjectPath, pbxProjectContent);
         }
+    }
+
+    // Push Notifications capability + Background Modes(Remote notifications) 자동 추가
+    // 순서 998: Apple 로그인 등 다른 후처리가 만든 entitlements 를 "읽어서 병합"한다.
+    // 주의: ProjectCapabilityManager 는 기존 entitlements 파일을 읽지 않고 덮어써서
+    //       Sign in with Apple 항목이 사라지는 문제가 있어 직접 병합 방식으로 구현.
+    [PostProcessBuild(998)]
+    public static void AddPushNotificationCapability(BuildTarget buildTarget, string pathToBuiltProject)
+    {
+        if (buildTarget != BuildTarget.iOS)
+        {
+            return;
+        }
+
+        string projPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
+        PBXProject proj = new PBXProject();
+        proj.ReadFromFile(projPath);
+        string targetGuid = proj.GetUnityMainTargetGuid();
+
+        // 기존 entitlements 경로가 지정돼 있으면 그대로 사용 (Apple 로그인 후처리가 만든 파일)
+        string entPath = proj.GetBuildPropertyForAnyConfig(targetGuid, "CODE_SIGN_ENTITLEMENTS");
+        if (string.IsNullOrEmpty(entPath))
+        {
+            entPath = "Entitlements.entitlements";
+        }
+        string entFullPath = Path.Combine(pathToBuiltProject, entPath);
+
+        // 기존 내용 읽고 aps-environment 만 추가/갱신 (다른 capability 보존)
+        PlistDocument entitlements = new PlistDocument();
+        if (File.Exists(entFullPath))
+        {
+            entitlements.ReadFromFile(entFullPath);
+        }
+        entitlements.root.SetString(
+            "aps-environment",
+            EditorUserBuildSettings.development ? "development" : "production"
+        );
+        File.WriteAllText(entFullPath, entitlements.WriteToString());
+
+        proj.SetBuildProperty(targetGuid, "CODE_SIGN_ENTITLEMENTS", entPath);
+        if (!proj.ContainsFileByProjectPath(entPath))
+        {
+            proj.AddFile(entPath, entPath);
+        }
+        proj.WriteToFile(projPath);
+
+        // Background Modes: Info.plist UIBackgroundModes 에 remote-notification 병합 (기존 항목 보존)
+        string plistPath = pathToBuiltProject + "/Info.plist";
+        PlistDocument plist = new PlistDocument();
+        plist.ReadFromString(File.ReadAllText(plistPath));
+        PlistElementArray bgModes = plist.root.values.ContainsKey("UIBackgroundModes")
+            ? plist.root.values["UIBackgroundModes"].AsArray()
+            : plist.root.CreateArray("UIBackgroundModes");
+        bool hasRemote = false;
+        foreach (var v in bgModes.values)
+        {
+            if (v != null && v.AsString() == "remote-notification")
+            {
+                hasRemote = true;
+                break;
+            }
+        }
+        if (!hasRemote)
+        {
+            bgModes.AddString("remote-notification");
+        }
+        File.WriteAllText(plistPath, plist.WriteToString());
+
+        Debug.Log("[IOSBuildSetXcode] Push capability 병합 완료 — " + entPath);
     }
 
     // ATS(App Transport Security) 정리 — 반드시 다른 플러그인 후처리가 끝난 뒤 실행(순서 999)
