@@ -88,10 +88,20 @@ public class IOSBuildSetXcode
             proj.WriteToFile(projPath);
             // Write PBXProject object back to the file
             EditUnityAppController(pathToBuiltProject);
-            // string pbxProjectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
-            // ProjectCapabilityManager capabilityManager = new ProjectCapabilityManager(pbxProjectPath, "Entitlements.entitlements", projectGuid);
-            // capabilityManager.AddPushNotifications(true);
-            // capabilityManager.WriteToFile();
+
+            // Push Notifications capability + Background Modes(Remote notifications) 자동 추가
+            // Apple 로그인 후처리(SignInWithApplePostprocessor)와 같은 Entitlements.entitlements 파일을 쓰므로 병합된다
+            string pbxProjectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
+            ProjectCapabilityManager capabilityManager = new ProjectCapabilityManager(
+                pbxProjectPath,
+                "Entitlements.entitlements",
+                null,
+                proj.GetUnityMainTargetGuid()
+            );
+            // 개발 빌드면 aps-environment=development, 아니면 production (스토어 배포 시 재서명에서 production 적용)
+            capabilityManager.AddPushNotifications(EditorUserBuildSettings.development);
+            capabilityManager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
+            capabilityManager.WriteToFile();
 
 
             //string pbxProjectContent = File.ReadAllText(pbxProjectPath);
