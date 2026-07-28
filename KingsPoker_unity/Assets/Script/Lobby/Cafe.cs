@@ -810,7 +810,7 @@ public class Cafe : WebsocketListenBehaviour
                         var ticketGbn = c.ValueOrDefault("ticketGbn", 0);
                         var changeTicket = c.ValueOrDefault("changeTicket", 0);
                         var changePoint = c.ValueOrDefault("changePoint", 0);
-                        var ticketName = KingshillInfo.GetTicketString(ticketGbn);
+                        var ticketName = KingshillInfo.GetTicketStringCached(ticketGbn); // await 불가 컨텍스트 — 캐시 조회
                         if(changeTicket > 0)
                         {
                             NormalMessage.instance.AddSimpleMessage(string.Format($"{ticketName} {changeTicket}개를 {MoneyToString.Converting(changePoint)}포인트로 교환했습니다."));
