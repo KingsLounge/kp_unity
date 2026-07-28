@@ -111,6 +111,28 @@ public class IOSBuildSetXcode
         }
     }
 
+    // ATS(App Transport Security) 정리 — 반드시 다른 플러그인 후처리가 끝난 뒤 실행(순서 999)
+    // 일부 플러그인이 NSAllowsArbitraryLoadsInWebContent 같은 세부 키를 추가하는데,
+    // 세부 키가 NSAllowsArbitraryLoads 와 공존하면 iOS가 전체 허용을 무시해 http 호출이 차단된다.
+    // → ATS 딕셔너리를 NSAllowsArbitraryLoads=YES 하나로 재구성 (매번 Xcode에서 수동 삭제하던 작업 자동화)
+    [PostProcessBuild(999)]
+    public static void FixAppTransportSecurity(BuildTarget buildTarget, string pathToBuiltProject)
+    {
+        if (buildTarget != BuildTarget.iOS)
+        {
+            return;
+        }
+        string plistPath = pathToBuiltProject + "/Info.plist";
+        PlistDocument plist = new PlistDocument();
+        plist.ReadFromString(File.ReadAllText(plistPath));
+
+        var ats = plist.root.CreateDict("NSAppTransportSecurity"); // 기존 값을 통째로 교체
+        ats.SetBoolean("NSAllowsArbitraryLoads", true);
+
+        File.WriteAllText(plistPath, plist.WriteToString());
+        Debug.Log("[IOSBuildSetXcode] ATS 정리 완료 — NSAllowsArbitraryLoads=YES 단일 구성");
+    }
+
     static void EditUnityAppController(string pathToBuiltProject)
     {
         //Edit UnityAppController.mm
