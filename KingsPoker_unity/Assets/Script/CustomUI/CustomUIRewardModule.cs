@@ -78,7 +78,56 @@ public class CustomUIRewardModule : CustomUI
             );
         }
 
+        // kp_rank_table: 칩 분배 테이블과 독립적인 순위별 KP 보상 병합
+        var kpTable = t_rewards.CastOrEmpty<JObject>("kp_rank_table");
+        if (kpTable != null && kpTable.Count > 0)
+        {
+            MergeKpRankTable(rewards, kpTable);
+        }
+
         SetValue(rewards);
+    }
+
+    private void MergeKpRankTable(JArray rewards, JObject kpTable)
+    {
+        // 기존 순위 행에 kp 필드 병합
+        var maxRank = 0;
+        foreach (var r in rewards)
+        {
+            var row = r as JObject;
+            if (row == null)
+            {
+                continue;
+            }
+            var rank = row.ValueOrDefault("rank", 0);
+            if (rank > maxRank)
+            {
+                maxRank = rank;
+            }
+            var kp = kpTable.ValueOrDefault<long>(rank.ToString(), 0);
+            if (kp > 0)
+            {
+                row["kp"] = kp;
+            }
+        }
+
+        // 칩 입상 범위 밖 순위의 KP는 행을 추가해서 표시 (예: 칩 6위까지 + KP 9위까지)
+        var extraRanks = new List<int>();
+        foreach (var d in kpTable)
+        {
+            if (int.TryParse(d.Key, out int rank) && rank > maxRank)
+            {
+                extraRanks.Add(rank);
+            }
+        }
+        extraRanks.Sort();
+        foreach (var rank in extraRanks)
+        {
+            var row = new JObject();
+            row["rank"] = rank;
+            row["kp"] = kpTable.ValueOrDefault<long>(rank.ToString(), 0);
+            rewards.Add(row);
+        }
     }
 
 

@@ -21,6 +21,7 @@ public class RewardItem : MonoBehaviour
         var ticket_count = data.ValueOrDefault("ticket_count", 0);
         var name = data.ValueOrDefault("name", "");
         var chip = data.ValueOrDefault("chip", 0);
+        var kp = data.ValueOrDefault<long>("kp", 0);
         rankText.text = rank.ToString();
         string rewardString = string.Empty;
         if (ticket_type > 0 && ticket_count > 0)
@@ -35,6 +36,14 @@ public class RewardItem : MonoBehaviour
                 rewardString += ", ";
             }
             rewardString += $"{LocalizeManager.GetLocalString("chip")} : {MoneyToString.Converting(chip)}";
+        }
+        if (kp > 0)
+        {
+            if(rewardString.Length > 0)
+            {
+                rewardString += ", ";
+            }
+            rewardString += $"KP : {MoneyToString.Converting(kp)}";
         }
 
         rewardText.text = rewardString;

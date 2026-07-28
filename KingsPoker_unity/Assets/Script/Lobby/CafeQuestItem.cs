@@ -51,7 +51,7 @@ public class CafeQuestItem : MonoBehaviour
         var amount = reward.ValueOrDefault("amount", 0);
         var item = await RewardItemString(reward);
 
-        rewardText.text = $"[보상]{item} {amount}";
+        rewardText.text = $"[보상] {amount}{item}";
     }
 
     public async UniTask<string> RewardItemString(JObject reward)
@@ -61,11 +61,14 @@ public class CafeQuestItem : MonoBehaviour
         switch (item)
         {
             case "token":
-                itemString = "토큰";
+                itemString = "칩";
                 break;
             case "kings_ticket":
                 var t_type = reward.ValueOrDefault("t_type", 1);
                 itemString = await KingshillInfo.GetTicketString(t_type);
+                break;
+            case "kp":
+                itemString = "KP";
                 break;
         }
         return itemString;

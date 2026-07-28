@@ -14,13 +14,25 @@ public class KingsHillTicketList : MonoBehaviour
     private Transform ticketAmountParent;
     [SerializeField]
     private GameObject ticketAmountItemPrefab;
-    
+
+    [SerializeField]
+    private KingshillKpChangeItem kpChangeItem; // KP -> 칩 전환 UI (티켓 교환 표 대체)
+
     private List<KingshillTicketItem> ticketItems = new List<KingshillTicketItem>();
     private List<KingshillTicketAmountItem> ticketAmountItems = new List<KingshillTicketAmountItem>();
     public void OnEnable()
     {
         SetTicketList();
-        SetTicketAmountList();
+        // 티켓 -> 칩 교환은 KP -> 칩 교환으로 대체됨 (SetTicketAmountList 미호출)
+        if (ticketAmountParent != null)
+        {
+            ticketAmountParent.gameObject.SetActive(false);
+        }
+        if (kpChangeItem != null)
+        {
+            kpChangeItem.gameObject.SetActive(true);
+            kpChangeItem.Refresh();
+        }
     }
 
     public async void SetTicketList()

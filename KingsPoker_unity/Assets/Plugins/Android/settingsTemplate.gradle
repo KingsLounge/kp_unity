@@ -19,7 +19,14 @@ dependencyResolutionManagement {
 // Android Resolver Repos Start
         def unityProjectPath = $/file:///**DIR_UNITYPROJECT**/$.replace("\\", "/")
         maven {
-            url "https://repo.onestore.co.kr/repository/onestore-sdk-public" // Assets/OneStoreCorpPlugins/AppLicenseChecker/Editor/AppLicenseCheckerDependencies.xml:5, Assets/OneStoreCorpPlugins/Purchase/Editor/PurchaseDependencies.xml:5
+            url "https://repo.onestore.net/repository/onestore-sdk-public" // Assets/OneStoreCorpPlugins/AppLicenseChecker/Editor/AppLicenseCheckerDependencies.xml:5, Assets/OneStoreCorpPlugins/Purchase/Editor/PurchaseDependencies.xml:5
+            // 원스토어 그룹만 이 저장소에서 조회 — com.google.* 등의 버전 조회가 이 저장소를 타지 않게 해서
+            // repo.onestore.net 응답 지연/장애 시 구글 라이브러리(play-services-auth 등) 해석이 막히는 문제 방지
+            content {
+                includeGroupByRegex "com\\.onestorecorp.*"
+                includeGroupByRegex "com\\.gaa.*"
+                includeGroupByRegex "com\\.onestore.*"
+            }
         }
         maven {
             url (unityProjectPath + "/Assets/GeneratedLocalRepo/Firebase/m2repository") // Assets/Firebase/Editor/AppDependencies.xml:22, Assets/Firebase/Editor/AuthDependencies.xml:20, Assets/Firebase/Editor/MessagingDependencies.xml:24

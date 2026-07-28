@@ -789,18 +789,36 @@ public class Cafe : WebsocketListenBehaviour
 
             case PCProtocol.PC_KINGSHILL_TICKET_TO_POINT:
                 {
-                    var ticketGbn = c.ValueOrDefault("ticketGbn", 0);
-                    var changeTicket = c.ValueOrDefault("changeTicket", 0);
-                    var changePoint = c.ValueOrDefault("changePoint", 0);
-                    var ticketName = KingshillInfo.GetTicketString(ticketGbn);
+                    var changeType = c.ValueOrDefault("changeType", 0); // 0: ticket, 1: KP
                     ticketPopup.SetActive(false);
-                    if(changeTicket > 0)
+                    if (changeType == 1)
                     {
-                        NormalMessage.instance.AddSimpleMessage(string.Format($"{ticketName} {changeTicket}개를 {MoneyToString.Converting(changePoint)}포인트로 교환했습니다."));
+                        var changeKp = c.ValueOrDefault("changeKp", 0);
+                        var changePoint = c.ValueOrDefault("changePoint", 0);
+                        if (changeKp > 0)
+                        {
+                            NormalMessage.instance.AddSimpleMessage(string.Format($"KP {MoneyToString.Converting(changeKp)}을(를) {MoneyToString.Converting(changePoint)}칩으로 교환했습니다."));
+                        }
+                        else
+                        {
+                            NormalMessage.instance.AddSimpleMessage("KP 교환 실패");
+                        }
+                        RequestKingshillUserInfo(); // KP 잔액 갱신
                     }
                     else
                     {
-                        NormalMessage.instance.AddSimpleMessage(string.Format($"{ticketName} 교환 실패"));
+                        var ticketGbn = c.ValueOrDefault("ticketGbn", 0);
+                        var changeTicket = c.ValueOrDefault("changeTicket", 0);
+                        var changePoint = c.ValueOrDefault("changePoint", 0);
+                        var ticketName = KingshillInfo.GetTicketString(ticketGbn);
+                        if(changeTicket > 0)
+                        {
+                            NormalMessage.instance.AddSimpleMessage(string.Format($"{ticketName} {changeTicket}개를 {MoneyToString.Converting(changePoint)}포인트로 교환했습니다."));
+                        }
+                        else
+                        {
+                            NormalMessage.instance.AddSimpleMessage(string.Format($"{ticketName} 교환 실패"));
+                        }
                     }
                 }
                 break;
