@@ -252,11 +252,11 @@ public class TnmtApplyPopup : MonoBehaviour
         {
             if (didEntry)
             {
-                buyinChipText.text = MoneyToString.Converting(t_reentry_cost);
+                buyinChipText.text = $"{MoneyToString.Converting(t_reentry_cost)}칩";
             }
             else
             {
-                buyinChipText.text = MoneyToString.Converting(buyinChip);
+                buyinChipText.text = $"{MoneyToString.Converting(buyinChip)}칩";
             }
         }
 

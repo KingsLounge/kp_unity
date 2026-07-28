@@ -53,11 +53,16 @@ public class CustomUIRewardModule : CustomUI
                 {
                     var tableData = t.Value as JObject;
                     var temp = new JObject();
-                    foreach(var d in tableData) 
+                    foreach(var d in tableData)
                     {
                         var ratio = float.Parse(d.Key);
                         var te = countEntry * ratio / (float)100;
                         var rank = Math.Round(te, MidpointRounding.AwayFromZero);
+                        // 서버(calcRewardPercent)와 동일하게 최소 1위 보장 — 엔트리가 적어도 1위 보상 행이 표시되게
+                        if (rank < 1)
+                        {
+                            rank = 1;
+                        }
                         temp[rank.ToString()] = d.Value;
                     }
                     tempTable[t.Key] = temp;

@@ -212,7 +212,7 @@ public class TnmtItem : MonoBehaviour
 
         if (buyinActive)
         {
-            buyins.Add(MoneyToString.Converting(buyin + t_buyin_fee));
+            buyins.Add($"{MoneyToString.Converting(buyin + t_buyin_fee)}칩");
         }
         if (ticket_active)
         {
