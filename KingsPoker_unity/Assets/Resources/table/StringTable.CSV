@@ -319,6 +319,7 @@ not_chip_enough_enter,0,칩이 부족합니다.,Not enough chip.,클럽캐셔 �
 game_type_text,0,게임 타입,Game Type,방생성시 사용
 handslog,0,핸드 히스토리,Hands history,핸드로그 전체 사용
 hold_chips,0,보유 칩,Chip Balance,인게임 바이인 사용
+hold_kps,0,보유 KP,KP Balance,인게임 바이인 사용 KP
 pot,0,팟,Pot,인게임 배팅사용
 timelefttext,0,클럽 운영 시간,Time Left,클럽사용
 resrvationtime,0,등록 시작 시간,Reservation Start Time,MTT사용
@@ -952,3 +953,4 @@ cafe_challenge,0,챌린지,,
 vive,0,진동,,
 lounge_kp,0,킹스라운지 KP\n{0},,
 kp_count_text,0,{0} KP,,
+get_tnmt_kp,0,획득 KP : {0},Reward KP : {0},토너 결과 팝업 KP 상금

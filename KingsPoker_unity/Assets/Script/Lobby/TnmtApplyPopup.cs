@@ -60,7 +60,7 @@ public class TnmtApplyPopup : MonoBehaviour
     private GameObject buyinKpObj; // KP 바이인 행 — KP 전용 토너에서만 노출 (미연결 시 칩 칸 재활용)
 
     [SerializeField]
-    private Text buyinKpText; // KP 바이인 금액 표시
+    private LocalText buyinKpText; // KP 바이인 금액 표시 (kp_count_text 키)
 
     [Header("Scale")]
     [SerializeField]
@@ -272,17 +272,17 @@ public class TnmtApplyPopup : MonoBehaviour
 
         if (isKpOnlyTnmt)
         {
-            var kpAmountString = $"{MoneyToString.Converting(didEntry ? kpOnlyReentry : kpOnlyBuyin)}KP";
+            var kpAmount = MoneyToString.Converting(didEntry ? kpOnlyReentry : kpOnlyBuyin);
             if (hasKpRow)
             {
                 if (buyinKpText != null)
                 {
-                    buyinKpText.text = kpAmountString;
+                    buyinKpText.SetLocalText("kp_count_text", kpAmount);
                 }
             }
             else
             {
-                buyinChipText.text = kpAmountString; // KP 행 미연결 시 칩 칸 재활용
+                buyinChipText.text = $"{kpAmount}KP"; // KP 행 미연결 시 칩 칸 재활용
             }
         }
         else if (isChipTnmt)

@@ -30,7 +30,7 @@ public class TnmtResultPopup : MonoBehaviour
     [SerializeField]
     private GameObject rewardKpObj; // KP 보상 표시 (미연결 시 무시)
     [SerializeField]
-    private Text rewardKpText;
+    private LocalText rewardKpText; // get_tnmt_kp 키 사용 (다른 보상 줄과 동일 컨벤션)
 
     [SerializeField]
     private GameObject rankInObj;
@@ -76,7 +76,7 @@ public class TnmtResultPopup : MonoBehaviour
             rewardKpObj.SetActive(kp > 0);
             if (rewardKpText != null)
             {
-                rewardKpText.text = $"획득 KP : {MoneyToString.Converting(kp)}";
+                rewardKpText.SetLocalText("get_tnmt_kp", MoneyToString.Converting(kp));
             }
         }
 
