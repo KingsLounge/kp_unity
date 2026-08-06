@@ -23,7 +23,7 @@ public class TournamentResultPanel : MonoBehaviour
     private Outline rankOutLine;
     [SerializeField]
     private List<Color> outlineColors;
-    public void SetRewardPanel(int rank, long reward, string enemyUid)
+    public void SetRewardPanel(int rank, long reward, string enemyUid, long kp = 0)
     {
         if(rank < medalSprites.Count+1)
         {
@@ -53,7 +53,19 @@ public class TournamentResultPanel : MonoBehaviour
         }
 
         rankText.text = rank.ToString();
-        rewardText.text = MoneyToString.Converting(reward);
+        // KP 상금은 기존 상금 텍스트에 함께 표기 (프리팹 변경 없이)
+        if (kp > 0 && reward > 0)
+        {
+            rewardText.text = $"{MoneyToString.Converting(reward)} + {MoneyToString.Converting(kp)}KP";
+        }
+        else if (kp > 0)
+        {
+            rewardText.text = $"{MoneyToString.Converting(kp)}KP";
+        }
+        else
+        {
+            rewardText.text = MoneyToString.Converting(reward);
+        }
         gameObject.SetActive(true);
     }
 }

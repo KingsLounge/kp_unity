@@ -1113,13 +1113,14 @@ public class HoldemPlayerManager : PlayerManager
         long cc = c.ValueOrDefault("cc", 0);
         int ticket = c.ValueOrDefault("ticket", 0);
         int ticket_amount = c.ValueOrDefault("ticket_amount", 0);
+        long kp = c.ValueOrDefault<long>("kp", 0);
         int rank = c.ValueOrDefault("rank", 0);
         string my = c.ValueOrDefault("my", string.Empty);
         string enemy = c.ValueOrDefault("enemy", string.Empty);
 
         if (my == myPlayer.gid)
         {
-            resultPanel?.SetRewardPanel(rank, reward, enemy);
+            resultPanel?.SetRewardPanel(rank, reward, enemy, kp);
         }
         Debug.Log(myPlayer.gid);
     }
