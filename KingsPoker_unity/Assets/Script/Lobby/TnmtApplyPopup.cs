@@ -100,6 +100,7 @@ public class TnmtApplyPopup : MonoBehaviour
     private int buyinScale;
     private long entryCost;
     private int entryTicketCount;
+    private long kpOnlyBuyin; // KP 전용 바이인 토너 (t_o.buyin_kp) — 0이면 일반 토너
     private string condition;
 
     [SerializeField]
@@ -199,6 +200,9 @@ public class TnmtApplyPopup : MonoBehaviour
 
         var t_o = tnmtInfo.info.CastOrEmpty<JObject>("t_o");
         var is_password = t_o.ValueOrDefault("is_password", false);
+        // KP 전용 바이인 토너 — 칩 대신 KP를 buyin_kp 만큼 차감 (서버 강제, 리엔트리 동일 금액)
+        kpOnlyBuyin = t_o.ValueOrDefault<long>("buyin_kp", 0);
+        var isKpOnlyTnmt = kpOnlyBuyin > 0;
 
         passwordObj.SetActive(is_password);
 
@@ -217,12 +221,12 @@ public class TnmtApplyPopup : MonoBehaviour
             }
         }
         var isTicketTnmt = ticket_count > 0;
-        var isChipTnmt = buyinChip > 0;
+        var isChipTnmt = buyinChip > 0 && !isKpOnlyTnmt;
 
         buyinTicketObj.SetActive(isTicketTnmt);
-        buyinChipObj.SetActive(isChipTnmt);
+        buyinChipObj.SetActive(isChipTnmt || isKpOnlyTnmt); // KP 전용도 바이인 칸 재활용 (텍스트만 KP)
 
-        chipToggle.isOn = isChipTnmt;
+        chipToggle.isOn = isChipTnmt || isKpOnlyTnmt;
         chipToggle.interactable = !condition.Equals("and");
 
         ticketToggle.isOn = condition.Equals("and") && isTicketTnmt;
@@ -248,7 +252,12 @@ public class TnmtApplyPopup : MonoBehaviour
             ticketCountText.text = MoneyToString.Converting(ticket_count);
         }
 
-        if (isChipTnmt)
+        if (isKpOnlyTnmt)
+        {
+            // KP 전용 — 신청/리엔트리 동일 금액
+            buyinChipText.text = $"{MoneyToString.Converting(kpOnlyBuyin)}KP";
+        }
+        else if (isChipTnmt)
         {
             if (didEntry)
             {
@@ -318,6 +327,13 @@ public class TnmtApplyPopup : MonoBehaviour
 
         entryCost = didEntry ? t_reentry_cost : t_buyin + t_buyin_fee;
         var chipMaxScale = entryCost > 0 ? Mathf.FloorToInt(chip / entryCost) : t_buyin_scale_max;
+        if (kpOnlyBuyin > 0)
+        {
+            // KP 전용 토너 — 비용·배율 한도를 KP 잔액 기준으로
+            entryCost = kpOnlyBuyin;
+            var myKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
+            chipMaxScale = Mathf.FloorToInt(myKp / kpOnlyBuyin);
+        }
         var ticketMaxScale = Mathf.FloorToInt(
             (
                 ticket_type > 0 && ticket_type < ticketCounts.Count
@@ -447,13 +463,21 @@ public class TnmtApplyPopup : MonoBehaviour
         buyinScale = Mathf.Clamp(scale, scaleMin, scaleMax);
         var chip = chipToggle.isOn ? entryCost * buyinScale : 0;
         var ticket = ticketToggle.isOn ? entryTicketCount * buyinScale : 0;
-        totalBuyinChipText.SetLocalText("chip_count_text", chip);
+        if (kpOnlyBuyin > 0)
+        {
+            // KP 전용 토너 — 총 바이인을 KP 단위로 표기 (칩 칸 재활용)
+            totalBuyinChipText.SetLocalText("kp_count_text", chip);
+        }
+        else
+        {
+            totalBuyinChipText.SetLocalText("chip_count_text", chip);
+        }
         totalBuyinTicketText.SetLocalText("ticket_counting_text", ticket);
         if (totalBuyinKpText != null)
         {
-            // KP 토글이 켜져 있으면 칩 결제분을 KP(1:1)로 지불
+            // KP 토글이 켜져 있거나 KP 전용 토너면 결제분을 KP(1:1)로 지불
             var isKpOn = kpToggle != null && kpToggle.gameObject.activeSelf && kpToggle.isOn;
-            var kp = isKpOn && (condition.Equals("and") || chipToggle.isOn) ? entryCost * buyinScale : 0;
+            var kp = (kpOnlyBuyin > 0 || isKpOn) && (condition.Equals("and") || chipToggle.isOn) ? entryCost * buyinScale : 0;
             totalBuyinKpText.SetLocalText("kp_count_text", kp);
         }
         buyinScaleInput.SetTextWithoutNotify(buyinScale.ToString());
@@ -483,10 +507,12 @@ public class TnmtApplyPopup : MonoBehaviour
             await new WaitForPCProtocol(PCProtocol.PC_PLAY_GAME_LEAVE_OBSERVER);
         }
 
-        if (kpToggle != null && kpToggle.gameObject.activeSelf && kpToggle.isOn)
+        if (kpOnlyBuyin > 0 || (kpToggle != null && kpToggle.gameObject.activeSelf && kpToggle.isOn))
         {
-            // KP 바이인 사전 잔액 체크 (칩 결제분과 동일 금액, 1:1)
-            var needKp = (condition.Equals("and") || chipToggle.isOn) ? entryCost * buyinScale : 0;
+            // KP 바이인 사전 잔액 체크 (KP 전용 토너 또는 KP 토글 사용 시, 1:1)
+            var needKp = kpOnlyBuyin > 0
+                ? kpOnlyBuyin * (long)Mathf.Max(1, buyinScale)
+                : ((condition.Equals("and") || chipToggle.isOn) ? entryCost * buyinScale : 0);
             var hasKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
             if (needKp > 0 && hasKp < needKp)
             {
