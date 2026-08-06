@@ -53,6 +53,12 @@ public class TnmtApplyPopup : MonoBehaviour
     [SerializeField]
     private Text myKpText; // 보유 KP 표시 (미연결 시 무시)
 
+    [SerializeField]
+    private GameObject buyinKpObj; // KP 바이인 행 — KP 전용 토너에서만 노출 (미연결 시 칩 칸 재활용)
+
+    [SerializeField]
+    private Text buyinKpText; // KP 바이인 금액 표시
+
     [Header("Scale")]
     [SerializeField]
     private LocalText buyinScaleMinText;
@@ -222,11 +228,16 @@ public class TnmtApplyPopup : MonoBehaviour
         }
         var isTicketTnmt = ticket_count > 0;
         var isChipTnmt = buyinChip > 0 && !isKpOnlyTnmt;
+        var hasKpRow = buyinKpObj != null; // KP 행이 프리팹에 있으면 그 행 사용, 없으면 칩 칸 재활용
 
         buyinTicketObj.SetActive(isTicketTnmt);
-        buyinChipObj.SetActive(isChipTnmt || isKpOnlyTnmt); // KP 전용도 바이인 칸 재활용 (텍스트만 KP)
+        buyinChipObj.SetActive(isChipTnmt || (isKpOnlyTnmt && !hasKpRow));
+        if (hasKpRow)
+        {
+            buyinKpObj.SetActive(isKpOnlyTnmt);
+        }
 
-        chipToggle.isOn = isChipTnmt || isKpOnlyTnmt;
+        chipToggle.isOn = isChipTnmt || isKpOnlyTnmt; // KP 전용도 배율 계산은 칩 토글 경로 사용
         chipToggle.interactable = !condition.Equals("and");
 
         ticketToggle.isOn = condition.Equals("and") && isTicketTnmt;
@@ -247,7 +258,18 @@ public class TnmtApplyPopup : MonoBehaviour
 
         if (isKpOnlyTnmt)
         {
-            buyinChipText.text = $"{MoneyToString.Converting(didEntry ? kpOnlyReentry : kpOnlyBuyin)}KP";
+            var kpAmountString = $"{MoneyToString.Converting(didEntry ? kpOnlyReentry : kpOnlyBuyin)}KP";
+            if (hasKpRow)
+            {
+                if (buyinKpText != null)
+                {
+                    buyinKpText.text = kpAmountString;
+                }
+            }
+            else
+            {
+                buyinChipText.text = kpAmountString; // KP 행 미연결 시 칩 칸 재활용
+            }
         }
         else if (isChipTnmt)
         {
