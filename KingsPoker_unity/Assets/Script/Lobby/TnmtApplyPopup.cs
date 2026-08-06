@@ -80,10 +80,19 @@ public class TnmtApplyPopup : MonoBehaviour
 
     [Header("Total")]
     [SerializeField]
+    private GameObject totalBuyinChipObj; // 사용 칩 행 루트 (미연결 시 텍스트 오브젝트 기준)
+
+    [SerializeField]
     private LocalText totalBuyinChipText;
 
     [SerializeField]
+    private GameObject totalBuyinTicketObj; // 사용 티켓 행 루트 (미연결 시 텍스트 오브젝트 기준)
+
+    [SerializeField]
     private LocalText totalBuyinTicketText;
+
+    [SerializeField]
+    private GameObject totalBuyinKpObj; // 사용 KP 행 루트 (미연결 시 텍스트 오브젝트 기준)
 
     [SerializeField]
     private LocalText totalBuyinKpText; // KP 결제 시 총 KP 표시 (미연결 시 무시)
@@ -247,14 +256,7 @@ public class TnmtApplyPopup : MonoBehaviour
         ticketToggle.interactable = !condition.Equals("and");
 
         // 보유 KP 는 KP 전용 토너에서만 표시
-        if (myKpObj != null)
-        {
-            myKpObj.SetActive(isKpOnlyTnmt);
-        }
-        else if (myKpText != null)
-        {
-            myKpText.gameObject.SetActive(isKpOnlyTnmt);
-        }
+        SetRowActive(myKpObj, myKpText, isKpOnlyTnmt);
         if (myKpText != null && isKpOnlyTnmt)
         {
             var myKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
@@ -449,6 +451,19 @@ public class TnmtApplyPopup : MonoBehaviour
         }
     }
 
+    // 행 루트가 연결돼 있으면 행 전체(라벨 포함), 아니면 텍스트 오브젝트만 토글
+    private static void SetRowActive(GameObject rowObj, Component fallbackText, bool active)
+    {
+        if (rowObj != null)
+        {
+            rowObj.SetActive(active);
+        }
+        else if (fallbackText != null)
+        {
+            fallbackText.gameObject.SetActive(active);
+        }
+    }
+
     public void BuyinScaleChanged(string str)
     {
         var scale = 0;
@@ -469,28 +484,26 @@ public class TnmtApplyPopup : MonoBehaviour
         var chip = chipToggle.isOn ? entryCost * buyinScale : 0;
         var ticket = ticketToggle.isOn ? entryTicketCount * buyinScale : 0;
 
-        // 토탈 줄은 해당 재화를 쓰는 토너에서만 표시
+        // 토탈 줄은 해당 재화를 쓰는 토너에서만 표시 (행 루트 연결 시 라벨까지 함께 토글)
         var showChipTotal = kpOnlyBuyin <= 0 && entryCost > 0;
-        totalBuyinChipText.gameObject.SetActive(showChipTotal);
+        SetRowActive(totalBuyinChipObj, totalBuyinChipText, showChipTotal);
         if (showChipTotal)
         {
             totalBuyinChipText.SetLocalText("chip_count_text", chip);
         }
 
         var showTicketTotal = entryTicketCount > 0;
-        totalBuyinTicketText.gameObject.SetActive(showTicketTotal);
+        SetRowActive(totalBuyinTicketObj, totalBuyinTicketText, showTicketTotal);
         if (showTicketTotal)
         {
             totalBuyinTicketText.SetLocalText("ticket_counting_text", ticket);
         }
-        if (totalBuyinKpText != null)
+
+        // 사용 KP 줄은 KP 전용 토너에서만 노출
+        SetRowActive(totalBuyinKpObj, totalBuyinKpText, kpOnlyBuyin > 0);
+        if (totalBuyinKpText != null && kpOnlyBuyin > 0)
         {
-            // 사용 KP 줄은 KP 전용 토너에서만 노출
-            totalBuyinKpText.gameObject.SetActive(kpOnlyBuyin > 0);
-            if (kpOnlyBuyin > 0)
-            {
-                totalBuyinKpText.SetLocalText("kp_count_text", entryCost * buyinScale);
-            }
+            totalBuyinKpText.SetLocalText("kp_count_text", entryCost * buyinScale);
         }
         buyinScaleInput.SetTextWithoutNotify(buyinScale.ToString());
     }
