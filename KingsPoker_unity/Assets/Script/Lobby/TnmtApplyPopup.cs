@@ -51,9 +51,6 @@ public class TnmtApplyPopup : MonoBehaviour
 
     [Header("kp")]
     [SerializeField]
-    private Variation[] kpVariations; // KP 토글 상태 연출 (미연결 시 무시)
-
-    [SerializeField]
     private Text myKpText; // 보유 KP 표시 (미연결 시 무시)
 
     [Header("Scale")]
@@ -87,9 +84,6 @@ public class TnmtApplyPopup : MonoBehaviour
 
     [SerializeField]
     private Toggle chipToggle;
-
-    [SerializeField]
-    private Toggle kpToggle; // 칩 대신 KP(1:1)로 바이인 — 2번카페 전용 (미연결 시 무시)
 
     [SerializeField]
     private GameObject passwordObj;
@@ -232,18 +226,11 @@ public class TnmtApplyPopup : MonoBehaviour
         ticketToggle.isOn = condition.Equals("and") && isTicketTnmt;
         ticketToggle.interactable = !condition.Equals("and");
 
-        if (kpToggle != null)
-        {
-            // KP 바이인은 킹스라운지(2번카페) + 칩 바이인 토너먼트에서만 노출
-            kpToggle.gameObject.SetActive(isLounge && isChipTnmt);
-            kpToggle.SetIsOnWithoutNotify(false);
-        }
         if (myKpText != null)
         {
             var myKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
             myKpText.text = MoneyToString.Converting(myKp);
         }
-        SetKpVariations();
 
         if (isTicketTnmt)
         {
@@ -421,27 +408,6 @@ public class TnmtApplyPopup : MonoBehaviour
         {
             variation.SetVariation(ticketToggle.isOn.ToString());
         }
-        SetKpVariations();
-    }
-
-    private void SetKpVariations()
-    {
-        if (kpVariations == null)
-        {
-            return;
-        }
-        var isKpOn = kpToggle != null && kpToggle.isOn;
-        foreach (var variation in kpVariations)
-        {
-            variation.SetVariation(isKpOn.ToString());
-        }
-    }
-
-    public void OnchangeKpToggle(bool value)
-    {
-        // KP는 "칩 결제분을 KP(1:1)로 대신 지불" 스위치 — 칩/티켓 토글 상태는 건드리지 않는다
-        SetKpVariations();
-        SetBuyinScale(buyinScale);
     }
 
     public void BuyinScaleChanged(string str)
@@ -475,9 +441,8 @@ public class TnmtApplyPopup : MonoBehaviour
         totalBuyinTicketText.SetLocalText("ticket_counting_text", ticket);
         if (totalBuyinKpText != null)
         {
-            // KP 토글이 켜져 있거나 KP 전용 토너면 결제분을 KP(1:1)로 지불
-            var isKpOn = kpToggle != null && kpToggle.gameObject.activeSelf && kpToggle.isOn;
-            var kp = (kpOnlyBuyin > 0 || isKpOn) && (condition.Equals("and") || chipToggle.isOn) ? entryCost * buyinScale : 0;
+            // KP 전용 토너면 결제분을 KP 로 표기
+            var kp = kpOnlyBuyin > 0 ? entryCost * buyinScale : 0;
             totalBuyinKpText.SetLocalText("kp_count_text", kp);
         }
         buyinScaleInput.SetTextWithoutNotify(buyinScale.ToString());
@@ -507,14 +472,12 @@ public class TnmtApplyPopup : MonoBehaviour
             await new WaitForPCProtocol(PCProtocol.PC_PLAY_GAME_LEAVE_OBSERVER);
         }
 
-        if (kpOnlyBuyin > 0 || (kpToggle != null && kpToggle.gameObject.activeSelf && kpToggle.isOn))
+        if (kpOnlyBuyin > 0)
         {
-            // KP 바이인 사전 잔액 체크 (KP 전용 토너 또는 KP 토글 사용 시, 1:1)
-            var needKp = kpOnlyBuyin > 0
-                ? kpOnlyBuyin * (long)Mathf.Max(1, buyinScale)
-                : ((condition.Equals("and") || chipToggle.isOn) ? entryCost * buyinScale : 0);
+            // KP 전용 토너 — 신청 전 KP 잔액 사전 체크
+            var needKp = kpOnlyBuyin * (long)Mathf.Max(1, buyinScale);
             var hasKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
-            if (needKp > 0 && hasKp < needKp)
+            if (hasKp < needKp)
             {
                 LoadingCircle.Instance.StopSpin();
                 ErrorMessageManager.Instance.AddGameError(0, "KP 부족", "보유한 KP가 부족합니다.", ErrorHandlingType.NONE, null, null);
@@ -532,10 +495,6 @@ public class TnmtApplyPopup : MonoBehaviour
         }
 
         p.Add(scaleString, buyinScale);
-        if (kpToggle != null && kpToggle.gameObject.activeSelf && kpToggle.isOn)
-        {
-            p.Add("useKp", 1); // 칩 대신 KP(1:1)로 바이인
-        }
         if (passwordObj.activeSelf)
         {
             p.Add("password", passwordInput.text);
