@@ -95,6 +95,7 @@ public class TnmtApplyPopup : MonoBehaviour
     private long entryCost;
     private int entryTicketCount;
     private long kpOnlyBuyin; // KP 전용 바이인 토너 (t_o.buyin_kp) — 0이면 일반 토너
+    private long kpOnlyReentry; // KP 전용 토너 리엔트리 비용 (t_o.reentry_kp, 미설정 시 buyin_kp)
     private string condition;
 
     [SerializeField]
@@ -194,8 +195,13 @@ public class TnmtApplyPopup : MonoBehaviour
 
         var t_o = tnmtInfo.info.CastOrEmpty<JObject>("t_o");
         var is_password = t_o.ValueOrDefault("is_password", false);
-        // KP 전용 바이인 토너 — 칩 대신 KP를 buyin_kp 만큼 차감 (서버 강제, 리엔트리 동일 금액)
+        // KP 전용 바이인 토너 — 칩 대신 KP를 buyin_kp 만큼 차감 (서버 강제, 리엔트리는 reentry_kp)
         kpOnlyBuyin = t_o.ValueOrDefault<long>("buyin_kp", 0);
+        kpOnlyReentry = t_o.ValueOrDefault<long>("reentry_kp", 0);
+        if (kpOnlyReentry <= 0)
+        {
+            kpOnlyReentry = kpOnlyBuyin;
+        }
         var isKpOnlyTnmt = kpOnlyBuyin > 0;
 
         passwordObj.SetActive(is_password);
@@ -241,8 +247,7 @@ public class TnmtApplyPopup : MonoBehaviour
 
         if (isKpOnlyTnmt)
         {
-            // KP 전용 — 신청/리엔트리 동일 금액
-            buyinChipText.text = $"{MoneyToString.Converting(kpOnlyBuyin)}KP";
+            buyinChipText.text = $"{MoneyToString.Converting(didEntry ? kpOnlyReentry : kpOnlyBuyin)}KP";
         }
         else if (isChipTnmt)
         {
@@ -316,10 +321,10 @@ public class TnmtApplyPopup : MonoBehaviour
         var chipMaxScale = entryCost > 0 ? Mathf.FloorToInt(chip / entryCost) : t_buyin_scale_max;
         if (kpOnlyBuyin > 0)
         {
-            // KP 전용 토너 — 비용·배율 한도를 KP 잔액 기준으로
-            entryCost = kpOnlyBuyin;
+            // KP 전용 토너 — 비용·배율 한도를 KP 잔액 기준으로 (리엔트리는 reentry_kp)
+            entryCost = didEntry ? kpOnlyReentry : kpOnlyBuyin;
             var myKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
-            chipMaxScale = Mathf.FloorToInt(myKp / kpOnlyBuyin);
+            chipMaxScale = Mathf.FloorToInt(myKp / entryCost);
         }
         var ticketMaxScale = Mathf.FloorToInt(
             (
@@ -474,8 +479,8 @@ public class TnmtApplyPopup : MonoBehaviour
 
         if (kpOnlyBuyin > 0)
         {
-            // KP 전용 토너 — 신청 전 KP 잔액 사전 체크
-            var needKp = kpOnlyBuyin * (long)Mathf.Max(1, buyinScale);
+            // KP 전용 토너 — 신청 전 KP 잔액 사전 체크 (entryCost 는 신청/리엔트리에 맞는 KP 비용)
+            var needKp = entryCost * (long)Mathf.Max(1, buyinScale);
             var hasKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
             if (hasKp < needKp)
             {
