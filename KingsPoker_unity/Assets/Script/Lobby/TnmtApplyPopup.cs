@@ -468,16 +468,21 @@ public class TnmtApplyPopup : MonoBehaviour
         buyinScale = Mathf.Clamp(scale, scaleMin, scaleMax);
         var chip = chipToggle.isOn ? entryCost * buyinScale : 0;
         var ticket = ticketToggle.isOn ? entryTicketCount * buyinScale : 0;
-        if (kpOnlyBuyin > 0)
-        {
-            // KP 전용 토너 — 칩 사용은 0, KP 금액은 아래 totalBuyinKpText 에만 표기
-            totalBuyinChipText.SetLocalText("chip_count_text", 0);
-        }
-        else
+
+        // 토탈 줄은 해당 재화를 쓰는 토너에서만 표시
+        var showChipTotal = kpOnlyBuyin <= 0 && entryCost > 0;
+        totalBuyinChipText.gameObject.SetActive(showChipTotal);
+        if (showChipTotal)
         {
             totalBuyinChipText.SetLocalText("chip_count_text", chip);
         }
-        totalBuyinTicketText.SetLocalText("ticket_counting_text", ticket);
+
+        var showTicketTotal = entryTicketCount > 0;
+        totalBuyinTicketText.gameObject.SetActive(showTicketTotal);
+        if (showTicketTotal)
+        {
+            totalBuyinTicketText.SetLocalText("ticket_counting_text", ticket);
+        }
         if (totalBuyinKpText != null)
         {
             // 사용 KP 줄은 KP 전용 토너에서만 노출
