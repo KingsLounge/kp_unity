@@ -436,8 +436,8 @@ public class TnmtApplyPopup : MonoBehaviour
         var ticket = ticketToggle.isOn ? entryTicketCount * buyinScale : 0;
         if (kpOnlyBuyin > 0)
         {
-            // KP 전용 토너 — 총 바이인을 KP 단위로 표기 (칩 칸 재활용)
-            totalBuyinChipText.SetLocalText("kp_count_text", chip);
+            // KP 전용 토너 — 칩 사용은 0, KP 금액은 아래 totalBuyinKpText 에만 표기
+            totalBuyinChipText.SetLocalText("chip_count_text", 0);
         }
         else
         {
