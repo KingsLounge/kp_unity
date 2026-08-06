@@ -97,10 +97,10 @@ public class IOSBuildSetXcode
         }
     }
 
-    // Push Notifications capability + Background Modes(Remote notifications) 자동 추가
-    // 순서 998: Apple 로그인 등 다른 후처리가 만든 entitlements 를 "읽어서 병합"한다.
+    // Push Notifications + Sign in with Apple + In-App Purchase capability 자동 추가
+    // 순서 998: 다른 후처리가 만든 entitlements 를 "읽어서 병합"한다.
     // 주의: ProjectCapabilityManager 는 기존 entitlements 파일을 읽지 않고 덮어써서
-    //       Sign in with Apple 항목이 사라지는 문제가 있어 직접 병합 방식으로 구현.
+    //       기존 항목이 사라지는 문제가 있어 직접 병합 방식으로 구현.
     [PostProcessBuild(998)]
     public static void AddPushNotificationCapability(BuildTarget buildTarget, string pathToBuiltProject)
     {
@@ -114,7 +114,7 @@ public class IOSBuildSetXcode
         proj.ReadFromFile(projPath);
         string targetGuid = proj.GetUnityMainTargetGuid();
 
-        // 기존 entitlements 경로가 지정돼 있으면 그대로 사용 (Apple 로그인 후처리가 만든 파일)
+        // 기존 entitlements 경로가 지정돼 있으면 그대로 사용
         string entPath = proj.GetBuildPropertyForAnyConfig(targetGuid, "CODE_SIGN_ENTITLEMENTS");
         if (string.IsNullOrEmpty(entPath))
         {
@@ -122,16 +122,23 @@ public class IOSBuildSetXcode
         }
         string entFullPath = Path.Combine(pathToBuiltProject, entPath);
 
-        // 기존 내용 읽고 aps-environment 만 추가/갱신 (다른 capability 보존)
+        // 기존 내용 읽고 필요한 키만 추가/갱신 (다른 capability 보존)
         PlistDocument entitlements = new PlistDocument();
         if (File.Exists(entFullPath))
         {
             entitlements.ReadFromFile(entFullPath);
         }
+        // Push Notifications
         entitlements.root.SetString(
             "aps-environment",
             EditorUserBuildSettings.development ? "development" : "production"
         );
+        // Sign in with Apple — 기존에 있으면 유지, 없으면 Default 로 추가
+        if (!entitlements.root.values.ContainsKey("com.apple.developer.applesignin"))
+        {
+            var signInArray = entitlements.root.CreateArray("com.apple.developer.applesignin");
+            signInArray.AddString("Default");
+        }
         File.WriteAllText(entFullPath, entitlements.WriteToString());
 
         proj.SetBuildProperty(targetGuid, "CODE_SIGN_ENTITLEMENTS", entPath);
@@ -139,6 +146,13 @@ public class IOSBuildSetXcode
         {
             proj.AddFile(entPath, entPath);
         }
+
+        // Xcode capability 목록 등록 + 프레임워크
+        proj.AddCapability(targetGuid, PBXCapabilityType.SignInWithApple, entPath);
+        proj.AddCapability(targetGuid, PBXCapabilityType.InAppPurchase);
+        proj.AddFrameworkToProject(targetGuid, "AuthenticationServices.framework", true); // weak — 로그인
+        proj.AddFrameworkToProject(targetGuid, "StoreKit.framework", false); // 인앱결제
+
         proj.WriteToFile(projPath);
 
         // Background Modes: Info.plist UIBackgroundModes 에 remote-notification 병합 (기존 항목 보존)
