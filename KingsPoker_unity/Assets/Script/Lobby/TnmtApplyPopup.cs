@@ -51,6 +51,9 @@ public class TnmtApplyPopup : MonoBehaviour
 
     [Header("kp")]
     [SerializeField]
+    private GameObject myKpObj; // 보유 KP 행 — KP 전용 토너에서만 노출 (미연결 시 myKpText 오브젝트 기준)
+
+    [SerializeField]
     private Text myKpText; // 보유 KP 표시 (미연결 시 무시)
 
     [SerializeField]
@@ -243,7 +246,16 @@ public class TnmtApplyPopup : MonoBehaviour
         ticketToggle.isOn = condition.Equals("and") && isTicketTnmt;
         ticketToggle.interactable = !condition.Equals("and");
 
-        if (myKpText != null)
+        // 보유 KP 는 KP 전용 토너에서만 표시
+        if (myKpObj != null)
+        {
+            myKpObj.SetActive(isKpOnlyTnmt);
+        }
+        else if (myKpText != null)
+        {
+            myKpText.gameObject.SetActive(isKpOnlyTnmt);
+        }
+        if (myKpText != null && isKpOnlyTnmt)
         {
             var myKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
             myKpText.text = MoneyToString.Converting(myKp);
@@ -468,9 +480,12 @@ public class TnmtApplyPopup : MonoBehaviour
         totalBuyinTicketText.SetLocalText("ticket_counting_text", ticket);
         if (totalBuyinKpText != null)
         {
-            // KP 전용 토너면 결제분을 KP 로 표기
-            var kp = kpOnlyBuyin > 0 ? entryCost * buyinScale : 0;
-            totalBuyinKpText.SetLocalText("kp_count_text", kp);
+            // 사용 KP 줄은 KP 전용 토너에서만 노출
+            totalBuyinKpText.gameObject.SetActive(kpOnlyBuyin > 0);
+            if (kpOnlyBuyin > 0)
+            {
+                totalBuyinKpText.SetLocalText("kp_count_text", entryCost * buyinScale);
+            }
         }
         buyinScaleInput.SetTextWithoutNotify(buyinScale.ToString());
     }
