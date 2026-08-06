@@ -210,7 +210,18 @@ public class TnmtItem : MonoBehaviour
         List<string> buyins = new List<string>();
         bool buyinActive = buyin + t_buyin_fee > 0;
 
-        if (buyinActive)
+        // KP 전용 바이인 토너 (t_o.buyin_kp > 0): 칩 대신 KP 표기
+        long kpBuyin = 0;
+        var itemTo = tnmtInfo.info.CastOrEmpty<JObject>("t_o");
+        if (itemTo != null)
+        {
+            kpBuyin = itemTo.ValueOrDefault<long>("buyin_kp", 0);
+        }
+        if (kpBuyin > 0)
+        {
+            buyins.Add($"{MoneyToString.Converting(kpBuyin)}KP");
+        }
+        else if (buyinActive)
         {
             buyins.Add($"{MoneyToString.Converting(buyin + t_buyin_fee)}칩");
         }
