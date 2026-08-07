@@ -173,7 +173,13 @@ public static class KingshillInfo
             ticketData = new JObject();
             foreach (JObject ticket in ticketList)
             {
-                ticketData[ticket["ticketCode"].ToString()] = ticket["ticketName"];
+                var code = ticket["ticketCode"].ToString();
+                // 라운지 목록에 KP(newKp) 같은 비티켓 항목이 섞여 들어옴 — ticketN 형식만 티켓으로 취급
+                if (!System.Text.RegularExpressions.Regex.IsMatch(code, "^ticket\\d*$"))
+                {
+                    continue;
+                }
+                ticketData[code] = ticket["ticketName"];
             }
         }
         var ticketPriceList = data.CastOrEmpty<JArray>("ticketPriceList", true);
