@@ -19697,7 +19697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.026977539}
+  m_AnchoredPosition: {x: 0, y: -0.026855469}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &264946928
@@ -58843,7 +58843,7 @@ MonoBehaviour:
   rewardTicketObj: {fileID: 787309945}
   rewardTicketText: {fileID: 787309944}
   rewardKpObj: {fileID: 1452682730}
-  rewardKpText: {fileID: 1452682729}
+  rewardKpText: {fileID: 1452682731}
   rankInObj: {fileID: 426153345}
 --- !u!1 &822745471
 GameObject:
@@ -97035,18 +97035,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1452682726}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1452682729 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2983293306365469373, guid: 8016ce45fbf423e458760e559edfc7af,
-    type: 3}
-  m_PrefabInstance: {fileID: 1452682726}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1452682728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1452682730 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6422273002686449441, guid: 8016ce45fbf423e458760e559edfc7af,
@@ -97065,7 +97053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 881f23fcdd523c14cb8934ec1fac41a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localKey: get_main_tnmt_ticket
+  localKey: 
 --- !u!1001 &1453250415
 PrefabInstance:
   m_ObjectHideFlags: 0

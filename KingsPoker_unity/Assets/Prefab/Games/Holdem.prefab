@@ -887,7 +887,7 @@ MonoBehaviour:
   m_PixelsPerUnitMultiplier: 1
 --- !u!95 &7773279341176661378
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -901,6 +901,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -2876,7 +2877,7 @@ CanvasRenderer:
   m_CullTransparentMesh: 0
 --- !u!95 &986898884234744220
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2890,6 +2891,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -4456,7 +4458,7 @@ CanvasRenderer:
   m_CullTransparentMesh: 0
 --- !u!95 &8782574956248337282
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4470,6 +4472,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -15176,7 +15179,7 @@ MonoBehaviour:
   m_PixelsPerUnitMultiplier: 1
 --- !u!95 &904948055819243971
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -15190,6 +15193,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -21778,20 +21782,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -50475,7 +50482,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 150, y: -15}
-  m_SizeDelta: {x: 5, y: 30}
+  m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4817765143303919941
 MonoBehaviour:
@@ -52996,7 +53003,7 @@ MonoBehaviour:
   m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 4
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_CharacterValidation: 1
@@ -88329,13 +88336,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -90171,13 +90178,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -91105,13 +91112,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -93247,13 +93254,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -93709,13 +93716,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -94114,13 +94121,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -95624,7 +95631,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3040316942768406389, guid: a3c0fc301d2feb04b820d2f886e9c904,
         type: 3}
-      propertyPath: childs.Array.data[0]
+      propertyPath: 'childs.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3040316942768406390, guid: a3c0fc301d2feb04b820d2f886e9c904,
@@ -95768,13 +95775,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -96320,13 +96327,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -96748,13 +96755,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -98286,13 +98293,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -99959,13 +99966,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -101034,13 +101041,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -102503,13 +102510,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -103713,13 +103720,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -104361,7 +104368,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3040316942768406389, guid: a3c0fc301d2feb04b820d2f886e9c904,
         type: 3}
-      propertyPath: childs.Array.data[0]
+      propertyPath: 'childs.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3040316942768406390, guid: a3c0fc301d2feb04b820d2f886e9c904,
@@ -104504,13 +104511,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -104828,13 +104835,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -105079,13 +105086,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
@@ -108523,13 +108530,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[0]
+      propertyPath: 'highlightTextures.Array.data[0]'
       value: 
       objectReference: {fileID: 21300000, guid: 6e288f669ea4eb14e9ba014053f4c879,
         type: 3}
     - target: {fileID: 5999921697720910007, guid: 8c171bad530b23b40941eb00a94f6024,
         type: 3}
-      propertyPath: highlightTextures.Array.data[1]
+      propertyPath: 'highlightTextures.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 2178427faf6810740b671aa327112dbd,
         type: 3}
