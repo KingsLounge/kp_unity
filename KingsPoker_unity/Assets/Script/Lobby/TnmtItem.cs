@@ -227,7 +227,8 @@ public class TnmtItem : MonoBehaviour
         }
         if (ticket_active)
         {
-            if (buyinActive)
+            // 칩 또는 KP 줄이 있을 때만 and/or 구분 줄 (KP 토너에서 구분이 빠지던 문제)
+            if (buyinActive || kpBuyin > 0)
             {
                 buyins.Add(LocalizeManager.GetLocalString(condition.Equals("and") ? "and" : "or"));
             }
@@ -237,6 +238,20 @@ public class TnmtItem : MonoBehaviour
             );
 
 
+        }
+        // 서버가 옵션 목록(buyin_options)을 주면 그걸로 표시 — 옵션 사이는 or, 옵션 안 재화는 +
+        var buyinOptions = BuyinOption.Parse(tnmtInfo.info, "buyin_options");
+        if (buyinOptions.Count > 0)
+        {
+            buyins.Clear();
+            for (int i = 0; i < buyinOptions.Count; i++)
+            {
+                if (i > 0)
+                {
+                    buyins.Add(LocalizeManager.GetLocalString("or"));
+                }
+                buyins.Add(await buyinOptions[i].Label());
+            }
         }
         txt_buyin.text = buyins.Count > 0 ? string.Join("\n", buyins) : 0.ToString();
 
