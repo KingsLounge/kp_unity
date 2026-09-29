@@ -1228,6 +1228,44 @@ public class HoldemBettingManager : BettingManager
         // SetReserveBettingToggleContainer(true);
     }
 
+    /// <summary>
+    /// 턴 패킷이 싣고 온 금액으로 베팅 상태를 맞춘다.
+    /// 예전에는 금액을 PC_HOLDEM_BET_MONEY / USER_MONEY 누적값에서만 가져왔다. 그 패킷의 반영이
+    /// 늦은 채로 내 턴이 오면 옛 값(최소 레이즈 0 등)으로 베팅 보드가 떠서, 레이즈를 눌러도
+    /// 콜 금액이 나갔다. 내 턴 동안은 다른 사람이 액션할 수 없어 이 값들은 턴이 끝날 때까지 유효하다.
+    /// 구버전 서버는 이 필드를 보내지 않는다. 그때는 false 를 돌려주고 기존 누적값을 그대로 쓴다.
+    /// </summary>
+    private bool ApplyTurnBetInfo(JObject c)
+    {
+        if (c["money_call"] == null || c["money_minimum_raise"] == null || c["bet_this_stage"] == null)
+        {
+            return false;
+        }
+
+        RoomStatus status = InfoManager.Instance.GetRoom(roomNumber);
+        long money_call = c.ValueOrDefault<long>("money_call", 0);
+        long myChip = c.ValueOrDefault<long>("rest_chip", playerManager.myPlayer.Chip);
+
+        tableCall = money_call;
+        money_minimum_raise = c.ValueOrDefault<long>("money_minimum_raise", 0);
+        myBetChip = c.ValueOrDefault<long>("bet_this_stage", 0);
+        if (c["money_total"] != null)
+        {
+            pot = c.ValueOrDefault<long>("money_total", pot);
+            potText.SetChip(pot);
+        }
+
+        // PC_HOLDEM_BET_MONEY 처리와 같은 계산식. (Mathf.Min 은 float 로 바뀌며 큰 칩 수에서 오차가 나서 정수 연산으로 한다)
+        long call = System.Math.Min(money_call - myBetChip, myChip);
+        call_chip = call < 0 ? 0 : call;
+        bet_chip = System.Math.Min(call_chip + status.bg, myChip);
+        raise_chip = System.Math.Min(call_chip + status.bg, myChip);
+
+        bettingButtons.SetBettingButtonPriceText(POKER_BETTYPE.call, call_chip);
+        bettingButtons.SetBettingButtonPriceText(POKER_BETTYPE.raise, raise_chip);
+        return true;
+    }
+
     private void WhoseTurn(JObject c)
     {
         int turnSeat = (int)c["seat"];
@@ -1236,6 +1274,8 @@ public class HoldemBettingManager : BettingManager
         {
             prevMyTurn = true;
             int activeBettype = (int)c["bettype"];
+            // 베팅 보드를 띄우기 전에, 이 턴의 금액을 서버가 보낸 값으로 확정한다
+            ApplyTurnBetInfo(c);
             ViveManager.Vibrate(200);
             // 예약베팅
             AutoBetting(activeBettype);
