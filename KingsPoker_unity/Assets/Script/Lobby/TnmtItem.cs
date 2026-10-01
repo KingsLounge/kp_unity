@@ -177,7 +177,8 @@ public class TnmtItem : MonoBehaviour
             chip_icon.gameObject.SetActive(cafeIdx == -1); // 특정 카페에 들어가 있지 않으면,
         }
 
-        txt_prize.text = MoneyToString.Converting(
+        txt_prize.text = TnmtPrizeCurrency.PoolText(
+            tnmtInfo.info,
             tnmtInfo.info.ValueOrDefault<long>("t_reward_all_chip", 0)
         );
         startTime = tnmtInfo.info.ValueOrDefault("t_start_time", DateTime.UtcNow).ToLocalTime();

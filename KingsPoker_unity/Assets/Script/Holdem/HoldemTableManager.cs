@@ -266,7 +266,7 @@ public class HoldemTableManager : TableManager
             }
             DateTime startTime = DateTimeParser.Parse(tnInfo.startTime).ToLocalTime();
             DateTime closeTime = DateTimeParser.Parse(tnInfo.closeTime).ToLocalTime();
-            prize.SetLocalText("prize_text", MoneyToString.Converting(tnInfo.totalPrize));
+            prize.SetLocalText("prize_text", TnmtPrizeCurrency.PoolText(tnInfo.info, tnInfo.totalPrize)); // KP 지급 토너면 "N KP"
             late_reg.SetLocalText("late_reg", closeTime.ToString("MM'/'dd HH:mm"));
             if (countdownCoroutine != null)
             {

@@ -90,6 +90,25 @@ public class CustomUIRewardModule : CustomUI
             MergeKpRankTable(rewards, kpTable);
         }
 
+        // 지급 통화가 KP 인 토너(t_rewards.prize_currency == "kp"): 비율/고정 칩 상금이 KP 로 나가므로 칩 칸을 KP 칸으로 옮겨 표시
+        if (TnmtPrizeCurrency.IsKp(t_rewards))
+        {
+            foreach (var r in rewards)
+            {
+                var row = r as JObject;
+                if (row == null)
+                {
+                    continue;
+                }
+                var chip = row.ValueOrDefault<long>("chip", 0);
+                if (chip > 0)
+                {
+                    row["kp"] = row.ValueOrDefault<long>("kp", 0) + chip;
+                    row["chip"] = 0;
+                }
+            }
+        }
+
         SetValue(rewards);
     }
 
