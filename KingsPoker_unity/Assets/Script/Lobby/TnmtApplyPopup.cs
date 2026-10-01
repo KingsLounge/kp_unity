@@ -103,17 +103,25 @@ public class TnmtApplyPopup : MonoBehaviour
     [SerializeField]
     private Toggle chipToggle;
 
-    [Header("options")]
+    // ── 바이인 옵션 줄 나열 방식 ──
+    // optionItemPrefab + optionContainer 를 연결하면 옵션 모드. 이 모드에서는 위쪽 필드가
+    // 전부 선택 사항이라(없으면 건너뜀) 기존 칩/티켓 토글·행을 프리팹에서 지워도 된다.
+    // 둘 중 하나라도 비어 있으면 기존 칩/티켓 토글 방식 그대로 동작한다.
+    [Header("options (줄 나열)")]
     [SerializeField]
-    private Dropdown buyinOptionDropdown; // 바이인 옵션 선택. 연결하면 옵션 모드(서버 buyin_options 기준), 미연결이면 기존 칩/티켓 토글 방식
+    private TnmtBuyinOptionItem optionItemPrefab; // 옵션 한 줄 프리팹
 
     [SerializeField]
-    private Text buyinOptionText; // 선택한 옵션 요약 (미연결 시 칩 칸 재활용)
+    private Transform optionContainer; // 줄들이 들어갈 부모 (Vertical Layout Group 권장)
 
-    private List<BuyinOption> buyinOptions = new List<BuyinOption>();
+    [SerializeField]
+    private ToggleGroup optionToggleGroup; // 미연결 시 optionContainer 에서 찾거나 새로 붙인다
+
+    private readonly List<BuyinOption> buyinOptions = new List<BuyinOption>();
+    private readonly List<TnmtBuyinOptionItem> optionItems = new List<TnmtBuyinOptionItem>();
     private int selectedOptionIndex = 0;
     private bool optionMode = false;
-    private bool optionListenerAdded = false;
+    private int optionPanelVersion = 0; // 비동기 갱신이 겹칠 때 늦게 끝난 쪽이 덮어쓰지 않게
 
     [SerializeField]
     private GameObject passwordObj;
@@ -145,17 +153,44 @@ public class TnmtApplyPopup : MonoBehaviour
 
     private void Awake()
     {
-        if (buyinOptionDropdown != null && !optionListenerAdded)
-        {
-            buyinOptionDropdown.onValueChanged.AddListener(OnOptionChanged);
-            optionListenerAdded = true;
-        }
         SetTnmtApplyPanel();
         isInit = true;
     }
 
+    public void SetTnmtData(int tn)
+    {
+        this.tn = tn;
+        if (isInit)
+        {
+            SetTnmtApplyPanel();
+            if (passwordInput != null)
+            {
+                passwordInput.text = string.Empty;
+            }
+        }
+
+        gameObject.SetActive(true);
+    }
+
+    // ───────────────────────── 옵션 모드 ─────────────────────────
+
     private BuyinOption CurrentOption =>
         optionMode && selectedOptionIndex >= 0 && selectedOptionIndex < buyinOptions.Count ? buyinOptions[selectedOptionIndex] : null;
+
+    private static void SetTextSafe(Text t, string s)
+    {
+        if (t != null) t.text = s;
+    }
+
+    private static void SetLocalSafe(LocalText t, string key, params object[] par)
+    {
+        if (t != null) t.SetLocalText(key, par);
+    }
+
+    private static void SetActiveSafe(GameObject g, bool active)
+    {
+        if (g != null) g.SetActive(active);
+    }
 
     private static List<long> MyTicketCounts()
     {
@@ -174,102 +209,20 @@ public class TnmtApplyPopup : MonoBehaviour
         return MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
     }
 
-    // 옵션 모드: 서버가 준 buyin_options / reentry_options 중 하나를 골라 option id + scale 로 신청한다.
-    private async UniTask SetupOptionMode(bool didEntry, int t_buyin_scale_min, int t_buyin_scale_max)
+    private long MyChip()
     {
-        var labels = new List<string>();
-        foreach (var opt in buyinOptions)
-        {
-            labels.Add(await opt.Label());
-        }
-        buyinOptionDropdown.ClearOptions();
-        buyinOptionDropdown.AddOptions(labels);
-        if (selectedOptionIndex >= buyinOptions.Count)
-        {
-            selectedOptionIndex = 0;
-        }
-        buyinOptionDropdown.SetValueWithoutNotify(selectedOptionIndex);
-        buyinOptionDropdown.gameObject.SetActive(true);
-
-        // 기존 토글은 옵션 모드에선 쓰지 않는다 (배율 계산은 칩 토글 경로)
-        chipToggle.SetIsOnWithoutNotify(true);
-        chipToggle.interactable = false;
-        ticketToggle.SetIsOnWithoutNotify(false);
-        ticketToggle.interactable = false;
-
-        RefreshOptionRows(didEntry);
-
-        buyinScaleMinText.SetLocalText("buyin_scale_min", t_buyin_scale_min);
-        buyinScaleMaxText.SetLocalText("buyin_scale_max", t_buyin_scale_max);
-        SetMinMaxText();
-        SetVariations();
-        SetBuyinScale(t_buyin_scale_max);
-    }
-
-    private void RefreshOptionRows(bool didEntry)
-    {
-        var opt = CurrentOption;
-        if (opt == null)
-        {
-            return;
-        }
-        var label = opt.LabelCached();
-        if (buyinOptionText != null)
-        {
-            buyinOptionText.text = label;
-        }
-        // 행 표시: 옵션에 들어 있는 재화만
-        buyinTicketObj.SetActive(opt.HasTicket);
-        var hasKpRow = buyinKpObj != null;
-        buyinChipObj.SetActive(opt.HasChip || (opt.HasKp && !hasKpRow) || (buyinOptionText == null));
-        if (hasKpRow)
-        {
-            buyinKpObj.SetActive(opt.HasKp);
-        }
-        if (buyinOptionText == null)
-        {
-            buyinChipText.text = label; // 요약 텍스트 미연결 시 칩 칸에 요약
-        }
-        else if (opt.HasChip)
-        {
-            buyinChipText.text = $"{MoneyToString.Converting(opt.chip)}칩";
-        }
-        if (opt.HasKp && hasKpRow && buyinKpText != null)
-        {
-            buyinKpText.SetLocalText("kp_count_text", MoneyToString.Converting(opt.kp));
-        }
-        if (opt.HasTicket)
-        {
-            var t = opt.tickets[0];
-            ticketTypeText.SetLocalText(KingshillInfo.GetTicketStringCached(t.type));
-            ticketCountText.text = MoneyToString.Converting(t.count);
-        }
-        SetRowActive(myKpObj, myKpText, opt.HasKp);
-        if (myKpText != null && opt.HasKp)
-        {
-            myKpText.text = MoneyToString.Converting(MyKp());
-        }
-        entryOrReentryText.SetLocalText(didEntry ? "reentry" : "entry");
-    }
-
-    public void OnOptionChanged(int index)
-    {
-        if (!optionMode)
-        {
-            return;
-        }
-        selectedOptionIndex = index;
-        RefreshOptionRows(IsDidEntry());
-        SetMinMaxText();
-        SetVariations();
-        SetBuyinScale(buyinScale);
+        return GetChip(tnmtInfo.info.ValueOrDefault("t_chip_type", CHIP_TYPE.nothing));
     }
 
     private bool IsDidEntry()
     {
+        if (tnmtInfo == null)
+        {
+            return false;
+        }
         foreach (JObject his in InfoManager.TnmtHistory)
         {
-            if (tnmtInfo != null && tnmtInfo.tn == his.ValueOrDefault("tn", 0))
+            if (tnmtInfo.tn == his.ValueOrDefault("tn", 0))
             {
                 return true;
             }
@@ -277,16 +230,185 @@ public class TnmtApplyPopup : MonoBehaviour
         return false;
     }
 
-    public void SetTnmtData(int tn)
+    private async UniTask SetOptionPanel()
     {
-        this.tn = tn;
-        if (isInit)
+        var version = ++optionPanelVersion;
+        if (tnmtInfo == null)
         {
-            SetTnmtApplyPanel();
-            passwordInput.text = string.Empty;
+            return;
+        }
+        var info = tnmtInfo.info;
+        var didEntry = IsDidEntry();
+
+        // 서버가 준 옵션, 없으면(구버전 서버) 기존 필드로 합성
+        var resolved = BuyinOption.Resolve(info, didEntry);
+
+        var t_o = info.CastOrEmpty<JObject>("t_o");
+        var scaleMinSetting = info.ValueOrDefault("t_buyin_scale_min", 1);
+        var scaleMaxSetting = info.ValueOrDefault("t_buyin_scale_max", 1);
+        var myChip = MyChip();
+        var myKp = MyKp();
+        var myTickets = MyTicketCounts();
+
+        // 줄 문구는 티켓 이름을 받아와야 해서 비동기 — 먼저 다 만든 뒤 한 번에 그린다
+        var prices = new List<string>();
+        var holds = new List<string>();
+        var affordables = new List<bool>();
+        var anyKp = false;
+        foreach (var opt in resolved)
+        {
+            prices.Add(await opt.Label());
+            holds.Add(await opt.HoldLabel(myChip, myKp, myTickets, Mathf.Max(1, scaleMinSetting)));
+            affordables.Add(opt.MaxAffordableScale(myChip, myKp, myTickets, scaleMaxSetting) >= Mathf.Max(1, scaleMinSetting));
+            anyKp |= opt.HasKp;
+        }
+        if (version != optionPanelVersion || this == null)
+        {
+            return; // 더 새로운 갱신이 시작됨
         }
 
-        gameObject.SetActive(true);
+        buyinOptions.Clear();
+        buyinOptions.AddRange(resolved);
+
+        // 머리말
+        SetTextSafe(tnmtNameText, $"# {tnmtInfo.tn} {tnmtInfo.title}");
+        SetLocalSafe(entryOrReentryText, didEntry ? "reentry" : "entry");
+        SetActiveSafe(passwordObj, t_o.ValueOrDefault("is_password", false));
+
+        // 내 보유 (있는 칸만)
+        SetTextSafe(myChipText, MoneyToString.Converting(myChip));
+        var isLounge = MyStatus.loungeData.ValueOrDefault("cafeIdx", 0) == 2;
+        SetActiveSafe(myTicketObj, isLounge);
+        if (isLounge && myTicketTexts != null)
+        {
+            for (int i = 0; i < myTicketTexts.Length && i < myTickets.Count; ++i)
+            {
+                SetLocalSafe(myTicketTexts[i], $"ticket{i + 1}_count", myTickets[i]);
+            }
+        }
+        SetRowActive(myKpObj, myKpText, anyKp);
+        if (anyKp)
+        {
+            SetTextSafe(myKpText, MoneyToString.Converting(myKp));
+        }
+
+        // 기존 칩/티켓/KP 가격 행과 토글은 옵션 줄이 대신한다 (남아 있으면 숨김)
+        SetActiveSafe(buyinChipObj, false);
+        SetActiveSafe(buyinTicketObj, false);
+        SetActiveSafe(buyinKpObj, false);
+        if (chipToggle != null) chipToggle.gameObject.SetActive(false);
+        if (ticketToggle != null) ticketToggle.gameObject.SetActive(false);
+
+        // 옵션 줄
+        if (optionToggleGroup == null)
+        {
+            optionToggleGroup = optionContainer.GetComponent<ToggleGroup>();
+            if (optionToggleGroup == null)
+            {
+                optionToggleGroup = optionContainer.gameObject.AddComponent<ToggleGroup>();
+            }
+        }
+        optionToggleGroup.allowSwitchOff = false;
+
+        // 줄 템플릿이 에셋이 아니라 팝업 안에 놓인 오브젝트면(컨테이너 자식 등) 템플릿 자체는 숨긴다.
+        // 복제본은 아래에서 SetActive(true) 로 켠다.
+        if (optionItemPrefab.gameObject.scene.IsValid() && optionItemPrefab.gameObject.activeSelf)
+        {
+            optionItemPrefab.gameObject.SetActive(false);
+        }
+
+        foreach (var item in optionItems)
+        {
+            if (item != null)
+            {
+                Destroy(item.gameObject);
+            }
+        }
+        optionItems.Clear();
+
+        // 기본 선택: 이전 선택을 유지하되 살 수 없으면 살 수 있는 첫 옵션
+        if (selectedOptionIndex >= buyinOptions.Count || !affordables[selectedOptionIndex])
+        {
+            var firstAffordable = affordables.IndexOf(true);
+            selectedOptionIndex = firstAffordable >= 0 ? firstAffordable : 0;
+        }
+
+        for (int i = 0; i < buyinOptions.Count; i++)
+        {
+            var index = i;
+            var item = Instantiate(optionItemPrefab, optionContainer);
+            item.gameObject.SetActive(true);
+            item.Set(prices[i], holds[i], affordables[i], optionToggleGroup, () => OnOptionSelected(index));
+            optionItems.Add(item);
+        }
+        for (int i = 0; i < optionItems.Count; i++)
+        {
+            optionItems[i].SetSelected(i == selectedOptionIndex);
+        }
+
+        SetLocalSafe(buyinScaleMinText, "buyin_scale_min", scaleMinSetting);
+        SetLocalSafe(buyinScaleMaxText, "buyin_scale_max", scaleMaxSetting);
+        SetMinMaxText();
+        SetBuyinScale(scaleMaxSetting);
+    }
+
+    private void OnOptionSelected(int index)
+    {
+        if (!optionMode || index == selectedOptionIndex)
+        {
+            return;
+        }
+        selectedOptionIndex = index;
+        SetMinMaxText();
+        SetBuyinScale(buyinScale);
+    }
+
+    private void SetMinMaxOption()
+    {
+        var t_buyin_scale_min = tnmtInfo.info.ValueOrDefault("t_buyin_scale_min", 1);
+        var t_buyin_scale_max = tnmtInfo.info.ValueOrDefault("t_buyin_scale_max", 1);
+        var opt = CurrentOption;
+        var affordable = opt != null ? opt.MaxAffordableScale(MyChip(), MyKp(), MyTicketCounts(), t_buyin_scale_max) : t_buyin_scale_max;
+        scaleMin = Mathf.Min(t_buyin_scale_min, affordable);
+        scaleMax = Mathf.Min(t_buyin_scale_max, affordable);
+        SetLocalSafe(buyinMinButtnText, "buyin_min_button", scaleMin);
+        SetLocalSafe(buyinMaxButtnText, "buyin_max_button", scaleMax);
+    }
+
+    private void SetTotalsOption()
+    {
+        var opt = CurrentOption;
+
+        var showChip = opt != null && opt.HasChip;
+        SetRowActive(totalBuyinChipObj, totalBuyinChipText, showChip);
+        if (showChip)
+        {
+            SetLocalSafe(totalBuyinChipText, "chip_count_text", opt.chip * buyinScale);
+        }
+
+        var showTicket = opt != null && opt.HasTicket;
+        SetRowActive(totalBuyinTicketObj, totalBuyinTicketText, showTicket);
+        if (showTicket)
+        {
+            long ticketTotal = 0;
+            foreach (var t in opt.tickets)
+            {
+                ticketTotal += (long)t.count * buyinScale;
+            }
+            SetLocalSafe(totalBuyinTicketText, "ticket_counting_text", ticketTotal);
+        }
+
+        var showKp = opt != null && opt.HasKp;
+        SetRowActive(totalBuyinKpObj, totalBuyinKpText, showKp);
+        if (showKp)
+        {
+            SetLocalSafe(totalBuyinKpText, "kp_count_text", opt.kp * buyinScale);
+        }
+
+        if (buyinScaleInput != null)
+        {
+            buyinScaleInput.SetTextWithoutNotify(buyinScale.ToString());
+        }
     }
 
     public void OnClickCancelButton()
@@ -301,6 +423,15 @@ public class TnmtApplyPopup : MonoBehaviour
     public async void SetTnmtApplyPanel()
     {
         tnmtInfo = InfoManager.Instance.GetTournamentInfo(tn);
+
+        // 옵션 줄 프리팹과 부모가 연결돼 있으면 옵션 모드 (아래 기존 방식은 타지 않는다)
+        optionMode = optionItemPrefab != null && optionContainer != null;
+        if (optionMode)
+        {
+            await SetOptionPanel();
+            return;
+        }
+
         var data = MyStatus.loungeData;
 
         var ticketCounts = new List<long>();
@@ -378,23 +509,6 @@ public class TnmtApplyPopup : MonoBehaviour
                 myTicketTexts[i].SetLocalText($"ticket{i + 1}_count", ticketCounts[i]);
             }
         }
-        // 옵션 모드: 드롭다운이 연결돼 있고 서버가 옵션 목록을 줬을 때. 리엔트리면 reentry_options(없으면 buyin_options)
-        buyinOptions = BuyinOption.Parse(tnmtInfo.info, didEntry ? "reentry_options" : "buyin_options");
-        if (didEntry && buyinOptions.Count == 0)
-        {
-            buyinOptions = BuyinOption.Parse(tnmtInfo.info, "buyin_options");
-        }
-        optionMode = buyinOptionDropdown != null && buyinOptions.Count > 0;
-        if (buyinOptionDropdown != null)
-        {
-            buyinOptionDropdown.gameObject.SetActive(optionMode);
-        }
-        if (optionMode)
-        {
-            await SetupOptionMode(didEntry, t_buyin_scale_min, t_buyin_scale_max);
-            return;
-        }
-
         var isTicketTnmt = ticket_count > 0;
         var isChipTnmt = buyinChip > 0 && !isKpOnlyTnmt;
         var hasKpRow = buyinKpObj != null; // KP 행이 프리팹에 있으면 그 행 사용, 없으면 칩 칸 재활용
@@ -473,6 +587,12 @@ public class TnmtApplyPopup : MonoBehaviour
 
     private void SetMinMaxText()
     {
+        if (optionMode)
+        {
+            SetMinMaxOption();
+            return;
+        }
+
         var data = MyStatus.loungeData;
 
         var ticketCounts = new List<long>();
@@ -509,19 +629,6 @@ public class TnmtApplyPopup : MonoBehaviour
         var t_ticket = tnmtInfo.info.CastOrEmpty<JObject>("t_ticket");
         var ticket_type = t_ticket.ValueOrDefault("ticket_type", 0);
         entryTicketCount = t_ticket.ValueOrDefault("ticket_count", 0);
-
-        if (optionMode)
-        {
-            var opt = CurrentOption;
-            var affordable = opt != null ? opt.MaxAffordableScale(chip, MyKp(), ticketCounts, t_buyin_scale_max) : t_buyin_scale_max;
-            entryCost = opt != null ? opt.chip : 0;
-            entryTicketCount = opt != null && opt.HasTicket ? opt.tickets[0].count : 0;
-            scaleMin = Mathf.Min(t_buyin_scale_min, affordable);
-            scaleMax = Mathf.Min(t_buyin_scale_max, affordable);
-            buyinMinButtnText.SetLocalText("buyin_min_button", scaleMin);
-            buyinMaxButtnText.SetLocalText("buyin_max_button", scaleMax);
-            return;
-        }
 
         entryCost = didEntry ? t_reentry_cost : t_buyin + t_buyin_fee;
         var chipMaxScale = entryCost > 0 ? Mathf.FloorToInt(chip / entryCost) : t_buyin_scale_max;
@@ -572,6 +679,10 @@ public class TnmtApplyPopup : MonoBehaviour
 
     public void OnchangeTicketToggle(bool value)
     {
+        if (optionMode)
+        {
+            return;
+        }
         if (!condition.Equals("and"))
         {
             chipToggle.SetIsOnWithoutNotify(!value);
@@ -600,6 +711,10 @@ public class TnmtApplyPopup : MonoBehaviour
 
     public void OnchangeChipToggle(bool value)
     {
+        if (optionMode)
+        {
+            return;
+        }
         if (!condition.Equals("and"))
         {
             ticketToggle.SetIsOnWithoutNotify(!value);
@@ -611,6 +726,10 @@ public class TnmtApplyPopup : MonoBehaviour
 
     private void SetVariations()
     {
+        if (optionMode)
+        {
+            return;
+        }
         foreach (var variation in chipVariations)
         {
             variation.SetVariation(chipToggle.isOn.ToString());
@@ -653,26 +772,7 @@ public class TnmtApplyPopup : MonoBehaviour
         buyinScale = Mathf.Clamp(scale, scaleMin, scaleMax);
         if (optionMode)
         {
-            var opt = CurrentOption;
-            var showChip = opt != null && opt.HasChip;
-            SetRowActive(totalBuyinChipObj, totalBuyinChipText, showChip);
-            if (showChip)
-            {
-                totalBuyinChipText.SetLocalText("chip_count_text", opt.chip * buyinScale);
-            }
-            var showTicket = opt != null && opt.HasTicket;
-            SetRowActive(totalBuyinTicketObj, totalBuyinTicketText, showTicket);
-            if (showTicket)
-            {
-                totalBuyinTicketText.SetLocalText("ticket_counting_text", opt.tickets[0].count * buyinScale);
-            }
-            var showKp = opt != null && opt.HasKp;
-            SetRowActive(totalBuyinKpObj, totalBuyinKpText, showKp);
-            if (totalBuyinKpText != null && showKp)
-            {
-                totalBuyinKpText.SetLocalText("kp_count_text", opt.kp * buyinScale);
-            }
-            buyinScaleInput.SetTextWithoutNotify(buyinScale.ToString());
+            SetTotalsOption();
             return;
         }
         var chip = chipToggle.isOn ? entryCost * buyinScale : 0;
@@ -734,17 +834,28 @@ public class TnmtApplyPopup : MonoBehaviour
                 LoadingCircle.Instance.StopSpin();
                 return;
             }
-            if (opt.HasKp && MyKp() < opt.kp * (long)Mathf.Max(1, buyinScale))
+            var applyScale = Mathf.Max(1, buyinScale);
+            if (opt.HasKp && MyKp() < opt.kp * (long)applyScale)
             {
                 LoadingCircle.Instance.StopSpin();
                 ErrorMessageManager.Instance.AddGameError(0, "KP 부족", "보유한 KP가 부족합니다.", ErrorHandlingType.NONE, null, null);
                 return;
             }
+
             p = new Packet(CPProtocol.CP_TNMT_APPLY);
             p.Add("tn", tn);
-            p.Add("option", opt.id); // 서버는 option 이 있으면 그 옵션으로 결제 (scale 키 추론 안 함)
-            p.Add("scale", buyinScale);
-            if (passwordObj.activeSelf)
+            if (opt.fromServer)
+            {
+                // 서버가 준 옵션 — id 로 지정 (서버는 scale 키 추론을 하지 않는다)
+                p.Add("option", opt.id);
+                p.Add("scale", applyScale);
+            }
+            else
+            {
+                // 구버전 서버 — 예전 방식 키 (scale / scale_chip / scale_ticket)
+                p.Add(opt.legacyScaleKey, applyScale);
+            }
+            if (passwordObj != null && passwordObj.activeSelf && passwordInput != null)
             {
                 p.Add("password", passwordInput.text);
             }

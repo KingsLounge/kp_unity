@@ -23,6 +23,11 @@ public class BuyinOption
     public List<Ticket> tickets = new List<Ticket>();
     public long pool;
 
+    // 서버가 준 옵션이면 true → 신청 때 option id 를 보낸다.
+    // false 면 앱이 기존 필드로 합성한 것(구버전 서버) → legacyScaleKey 로 예전 방식 신청.
+    public bool fromServer = true;
+    public string legacyScaleKey = "scale"; // "scale" | "scale_chip" | "scale_ticket"
+
     public bool IsFree => chip <= 0 && kp <= 0 && tickets.Count == 0;
     public bool HasChip => chip > 0;
     public bool HasKp => kp > 0;
@@ -69,6 +74,107 @@ public class BuyinOption
             list.Add(opt);
         }
         return list;
+    }
+
+    /// <summary>
+    /// 이 토너의 옵션 목록. 서버가 buyin_options / reentry_options 를 줬으면 그것,
+    /// 없으면(구버전 서버) 기존 필드로 서버와 같은 규칙으로 합성한다.
+    /// </summary>
+    public static List<BuyinOption> Resolve(JObject info, bool reentry)
+    {
+        var list = Parse(info, reentry ? "reentry_options" : "buyin_options");
+        if (reentry && list.Count == 0)
+        {
+            list = Parse(info, "buyin_options");
+        }
+        if (list.Count > 0)
+        {
+            return list;
+        }
+        return FromLegacy(info, reentry);
+    }
+
+    /// <summary>
+    /// 기존 필드(t_buyin, t_buyin_fee, t_reentry_cost, t_ticket, t_o.buyin_kp/reentry_kp)로 합성.
+    ///  - KP 전용          → [kp]
+    ///  - 티켓 조건 'or'   → [chip] , [ticket]   (신청 키 scale_chip / scale_ticket)
+    ///  - 그 외            → [chip (+ticket)]    (신청 키 scale)
+    /// </summary>
+    public static List<BuyinOption> FromLegacy(JObject info, bool reentry)
+    {
+        var list = new List<BuyinOption>();
+        if (info == null)
+        {
+            return list;
+        }
+        var t_o = info.CastOrEmpty<JObject>("t_o", true);
+        var kpBuyin = t_o.ValueOrDefault<long>("buyin_kp", 0, true);
+        var kpReentry = t_o.ValueOrDefault<long>("reentry_kp", 0, true);
+        if (kpReentry <= 0)
+        {
+            kpReentry = kpBuyin;
+        }
+        if (kpBuyin > 0)
+        {
+            list.Add(new BuyinOption { id = "kp", kp = reentry ? kpReentry : kpBuyin, fromServer = false, legacyScaleKey = "scale" });
+            return list;
+        }
+
+        long chip = reentry
+            ? info.ValueOrDefault<long>("t_reentry_cost", 0, true)
+            : info.ValueOrDefault<long>("t_buyin", 0, true) + info.ValueOrDefault<long>("t_buyin_fee", 0, true);
+
+        var t_ticket = info.CastOrEmpty<JObject>("t_ticket", true);
+        var ticketType = t_ticket.ValueOrDefault("ticket_type", 0, true);
+        var ticketCount = t_ticket.ValueOrDefault("ticket_count", 0, true);
+        var condition = t_ticket.ValueOrDefault("condition", "and", true);
+        var hasTicket = ticketType > 0 && ticketCount > 0;
+
+        if (hasTicket && condition.Equals("or"))
+        {
+            list.Add(new BuyinOption { id = "chip", chip = chip, fromServer = false, legacyScaleKey = "scale_chip" });
+            var ticketOnly = new BuyinOption { id = "ticket", fromServer = false, legacyScaleKey = "scale_ticket" };
+            ticketOnly.tickets.Add(new Ticket { type = ticketType, count = ticketCount });
+            list.Add(ticketOnly);
+            return list;
+        }
+
+        var single = new BuyinOption { id = hasTicket ? "chip_ticket" : "chip", chip = chip, fromServer = false, legacyScaleKey = "scale" };
+        if (hasTicket)
+        {
+            single.tickets.Add(new Ticket { type = ticketType, count = ticketCount });
+        }
+        list.Add(single);
+        return list;
+    }
+
+    /// <summary>
+    /// 이 옵션에 관련된 재화의 내 보유량 한 줄: "보유 15칩 · 340KP · 데일리 시드권 0장".
+    /// scale 배만큼 사기에 모자란 재화는 shortColor 로 감싼다 (Text 의 Rich Text 필요).
+    /// </summary>
+    public async UniTask<string> HoldLabel(long myChip, long myKp, IList<long> myTickets, int scale, string shortColor = "#E5484D")
+    {
+        var parts = new List<string>();
+        System.Func<string, bool, string> mark = (text, isShort) => isShort ? $"<color={shortColor}>{text}</color>" : text;
+        if (chip > 0)
+        {
+            parts.Add(mark(MoneyToString.Converting(myChip) + "칩", myChip < chip * scale));
+        }
+        if (kp > 0)
+        {
+            parts.Add(mark(MoneyToString.Converting(myKp) + "KP", myKp < kp * scale));
+        }
+        foreach (var t in tickets)
+        {
+            var have = t.type >= 1 && t.type <= myTickets.Count ? myTickets[t.type - 1] : 0;
+            var name = await KingshillInfo.GetTicketString(t.type);
+            parts.Add(mark($"{name} {have}장", have < (long)t.count * scale));
+        }
+        if (parts.Count == 0)
+        {
+            return string.Empty;
+        }
+        return "보유 " + string.Join(" · ", parts);
     }
 
     /// <summary>"2칩 + 5번티켓 1장" 처럼 한 줄 요약. 티켓 이름은 킹스라운지에서 받아오므로 비동기.</summary>
