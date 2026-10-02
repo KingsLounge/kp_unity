@@ -242,6 +242,9 @@ public class TnmtApplyPopup : MonoBehaviour
 
         // 서버가 준 옵션, 없으면(구버전 서버) 기존 필드로 합성
         var resolved = BuyinOption.Resolve(info, didEntry);
+        Debug.Log(
+            $"[TnmtApplyPopup] tn={tn} optionMode reentry={didEntry} serverOptions={(info.ContainsKey("buyin_options") ? info["buyin_options"].ToString(Newtonsoft.Json.Formatting.None) : "(none)")} resolved={resolved.Count} ids={string.Join(",", resolved.ConvertAll(o => o.id + (o.fromServer ? "" : "*")))}"
+        );
 
         var t_o = info.CastOrEmpty<JObject>("t_o");
         var scaleMinSetting = info.ValueOrDefault("t_buyin_scale_min", 1);
@@ -426,6 +429,10 @@ public class TnmtApplyPopup : MonoBehaviour
 
         // 옵션 줄 프리팹과 부모가 연결돼 있으면 옵션 모드 (아래 기존 방식은 타지 않는다)
         optionMode = optionItemPrefab != null && optionContainer != null;
+        if (!optionMode)
+        {
+            Debug.Log($"[TnmtApplyPopup] tn={tn} legacyMode (optionItemPrefab={(optionItemPrefab != null)} optionContainer={(optionContainer != null)}) buyin_options in info={(tnmtInfo != null && tnmtInfo.info.ContainsKey("buyin_options"))}");
+        }
         if (optionMode)
         {
             await SetOptionPanel();

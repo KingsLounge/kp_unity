@@ -240,17 +240,14 @@ public class TnmtItem : MonoBehaviour
 
 
         }
-        // 서버가 옵션 목록(buyin_options)을 주면 그걸로 표시 — 옵션 사이는 or, 옵션 안 재화는 +
+        // 서버가 옵션 목록(buyin_options)을 주면 그걸로 표시 — 옵션 한 줄씩(택1), 옵션 안 재화는 +.
+        // '또는' 줄은 넣지 않는다: 줄이 늘면 Best Fit 으로 글자가 너무 작아진다.
         var buyinOptions = BuyinOption.Parse(tnmtInfo.info, "buyin_options");
         if (buyinOptions.Count > 0)
         {
             buyins.Clear();
             for (int i = 0; i < buyinOptions.Count; i++)
             {
-                if (i > 0)
-                {
-                    buyins.Add(LocalizeManager.GetLocalString("or"));
-                }
                 buyins.Add(await buyinOptions[i].Label());
             }
         }
