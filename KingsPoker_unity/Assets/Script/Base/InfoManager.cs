@@ -1181,6 +1181,20 @@ public class TournamentInfo
     {
         tn = (int)data["tn"];
 
+        // 바이인 옵션(buyin_options/reentry_options)은 유저 목록·정보·업데이트 패킷에만 실려 온다.
+        // 다른 패킷(카페 정보 등)이 같은 토너를 옵션 없이 보내 덮어쓰면 신청 팝업에서 옵션이 사라지므로,
+        // 새 데이터에 옵션이 없고 이전 데이터에 있으면 이전 것을 유지한다.
+        if (info != null)
+        {
+            foreach (var key in new[] { "buyin_options", "reentry_options" })
+            {
+                if (!data.ContainsKey(key) && info.ContainsKey(key))
+                {
+                    data[key] = info[key];
+                }
+            }
+        }
+
         info = data;
         var live = data.CastOrEmpty<JObject>("live");
         if (live.ContainsKey("countEntry"))
