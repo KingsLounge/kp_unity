@@ -83,6 +83,138 @@ public class ScriptBatch : EditorWindow
         }
     }
 
+    // ---- 빌드 실행 ----
+    // 편집기 스크립트(#if UNITY_IOS 같은 조건)는 '활성 플랫폼' 기준으로 미리 컴파일돼 있어서, 전환 없이
+    // BuildPlayer 를 부르면 다른 플랫폼용으로 컴파일된 후처리가 실행된다(iOS 에서 CoreHaptics 미링크 등).
+    // 타깃이 다르면 먼저 전환하고, 재컴파일이 끝난 뒤 자동으로 빌드를 이어간다.
+    const string PendingFileKey = "ScriptBatch.pending.file";
+    const string PendingTargetKey = "ScriptBatch.pending.target";
+    const string PendingRunKey = "ScriptBatch.pending.run";
+
+    static void StartBuild(string file, BuildTarget target, bool buildAndRun)
+    {
+        if (string.IsNullOrEmpty(file))
+        {
+            UnityEngine.Debug.Log("[ScriptBatch] 빌드 취소 (저장 경로 없음)");
+            return;
+        }
+        if (EditorUserBuildSettings.activeBuildTarget == target)
+        {
+            DoBuild(file, target, buildAndRun);
+            return;
+        }
+
+        SessionState.SetString(PendingFileKey, file);
+        SessionState.SetInt(PendingTargetKey, (int)target);
+        SessionState.SetBool(PendingRunKey, buildAndRun);
+        UnityEngine.Debug.Log(
+            $"[ScriptBatch] 활성 플랫폼 {EditorUserBuildSettings.activeBuildTarget} → {target} 전환 후 자동으로 빌드를 이어갑니다."
+        );
+        bool ok = EditorUserBuildSettings.SwitchActiveBuildTargetAsync(
+            BuildPipeline.GetBuildTargetGroup(target),
+            target
+        );
+        if (!ok)
+        {
+            ClearPending();
+            UnityEngine.Debug.LogError($"[ScriptBatch] {target} 플랫폼 전환 실패 — 해당 플랫폼 모듈이 설치돼 있는지 확인하세요.");
+        }
+    }
+
+    static void ClearPending()
+    {
+        SessionState.EraseString(PendingFileKey);
+        SessionState.EraseInt(PendingTargetKey);
+        SessionState.EraseBool(PendingRunKey);
+    }
+
+    // 도메인 리로드(재컴파일) 때마다 등록. 전환이 끝나고 컴파일이 멈추면 보류 중인 빌드를 실행한다.
+    [InitializeOnLoadMethod]
+    static void WatchPendingBuild()
+    {
+        if (string.IsNullOrEmpty(SessionState.GetString(PendingFileKey, string.Empty)))
+        {
+            return;
+        }
+        EditorApplication.update += ResumePendingBuild;
+    }
+
+    static void ResumePendingBuild()
+    {
+        if (EditorApplication.isCompiling || EditorApplication.isUpdating)
+        {
+            return;
+        }
+        string file = SessionState.GetString(PendingFileKey, string.Empty);
+        if (string.IsNullOrEmpty(file))
+        {
+            EditorApplication.update -= ResumePendingBuild;
+            return;
+        }
+        var target = (BuildTarget)SessionState.GetInt(PendingTargetKey, (int)BuildTarget.NoTarget);
+        if (EditorUserBuildSettings.activeBuildTarget != target)
+        {
+            return; // 아직 전환 중
+        }
+        bool run = SessionState.GetBool(PendingRunKey, false);
+        EditorApplication.update -= ResumePendingBuild;
+        ClearPending();
+        UnityEngine.Debug.Log($"[ScriptBatch] {target} 전환 완료 — 빌드 시작: {file}");
+        DoBuild(file, target, run);
+    }
+
+    static void DoBuild(string file, BuildTarget target, bool buildAndRun)
+    {
+        BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, file, target, BuildOptions.None);
+        EditorApplication.Beep();
+        Process.Start(System.IO.Path.GetDirectoryName(file));
+        if (buildAndRun)
+        {
+            if (target == BuildTarget.Android)
+            {
+                Process process = new Process();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = "CMD.exe";
+
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardInput = true;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
+
+                process.EnableRaisingEvents = false;
+                process.StartInfo = startInfo;
+                process.Start(); //프로세스 시작
+                process.StandardInput.Write(
+                    EditorPrefs.GetString("AndroidSdkRoot")
+                        + "/platform-tools/adb.exe  install -r "
+                        + file
+                        + Environment.NewLine
+                );
+                process.StandardInput.Close();
+
+                string result = process.StandardOutput.ReadToEnd(); //실행결과를 standard output으로 받아와 string값에 저장
+                string error = process.StandardError.ReadToEnd(); //오류유무를 standard output으로 받아와 string값에 저장
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("[ Result Info ]\r\n"); //출력
+                sb.Append(result);
+                sb.Append("\r\n");
+                sb.Append("[ Error Info ]\r\n");
+                sb.Append(error);
+
+                UnityEngine.Debug.Log(sb.ToString());
+
+                process.WaitForExit();
+                process.Close();
+            }
+            else if (target == BuildTarget.StandaloneWindows)
+            {
+                Process proc = new Process();
+                proc.StartInfo.FileName = file;
+                proc.Start();
+            }
+        }
+    }
+
     [MenuItem("MyTools/Build")]
     public static void BuildWindow()
     {
@@ -352,54 +484,7 @@ public class ScriptBatch : EditorWindow
             SettingInit();
             GetWindow<ScriptBatch>().Close();
 
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, file, target, BuildOptions.None);
-            EditorApplication.Beep();
-            Process.Start(System.IO.Path.GetDirectoryName(file));
-            if (buildAndRun)
-            {
-                if (target == BuildTarget.Android)
-                {
-                    Process process = new Process();
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = "CMD.exe";
-
-                    startInfo.UseShellExecute = false;
-                    startInfo.RedirectStandardInput = true;
-                    startInfo.RedirectStandardOutput = true;
-                    startInfo.RedirectStandardError = true;
-
-                    process.EnableRaisingEvents = false;
-                    process.StartInfo = startInfo;
-                    process.Start(); //프로세스 시작
-                    process.StandardInput.Write(
-                        EditorPrefs.GetString("AndroidSdkRoot")
-                            + "/platform-tools/adb.exe  install -r "
-                            + file
-                            + Environment.NewLine
-                    );
-                    process.StandardInput.Close();
-
-                    string result = process.StandardOutput.ReadToEnd(); //실행결과를 standard output으로 받아와 string값에 저장
-                    string error = process.StandardError.ReadToEnd(); //오류유무를 standard output으로 받아와 string값에 저장
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    sb.Append("[ Result Info ]\r\n"); //출력
-                    sb.Append(result);
-                    sb.Append("\r\n");
-                    sb.Append("[ Error Info ]\r\n");
-                    sb.Append(error);
-
-                    UnityEngine.Debug.Log(sb.ToString());
-
-                    process.WaitForExit();
-                    process.Close();
-                }
-                else if (target == BuildTarget.StandaloneWindows)
-                {
-                    Process proc = new Process();
-                    proc.StartInfo.FileName = file;
-                    proc.Start();
-                }
-            }
+            StartBuild(file, target, buildAndRun);
         };
         EditorGUI.BeginChangeCheck();
 
