@@ -153,6 +153,13 @@ public class IOSBuildSetXcode
         proj.AddFrameworkToProject(targetGuid, "AuthenticationServices.framework", true); // weak — 로그인
         proj.AddFrameworkToProject(targetGuid, "StoreKit.framework", false); // 인앱결제
 
+        // CoreHaptics — distriqt 진동 플러그인(libVibrationUnity.a)이 사용. 플러그인의 후처리(VibrationScripts)는
+        // #if UNITY_IOS 로 감싸져 있어 에디터 활성 플랫폼이 iOS 가 아니면 통째로 빠지고 링크 에러가 난다
+        // (Undefined symbol: _OBJC_CLASS_$_CHHapticEngine …). 여기서 항상 넣어 활성 플랫폼과 무관하게 만든다.
+        string frameworkGuid = proj.GetUnityFrameworkTargetGuid();
+        proj.AddFrameworkToProject(targetGuid, "CoreHaptics.framework", false);
+        proj.AddFrameworkToProject(frameworkGuid, "CoreHaptics.framework", false);
+
         proj.WriteToFile(projPath);
 
         // Background Modes: Info.plist UIBackgroundModes 에 remote-notification 병합 (기존 항목 보존)
