@@ -851,11 +851,11 @@ public class LoginManager : MonoBehaviour
         LoadingCircle.Instance.StartSpin();
         FirebaseManager.Instance.PasswordReset(
             FindPasswordEmail.text,
-            (isSuccess) =>
+            (isSuccess, error) =>
             {
+                LoadingCircle.Instance.StopSpin();
                 if (isSuccess)
                 {
-                    LoadingCircle.Instance.StopSpin();
                     ErrorMessageManager.Instance.AddGameError(
                         0,
                         "SYS_SECRET_INIT_EMAIL_SEND_SUCCESS",
@@ -865,9 +865,13 @@ public class LoginManager : MonoBehaviour
                         ChangeLoginOrCreateAuthTab
                     );
                 }
+                else if (!string.IsNullOrEmpty(error))
+                {
+                    // Firebase 가 준 이유를 그대로 (가입 안 된 이메일 / 형식 오류 / 요청 과다 …)
+                    ErrorMessageManager.Instance.AddGameErrorBodyNotLocal(1, "SYS_SECRET_INIT_EMAIL_SEND_FAILED", error);
+                }
                 else
                 {
-                    LoadingCircle.Instance.StopSpin();
                     ErrorMessageManager.Instance.AddGameError(
                         1,
                         "SYS_SECRET_INIT_EMAIL_SEND_FAILED",

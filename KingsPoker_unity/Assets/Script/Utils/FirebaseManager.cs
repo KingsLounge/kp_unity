@@ -410,10 +410,23 @@ public class FirebaseManager : MonoBehaviour
     }
 
 
-    public async void PasswordReset(string email, System.Action<bool> callback)
+    /// <summary>
+    /// 비밀번호 재설정 메일 요청. 서버를 거치지 않고 Firebase 가 직접 보낸다.
+    /// callback(성공 여부, 실패 사유 문구) — 다른 로그인 함수들처럼 await 가 끝난 뒤(메인 스레드)에 부른다.
+    /// (이전엔 ContinueWith 안(워커 스레드)에서 UI 콜백을 불러 팝업/로딩이 멈출 수 있었다)
+    /// </summary>
+    public async void PasswordReset(string email, System.Action<bool, string> callback)
     {
+        var trimmed = (email ?? string.Empty).Trim(); // 모바일 키보드가 붙이는 공백/줄바꿈 → INVALID_EMAIL 방지
+        bool isSuccess = false;
+        string error = null;
 #if UNITY_IOS || UNITY_ANDROID
-        await Firebase.Auth.FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(email).ContinueWith(task =>
+        if (string.IsNullOrEmpty(trimmed))
+        {
+            callback(false, "이메일을 입력해 주세요.");
+            return;
+        }
+        await Firebase.Auth.FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(trimmed).ContinueWith(task =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
@@ -421,15 +434,48 @@ public class FirebaseManager : MonoBehaviour
                 {
                     Console.Error(task.Exception);
                 }
-                callback(false);
+                error = DescribePasswordResetError(task.Exception);
             }
             else
             {
-                callback(true);
+                isSuccess = true;
             }
         });
-        return;
+#else
+        error = "에디터/PC 빌드에서는 비밀번호 찾기를 지원하지 않습니다.";
 #endif
+        callback(isSuccess, error);
+    }
+
+    // Firebase 오류를 유저가 이해할 문구로. 소셜 가입 계정은 비밀번호가 없어 UserNotFound 로 떨어진다.
+    private static string DescribePasswordResetError(System.AggregateException ex)
+    {
+        if (ex == null)
+        {
+            return null;
+        }
+        foreach (var inner in ex.Flatten().InnerExceptions)
+        {
+            var fe = inner as Firebase.FirebaseException;
+            if (fe == null)
+            {
+                continue;
+            }
+            switch ((Firebase.Auth.AuthError)fe.ErrorCode)
+            {
+                case Firebase.Auth.AuthError.UserNotFound:
+                    return "가입되지 않은 이메일입니다. 구글/애플로 가입한 계정은 비밀번호가 없어 재설정할 수 없습니다.";
+                case Firebase.Auth.AuthError.InvalidEmail:
+                    return "이메일 형식이 올바르지 않습니다.";
+                case Firebase.Auth.AuthError.TooManyRequests:
+                    return "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.";
+                case Firebase.Auth.AuthError.NetworkRequestFailed:
+                    return "네트워크 연결을 확인해 주세요.";
+                default:
+                    return fe.Message;
+            }
+        }
+        return ex.Message;
     }
 
     #endregion
