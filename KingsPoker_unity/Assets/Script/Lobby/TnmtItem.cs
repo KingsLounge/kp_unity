@@ -252,7 +252,7 @@ public class TnmtItem : MonoBehaviour
             {
                 buyins.Add(await buyinOptions[i].Label());
             }
-            optionSeparator = " /\n";
+            optionSeparator = BuyinOption.NBSP + "/\n"; // "/" 가 혼자 다음 줄로 밀리지 않게
         }
         txt_buyin.text = buyins.Count > 0 ? string.Join(optionSeparator, buyins) : 0.ToString();
 

@@ -11,6 +11,10 @@ using Newtonsoft.Json.Linq;
 /// </summary>
 public class BuyinOption
 {
+    // 줄바꿈 불가 공백. 라벨 안의 "이름 1장", "2칩 + 4KP" 가 카드 폭에 밀려 중간에서 쪼개지지 않게 한다.
+    public const char NBSP = '\u00A0';
+    public const string JOIN = "\u00A0+\u00A0";
+
     public struct Ticket
     {
         public int type;
@@ -168,7 +172,7 @@ public class BuyinOption
         {
             var have = t.type >= 1 && t.type <= myTickets.Count ? myTickets[t.type - 1] : 0;
             var name = await KingshillInfo.GetTicketString(t.type);
-            parts.Add(mark($"{name} {have}장", have < (long)t.count * scale));
+            parts.Add(mark($"{name}{NBSP}{have}장", have < (long)t.count * scale));
         }
         if (parts.Count == 0)
         {
@@ -187,14 +191,14 @@ public class BuyinOption
         }
         if (kp > 0)
         {
-            if (sb.Length > 0) sb.Append(" + ");
+            if (sb.Length > 0) sb.Append(JOIN);
             sb.Append(MoneyToString.Converting(kp * scale)).Append("KP");
         }
         foreach (var t in tickets)
         {
-            if (sb.Length > 0) sb.Append(" + ");
+            if (sb.Length > 0) sb.Append(JOIN);
             var name = await KingshillInfo.GetTicketString(t.type);
-            sb.Append(name).Append(' ').Append(t.count * scale).Append("장");
+            sb.Append(name).Append(NBSP).Append(t.count * scale).Append("장");
         }
         return sb.Length > 0 ? sb.ToString() : LocalizeManager.GetLocalString("free");
     }
@@ -209,13 +213,13 @@ public class BuyinOption
         }
         if (kp > 0)
         {
-            if (sb.Length > 0) sb.Append(" + ");
+            if (sb.Length > 0) sb.Append(JOIN);
             sb.Append(MoneyToString.Converting(kp * scale)).Append("KP");
         }
         foreach (var t in tickets)
         {
-            if (sb.Length > 0) sb.Append(" + ");
-            sb.Append(KingshillInfo.GetTicketStringCached(t.type)).Append(' ').Append(t.count * scale).Append("장");
+            if (sb.Length > 0) sb.Append(JOIN);
+            sb.Append(KingshillInfo.GetTicketStringCached(t.type)).Append(NBSP).Append(t.count * scale).Append("장");
         }
         return sb.Length > 0 ? sb.ToString() : LocalizeManager.GetLocalString("free");
     }

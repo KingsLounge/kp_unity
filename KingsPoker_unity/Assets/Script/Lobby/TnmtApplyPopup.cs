@@ -289,7 +289,7 @@ public class TnmtApplyPopup : MonoBehaviour
         foreach (var type in ticketTypes)
         {
             var have = type >= 1 && type <= myTickets.Count ? myTickets[type - 1] : 0;
-            ticketHoldParts.Add($"{await KingshillInfo.GetTicketString(type)} {have}장");
+            ticketHoldParts.Add($"{await KingshillInfo.GetTicketString(type)}{BuyinOption.NBSP}{have}장");
         }
         if (version != optionPanelVersion || this == null)
         {
