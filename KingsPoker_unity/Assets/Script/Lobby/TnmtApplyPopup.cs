@@ -18,6 +18,9 @@ public class TnmtApplyPopup : MonoBehaviour
 
     [Header("myInfo")]
     [SerializeField]
+    private GameObject myChipObj; // 보유 칩 행 루트 — 옵션 모드에서 칩 옵션이 있을 때만 노출 (미연결 시 myChipText 오브젝트 기준)
+
+    [SerializeField]
     private Text myChipText;
 
     [SerializeField]
@@ -25,6 +28,12 @@ public class TnmtApplyPopup : MonoBehaviour
 
     [SerializeField]
     private LocalText[] myTicketTexts;
+
+    [SerializeField]
+    private GameObject myOptionTicketObj; // 옵션 모드 보유 티켓 행 루트 (미연결 시 myOptionTicketText 오브젝트 기준)
+
+    [SerializeField]
+    private Text myOptionTicketText; // 옵션에 쓰이는 티켓만: "JOPT 1장 · 월간티켓 0장" (미연결 시 myTicketObj 로 대체)
 
     [SerializeField]
     private GameObject buyinTicketObj;
@@ -116,6 +125,9 @@ public class TnmtApplyPopup : MonoBehaviour
 
     [SerializeField]
     private ToggleGroup optionToggleGroup; // 미연결 시 optionContainer 에서 찾거나 새로 붙인다
+
+    [SerializeField]
+    private GameObject optionCaptionObj; // "결제 방법 선택 (택1)" 캡션 — 옵션이 2개 이상일 때만 노출 (미연결 시 생략)
 
     private readonly List<BuyinOption> buyinOptions = new List<BuyinOption>();
     private readonly List<TnmtBuyinOptionItem> optionItems = new List<TnmtBuyinOptionItem>();
@@ -257,13 +269,27 @@ public class TnmtApplyPopup : MonoBehaviour
         var prices = new List<string>();
         var holds = new List<string>();
         var affordables = new List<bool>();
+        var anyChip = false;
         var anyKp = false;
+        var ticketTypes = new List<int>(); // 옵션에 쓰이는 티켓 종류 (등장 순)
         foreach (var opt in resolved)
         {
             prices.Add(await opt.Label());
             holds.Add(await opt.HoldLabel(myChip, myKp, myTickets, Mathf.Max(1, scaleMinSetting)));
             affordables.Add(opt.MaxAffordableScale(myChip, myKp, myTickets, scaleMaxSetting) >= Mathf.Max(1, scaleMinSetting));
+            anyChip |= opt.HasChip;
             anyKp |= opt.HasKp;
+            foreach (var t in opt.tickets)
+            {
+                if (!ticketTypes.Contains(t.type)) ticketTypes.Add(t.type);
+            }
+        }
+        // 보유 티켓 줄: 옵션에 쓰이는 종류만 "JOPT 1장 · 월간티켓 0장"
+        var ticketHoldParts = new List<string>();
+        foreach (var type in ticketTypes)
+        {
+            var have = type >= 1 && type <= myTickets.Count ? myTickets[type - 1] : 0;
+            ticketHoldParts.Add($"{await KingshillInfo.GetTicketString(type)} {have}장");
         }
         if (version != optionPanelVersion || this == null)
         {
@@ -278,22 +304,43 @@ public class TnmtApplyPopup : MonoBehaviour
         SetLocalSafe(entryOrReentryText, didEntry ? "reentry" : "entry");
         SetActiveSafe(passwordObj, t_o.ValueOrDefault("is_password", false));
 
-        // 내 보유 (있는 칸만)
-        SetTextSafe(myChipText, MoneyToString.Converting(myChip));
-        var isLounge = MyStatus.loungeData.ValueOrDefault("cafeIdx", 0) == 2;
-        SetActiveSafe(myTicketObj, isLounge);
-        if (isLounge && myTicketTexts != null)
+        // 내 보유 — 이 토너의 옵션에 등장하는 재화만 보여준다 (칩 옵션이 없는데 "보유 칩 0" 이 뜨면 칩이 필요한 줄 안다)
+        SetRowActive(myChipObj, myChipText, anyChip);
+        if (anyChip)
         {
-            for (int i = 0; i < myTicketTexts.Length && i < myTickets.Count; ++i)
-            {
-                SetLocalSafe(myTicketTexts[i], $"ticket{i + 1}_count", myTickets[i]);
-            }
+            SetTextSafe(myChipText, MoneyToString.Converting(myChip));
         }
         SetRowActive(myKpObj, myKpText, anyKp);
         if (anyKp)
         {
             SetTextSafe(myKpText, MoneyToString.Converting(myKp));
         }
+        var isLounge = MyStatus.loungeData.ValueOrDefault("cafeIdx", 0) == 2;
+        var anyTicket = ticketTypes.Count > 0 && isLounge;
+        if (myOptionTicketText != null)
+        {
+            // 옵션 티켓 전용 줄이 있으면 그걸 쓰고, 종류별 전체 보유 줄(myTicketObj)은 숨긴다
+            SetRowActive(myOptionTicketObj, myOptionTicketText, anyTicket);
+            if (anyTicket)
+            {
+                SetTextSafe(myOptionTicketText, string.Join(" · ", ticketHoldParts));
+            }
+            SetActiveSafe(myTicketObj, false);
+        }
+        else
+        {
+            SetActiveSafe(myTicketObj, anyTicket);
+            if (anyTicket && myTicketTexts != null)
+            {
+                for (int i = 0; i < myTicketTexts.Length && i < myTickets.Count; ++i)
+                {
+                    SetLocalSafe(myTicketTexts[i], $"ticket{i + 1}_count", myTickets[i]);
+                }
+            }
+        }
+
+        // 옵션이 둘 이상일 때만 "결제 방법 선택 (택1)" 캡션
+        SetActiveSafe(optionCaptionObj, resolved.Count > 1);
 
         // 기존 칩/티켓/KP 가격 행과 토글은 옵션 줄이 대신한다 (남아 있으면 숨김)
         SetActiveSafe(buyinChipObj, false);

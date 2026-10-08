@@ -241,8 +241,10 @@ public class TnmtItem : MonoBehaviour
 
         }
         // 서버가 옵션 목록(buyin_options)을 주면 그걸로 표시 — 옵션 한 줄씩(택1), 옵션 안 재화는 +.
-        // '또는' 줄은 넣지 않는다: 줄이 늘면 Best Fit 으로 글자가 너무 작아진다.
+        // 택1 은 줄 끝의 " /" 로 표시한다 ("10KP /" 다음 줄 "JOPT 1장"). '또는' 줄을 따로 넣으면
+        // 줄이 늘어 Best Fit 으로 글자가 너무 작아지고, "/" 는 언어와 무관해 로컬라이징에도 그대로 쓴다.
         var buyinOptions = BuyinOption.Parse(tnmtInfo.info, "buyin_options");
+        var optionSeparator = "\n";
         if (buyinOptions.Count > 0)
         {
             buyins.Clear();
@@ -250,8 +252,9 @@ public class TnmtItem : MonoBehaviour
             {
                 buyins.Add(await buyinOptions[i].Label());
             }
+            optionSeparator = " /\n";
         }
-        txt_buyin.text = buyins.Count > 0 ? string.Join("\n", buyins) : 0.ToString();
+        txt_buyin.text = buyins.Count > 0 ? string.Join(optionSeparator, buyins) : 0.ToString();
 
         CafeInfo cafeInfo = Cafe.instance.GetCafeList((int)tnmtInfo.info["cafeIdx"]);
         if (cafeInfo != null)
