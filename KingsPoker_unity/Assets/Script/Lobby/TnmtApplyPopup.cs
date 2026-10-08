@@ -35,10 +35,11 @@ public class TnmtApplyPopup : MonoBehaviour
     [SerializeField]
     private Text myOptionTicketText; // 옵션에 쓰이는 티켓만: "JOPT 1장 · 월간티켓 0장" (미연결 시 보유 칩 행을 복제해 같은 레이아웃으로 표시)
 
-    // 보유 칩 행(라벨+값)을 복제한 보유 티켓 행들 — 티켓 종류마다 한 행 ("보유 JOPT   0장"), 레이아웃은 칩/KP 행과 동일
-    private readonly List<GameObject> ticketRows = new List<GameObject>();
-    private readonly List<LocalText> ticketRowLabels = new List<LocalText>();
-    private readonly List<LocalText> ticketRowValues = new List<LocalText>();
+    // 옵션 모드의 보유 블록: 보유 칩 행(myChipText 의 부모, 라벨+값)을 템플릿으로 필요한 재화 수만큼 복제한다.
+    // 칩 → KP → 티켓 종류 순. 프리팹에서는 템플릿 행 하나만 관리하면 되고, 원래 KP/티켓 행은 숨긴다.
+    private readonly List<GameObject> holdRows = new List<GameObject>();
+    private readonly List<LocalText> holdRowLabels = new List<LocalText>();
+    private readonly List<LocalText> holdRowValues = new List<LocalText>();
 
     [SerializeField]
     private GameObject buyinTicketObj;
@@ -314,75 +315,29 @@ public class TnmtApplyPopup : MonoBehaviour
         SetLocalSafe(entryOrReentryText, didEntry ? "reentry" : "entry");
         SetActiveSafe(passwordObj, t_o.ValueOrDefault("is_password", false));
 
-        // 내 보유 — 이 토너의 옵션에 등장하는 재화만 보여준다 (칩 옵션이 없는데 "보유 칩 0" 이 뜨면 칩이 필요한 줄 안다)
-        SetRowActive(myChipObj, myChipText, anyChip);
-        if (anyChip)
+        // 내 보유 — 이 토너의 옵션에 등장하는 재화만, 보유 칩 행을 템플릿으로 복제해 한 재화에 한 행씩 보여준다.
+        // (칩 옵션이 없는데 "보유 칩 0" 이 뜨면 칩이 필요한 줄 안다)
+        var holdEntries = new List<(string labelKey, string labelParam, string value)>();
+        if (anyChip) holdEntries.Add(("hold_chips", null, MoneyToString.Converting(myChip)));
+        if (anyKp) holdEntries.Add(("hold_kps", null, MoneyToString.Converting(myKp)));
+        if (myOptionTicketText == null)
         {
-            SetTextSafe(myChipText, MoneyToString.Converting(myChip));
+            for (int i = 0; i < ticketTypes.Count; i++)
+            {
+                // 라벨 "보유 JOPT": 줄바꿈 불가 공백으로 라벨 폭에서 두 줄로 갈리지 않게 (Best Fit 이 한 줄로 축소)
+                holdEntries.Add(("hold_ticket_label", BuyinOption.NBSP + ticketNames[i], ticketHaves[i].ToString()));
+            }
         }
-        SetRowActive(myKpObj, myKpText, anyKp);
-        if (anyKp)
-        {
-            SetTextSafe(myKpText, MoneyToString.Converting(myKp));
-        }
-        // 보유 티켓: 옵션에 티켓이 쓰이면 보여준다. (예전 조건 loungeData.cafeIdx == 2 는 라운지 유저 정보에
-        // 없는 키라 항상 false → 보유 티켓 줄이 한 번도 안 떴던 원인)
-        var anyTicket = ticketTypes.Count > 0;
+        BuildHoldRows(holdEntries);
+
+        // 옵션 티켓 전용 한 줄 텍스트가 연결돼 있으면 그쪽으로 ("JOPT 1장 · 월간티켓 0장")
         if (myOptionTicketText != null)
         {
-            // 옵션 티켓 전용 줄이 있으면 그걸 쓰고, 종류별 보유 줄(myTicketObj)은 숨긴다
+            var anyTicket = ticketTypes.Count > 0;
             SetRowActive(myOptionTicketObj, myOptionTicketText, anyTicket);
             if (anyTicket)
             {
                 SetTextSafe(myOptionTicketText, string.Join(" · ", ticketHoldParts));
-            }
-            SetActiveSafe(myTicketObj, false);
-        }
-        else
-        {
-            // 보유 칩 행(라벨 + 값, 간격까지)을 종류 수만큼 복제해 보유 티켓 행으로 쓴다 → 칩/KP 행과 레이아웃이 같다.
-            // 라벨 "보유 JOPT", 값 "0". 기존 종류별 줄(myTicketObj)은 쓰지 않는다. 프리팹 수정 없이 동작.
-            SetActiveSafe(myTicketObj, false);
-            var chipRow = myChipText != null ? myChipText.transform.parent : null;
-            if (chipRow != null)
-            {
-                while (ticketRows.Count < ticketTypes.Count)
-                {
-                    var row = Instantiate(chipRow.gameObject, chipRow.parent);
-                    row.name = chipRow.name + " (ticket " + (ticketRows.Count + 1) + ")";
-                    // 자리: 기존 티켓 줄 위치(없으면 칩 행 다음), 종류 순서대로 뒤에 이어 붙인다
-                    var baseIndex = myTicketObj != null && myTicketObj.transform.parent == chipRow.parent
-                        ? myTicketObj.transform.GetSiblingIndex()
-                        : chipRow.GetSiblingIndex() + 1;
-                    row.transform.SetSiblingIndex(baseIndex + ticketRows.Count);
-
-                    var valueIndex = myChipText.transform.GetSiblingIndex();
-                    var valueTr = valueIndex < row.transform.childCount ? row.transform.GetChild(valueIndex) : null;
-                    var valueText = valueTr != null ? valueTr.GetComponent<Text>() : null;
-                    LocalText valueLocal = null;
-                    if (valueText != null)
-                    {
-                        valueLocal = valueText.GetComponent<LocalText>() ?? valueText.gameObject.AddComponent<LocalText>();
-                    }
-                    LocalText labelLocal = null;
-                    foreach (var txt in row.GetComponentsInChildren<Text>(true))
-                    {
-                        if (txt == valueText) continue;
-                        labelLocal = txt.GetComponent<LocalText>() ?? txt.gameObject.AddComponent<LocalText>();
-                        break;
-                    }
-                    ticketRows.Add(row);
-                    ticketRowLabels.Add(labelLocal);
-                    ticketRowValues.Add(valueLocal);
-                }
-            }
-            for (int i = 0; i < ticketRows.Count; i++)
-            {
-                var show = anyTicket && i < ticketTypes.Count;
-                ticketRows[i].SetActive(show);
-                if (!show) continue;
-                if (ticketRowLabels[i] != null) ticketRowLabels[i].SetLocalText("hold_ticket_label", BuyinOption.NBSP + ticketNames[i]); // "보유 월간티켓" 이 라벨 폭(200)에서 줄바꿈되지 않게 — 줄바꿈 불가 공백 + Best Fit 으로 한 줄에 축소
-                if (ticketRowValues[i] != null) ticketRowValues[i].SetLocalText("raw_text", ticketHaves[i].ToString()); // "보유 KP 96" 과 같은 꼴 — 단위 없음
             }
         }
 
@@ -532,6 +487,10 @@ public class TnmtApplyPopup : MonoBehaviour
             await SetOptionPanel();
             return;
         }
+
+        // 옛 방식은 원래 행들을 쓴다 — 옵션 모드가 숨겨 둔 템플릿 행을 되살리고 복제본은 숨긴다
+        if (myChipText != null && myChipText.transform.parent != null) myChipText.transform.parent.gameObject.SetActive(true);
+        foreach (var row in holdRows) if (row != null) row.SetActive(false);
 
         var data = MyStatus.loungeData;
 
@@ -842,6 +801,68 @@ public class TnmtApplyPopup : MonoBehaviour
     }
 
     // 행 루트가 연결돼 있으면 행 전체(라벨 포함), 아니면 텍스트 오브젝트만 토글
+    /// <summary>
+    /// 보유 블록을 템플릿 행(보유 칩 행)의 복제본으로 구성한다. entries 순서대로 행을 켜고 라벨/값을 채우며,
+    /// 템플릿 행과 원래 KP/티켓 행은 숨긴다. 복제본은 재사용한다 (팝업을 다시 열어도 늘어나지 않음).
+    /// </summary>
+    private void BuildHoldRows(List<(string labelKey, string labelParam, string value)> entries)
+    {
+        var template = myChipText != null ? myChipText.transform.parent : null;
+        if (template == null)
+        {
+            // 템플릿이 없으면 기존 오브젝트로 최소한만: 칩/KP 값
+            return;
+        }
+        var templateObj = template.gameObject;
+        var container = template.parent;
+        var valueIndex = myChipText.transform.GetSiblingIndex();
+
+        while (holdRows.Count < entries.Count)
+        {
+            var row = Instantiate(templateObj, container);
+            row.name = templateObj.name + " (hold " + (holdRows.Count + 1) + ")";
+            // 템플릿 바로 뒤에 순서대로
+            row.transform.SetSiblingIndex(template.GetSiblingIndex() + 1 + holdRows.Count);
+
+            var valueTr = valueIndex < row.transform.childCount ? row.transform.GetChild(valueIndex) : null;
+            var valueText = valueTr != null ? valueTr.GetComponent<Text>() : null;
+            LocalText valueLocal = null;
+            if (valueText != null)
+            {
+                valueLocal = valueText.GetComponent<LocalText>() ?? valueText.gameObject.AddComponent<LocalText>();
+            }
+            LocalText labelLocal = null;
+            foreach (var txt in row.GetComponentsInChildren<Text>(true))
+            {
+                if (txt == valueText) continue;
+                labelLocal = txt.GetComponent<LocalText>() ?? txt.gameObject.AddComponent<LocalText>();
+                break;
+            }
+            holdRows.Add(row);
+            holdRowLabels.Add(labelLocal);
+            holdRowValues.Add(valueLocal);
+        }
+
+        for (int i = 0; i < holdRows.Count; i++)
+        {
+            var show = i < entries.Count;
+            holdRows[i].SetActive(show);
+            if (!show) continue;
+            var e = entries[i];
+            if (holdRowLabels[i] != null)
+            {
+                if (e.labelParam != null) holdRowLabels[i].SetLocalText(e.labelKey, e.labelParam);
+                else holdRowLabels[i].SetLocalText(e.labelKey);
+            }
+            if (holdRowValues[i] != null) holdRowValues[i].SetLocalText("raw_text", e.value);
+        }
+
+        // 템플릿과 원래 행은 숨긴다 (옵션 모드에서는 복제본만 보인다)
+        templateObj.SetActive(false);
+        SetRowActive(myKpObj, myKpText, false);
+        SetActiveSafe(myTicketObj, false);
+    }
+
     private static void SetRowActive(GameObject rowObj, Component fallbackText, bool active)
     {
         if (rowObj != null)
