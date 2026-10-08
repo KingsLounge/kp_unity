@@ -341,7 +341,7 @@ public class TnmtApplyPopup : MonoBehaviour
         else
         {
             // 보유 칩 행(라벨 + 값, 간격까지)을 종류 수만큼 복제해 보유 티켓 행으로 쓴다 → 칩/KP 행과 레이아웃이 같다.
-            // 라벨 "보유 JOPT", 값 "0장". 기존 종류별 줄(myTicketObj)은 쓰지 않는다. 프리팹 수정 없이 동작.
+            // 라벨 "보유 JOPT", 값 "0". 기존 종류별 줄(myTicketObj)은 쓰지 않는다. 프리팹 수정 없이 동작.
             SetActiveSafe(myTicketObj, false);
             var chipRow = myChipText != null ? myChipText.transform.parent : null;
             if (chipRow != null)
@@ -382,7 +382,7 @@ public class TnmtApplyPopup : MonoBehaviour
                 ticketRows[i].SetActive(show);
                 if (!show) continue;
                 if (ticketRowLabels[i] != null) ticketRowLabels[i].SetLocalText("hold_ticket_label", ticketNames[i]);
-                if (ticketRowValues[i] != null) ticketRowValues[i].SetLocalText("raw_text", $"{ticketHaves[i]}장");
+                if (ticketRowValues[i] != null) ticketRowValues[i].SetLocalText("raw_text", ticketHaves[i].ToString()); // "보유 KP 96" 과 같은 꼴 — 단위 없음
             }
         }
 
