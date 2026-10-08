@@ -33,7 +33,10 @@ public class TnmtApplyPopup : MonoBehaviour
     private GameObject myOptionTicketObj; // 옵션 모드 보유 티켓 행 루트 (미연결 시 myOptionTicketText 오브젝트 기준)
 
     [SerializeField]
-    private Text myOptionTicketText; // 옵션에 쓰이는 티켓만: "JOPT 1장 · 월간티켓 0장" (미연결 시 myTicketObj 로 대체)
+    private Text myOptionTicketText; // 옵션에 쓰이는 티켓만: "JOPT 1장 · 월간티켓 0장" (미연결 시 보유 칩 행을 복제해 같은 레이아웃으로 표시)
+
+    private GameObject ticketRowClone; // 보유 칩 행(라벨+값)을 복제한 보유 티켓 행 — 레이아웃을 칩/KP 행과 똑같이 맞추기 위해
+    private LocalText ticketRowValue;
 
     [SerializeField]
     private GameObject buyinTicketObj;
@@ -330,29 +333,49 @@ public class TnmtApplyPopup : MonoBehaviour
         }
         else
         {
-            // 기존 종류별 줄(myTicketObj + myTicketTexts)을 재사용: 옵션에 쓰이는 종류만 켜고 실제 티켓 이름으로 표시.
-            // 텍스트 칸이 모자라면 첫 칸을 복제한다 (프리팹 수정 없이 동작)
-            SetActiveSafe(myTicketObj, anyTicket);
-            if (anyTicket && myTicketTexts != null && myTicketTexts.Length > 0)
+            // 보유 칩 행(라벨 + 값, 간격까지)을 복제해 보유 티켓 행으로 쓴다 → 칩/KP 행과 레이아웃이 같아진다.
+            // 기존 종류별 줄(myTicketObj)은 쓰지 않는다. 프리팹 수정 없이 동작.
+            SetActiveSafe(myTicketObj, false);
+            if (ticketRowClone == null && myChipText != null && myChipText.transform.parent != null)
             {
-                var slots = new List<LocalText>(myTicketTexts);
-                while (slots.Count < ticketTypes.Count)
+                var chipRow = myChipText.transform.parent;
+                var rowIndex = myTicketObj != null && myTicketObj.transform.parent == chipRow.parent
+                    ? myTicketObj.transform.GetSiblingIndex()
+                    : chipRow.GetSiblingIndex() + 1;
+                ticketRowClone = Instantiate(chipRow.gameObject, chipRow.parent);
+                ticketRowClone.name = chipRow.name + " (ticket)";
+                ticketRowClone.transform.SetSiblingIndex(rowIndex);
+
+                // 값 칸 = 칩 값 텍스트와 같은 자리의 자식, 라벨 = 그 외 첫 Text
+                var valueIndex = myChipText.transform.GetSiblingIndex();
+                var valueTr = valueIndex < ticketRowClone.transform.childCount ? ticketRowClone.transform.GetChild(valueIndex) : null;
+                var valueText = valueTr != null ? valueTr.GetComponent<Text>() : null;
+                if (valueText != null)
                 {
-                    var clone = Instantiate(slots[0], slots[0].transform.parent);
-                    clone.gameObject.name = slots[0].gameObject.name + " (opt)";
-                    slots.Add(clone);
-                }
-                myTicketTexts = slots.ToArray();
-                for (int i = 0; i < slots.Count; i++)
-                {
-                    var used = i < ticketTypes.Count;
-                    slots[i].gameObject.SetActive(used);
-                    if (used)
+                    ticketRowValue = valueText.GetComponent<LocalText>();
+                    if (ticketRowValue == null)
                     {
-                        // LocalText 는 Start/언어 변경 때 자기 키로 글자를 다시 쓰므로 .text 직접 대입은 덮어써진다
-                        // → "{0}" 키(raw_text)로 넣어 유지되게 한다
-                        slots[i].SetLocalText("raw_text", ticketHoldParts[i]);
+                        ticketRowValue = valueText.gameObject.AddComponent<LocalText>();
                     }
+                }
+                foreach (var txt in ticketRowClone.GetComponentsInChildren<Text>(true))
+                {
+                    if (txt == valueText) continue;
+                    var label = txt.GetComponent<LocalText>();
+                    if (label == null)
+                    {
+                        label = txt.gameObject.AddComponent<LocalText>();
+                    }
+                    label.SetLocalText("hold_ticket_label");
+                    break;
+                }
+            }
+            if (ticketRowClone != null)
+            {
+                ticketRowClone.SetActive(anyTicket);
+                if (anyTicket && ticketRowValue != null)
+                {
+                    ticketRowValue.SetLocalText("raw_text", string.Join(" · ", ticketHoldParts));
                 }
             }
         }

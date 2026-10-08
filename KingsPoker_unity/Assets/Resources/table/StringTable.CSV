@@ -956,3 +956,4 @@ kp_count_text,0,{0} KP,,
 get_tnmt_kp,0,획득 KP : {0},Reward KP : {0},토너 결과 팝업 KP 상금
 buyin_option_select_caption,0,결제 방법 선택 (택1),Select one payment method,토너먼트 입장 팝업 옵션 캡션
 raw_text,0,{0},{0},문구를 그대로 표시 (코드에서 만든 문자열용)
+hold_ticket_label,0,보유 티켓,Tickets,토너먼트 입장 팝업 보유 티켓 라벨
