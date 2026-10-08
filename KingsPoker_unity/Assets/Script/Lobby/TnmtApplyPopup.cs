@@ -315,11 +315,12 @@ public class TnmtApplyPopup : MonoBehaviour
         {
             SetTextSafe(myKpText, MoneyToString.Converting(myKp));
         }
-        var isLounge = MyStatus.loungeData.ValueOrDefault("cafeIdx", 0) == 2;
-        var anyTicket = ticketTypes.Count > 0 && isLounge;
+        // 보유 티켓: 옵션에 티켓이 쓰이면 보여준다. (예전 조건 loungeData.cafeIdx == 2 는 라운지 유저 정보에
+        // 없는 키라 항상 false → 보유 티켓 줄이 한 번도 안 떴던 원인)
+        var anyTicket = ticketTypes.Count > 0;
         if (myOptionTicketText != null)
         {
-            // 옵션 티켓 전용 줄이 있으면 그걸 쓰고, 종류별 전체 보유 줄(myTicketObj)은 숨긴다
+            // 옵션 티켓 전용 줄이 있으면 그걸 쓰고, 종류별 보유 줄(myTicketObj)은 숨긴다
             SetRowActive(myOptionTicketObj, myOptionTicketText, anyTicket);
             if (anyTicket)
             {
@@ -329,12 +330,31 @@ public class TnmtApplyPopup : MonoBehaviour
         }
         else
         {
+            // 기존 종류별 줄(myTicketObj + myTicketTexts)을 재사용: 옵션에 쓰이는 종류만 켜고 실제 티켓 이름으로 표시.
+            // 텍스트 칸이 모자라면 첫 칸을 복제한다 (프리팹 수정 없이 동작)
             SetActiveSafe(myTicketObj, anyTicket);
-            if (anyTicket && myTicketTexts != null)
+            if (anyTicket && myTicketTexts != null && myTicketTexts.Length > 0)
             {
-                for (int i = 0; i < myTicketTexts.Length && i < myTickets.Count; ++i)
+                var slots = new List<LocalText>(myTicketTexts);
+                while (slots.Count < ticketTypes.Count)
                 {
-                    SetLocalSafe(myTicketTexts[i], $"ticket{i + 1}_count", myTickets[i]);
+                    var clone = Instantiate(slots[0], slots[0].transform.parent);
+                    clone.gameObject.name = slots[0].gameObject.name + " (opt)";
+                    slots.Add(clone);
+                }
+                myTicketTexts = slots.ToArray();
+                for (int i = 0; i < slots.Count; i++)
+                {
+                    var used = i < ticketTypes.Count;
+                    slots[i].gameObject.SetActive(used);
+                    if (used)
+                    {
+                        var txt = slots[i].GetComponent<Text>();
+                        if (txt != null)
+                        {
+                            txt.text = ticketHoldParts[i];
+                        }
+                    }
                 }
             }
         }
@@ -803,7 +823,17 @@ public class TnmtApplyPopup : MonoBehaviour
         }
         else if (fallbackText != null)
         {
-            fallbackText.gameObject.SetActive(active);
+            // 행 루트가 연결돼 있지 않으면 텍스트의 부모가 "라벨 + 값" 묶음(자식 몇 개짜리 Line)일 때 그 줄째 끄고,
+            // 큰 컨테이너면 텍스트만 끈다 (라벨만 덩그러니 남는 문제 방지)
+            var parent = fallbackText.transform.parent;
+            if (parent != null && parent.childCount <= 4 && parent.GetComponent<TnmtApplyPopup>() == null)
+            {
+                parent.gameObject.SetActive(active);
+            }
+            else
+            {
+                fallbackText.gameObject.SetActive(active);
+            }
         }
     }
 
