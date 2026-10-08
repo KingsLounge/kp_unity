@@ -381,7 +381,7 @@ public class TnmtApplyPopup : MonoBehaviour
                 var show = anyTicket && i < ticketTypes.Count;
                 ticketRows[i].SetActive(show);
                 if (!show) continue;
-                if (ticketRowLabels[i] != null) ticketRowLabels[i].SetLocalText("hold_ticket_label", ticketNames[i]);
+                if (ticketRowLabels[i] != null) ticketRowLabels[i].SetLocalText("hold_ticket_label", BuyinOption.NBSP + ticketNames[i]); // "보유 월간티켓" 이 라벨 폭(200)에서 줄바꿈되지 않게 — 줄바꿈 불가 공백 + Best Fit 으로 한 줄에 축소
                 if (ticketRowValues[i] != null) ticketRowValues[i].SetLocalText("raw_text", ticketHaves[i].ToString()); // "보유 KP 96" 과 같은 꼴 — 단위 없음
             }
         }
