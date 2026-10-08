@@ -1046,8 +1046,7 @@ public class FirebaseManager : MonoBehaviour
                 break;
             case LoginType.EMAIL:
                 break;
-            case LoginType.NAVER:
-                NaverLogin.Instance.Logout();
+            case LoginType.NAVER: // 네이버 로그인 제거됨 — 할 일 없음
                 break;
             case LoginType.APPLE:
                 break;

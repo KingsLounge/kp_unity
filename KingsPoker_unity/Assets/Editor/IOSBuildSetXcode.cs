@@ -46,11 +46,6 @@ public class IOSBuildSetXcode
             var urlInnerArray = urlDict.CreateArray("CFBundleURLSchemes");
             // kakao+카카오 앱 키
             urlInnerArray.AddString($"kakao{kakaoAppKey}");
-            // naver 스키마
-            urlDict = array.AddDict();
-            urlDict.SetString("CFBundleURLName", "naverlogin");
-            urlInnerArray = urlDict.CreateArray("CFBundleURLSchemes");
-            urlInnerArray.AddString("naveroauthlogin");
 
             File.WriteAllText(plistPath, plist.WriteToString());
 

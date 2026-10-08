@@ -1017,52 +1017,11 @@ public class LoginManager : MonoBehaviour
 
     #region Naver
 
+    // 네이버 로그인은 2026-10 에 제거됨 (SDK 미사용, dSYM 경고 유발). 씬의 버튼은 비활성이며 호환용 스텁만 남긴다.
     public void OnClickNaverLoginButton()
     {
-        recvBlock = false;
-
-        LoadingCircle.Instance.StartSpin();
-        NaverLogin.Instance.Login(
-            (string token) =>
-            {
-                Console.Log("네이버 로그인 성공");
-                PublisherApiManager.Instance.NaverCustomTokenAPI(
-                    token,
-                    (string customToken) =>
-                    {
-                        Debug.Log("SignInWithCustomToken Start");
-                        FirebaseManager.Instance.SignInWithCustomToken(
-                            customToken,
-                            LoginType.NAVER,
-                            (isSuccess) =>
-                            {
-                                Debug.Log("토큰 전달 성공");
-                                if (isSuccess)
-                                {
-#if DEV
-                                    RequestDevGameLoginData();
-#else
-                                    RequestPubLogin();
-#endif
-                                }
-                                else
-                                {
-                                    //SystemMessageManager.Instance.InvokeSystemError(0);
-                                    //OnPopup("로그인 실패");
-                                    LoadingCircle.Instance.StopSpin();
-                                    Console.Log("로그인 실패");
-                                }
-                            }
-                        );
-                    }
-                );
-            },
-            (string reson) =>
-            {
-                LoadingCircle.Instance.StopSpin();
-                Console.Log("로그인 실패");
-            }
-        );
+        LoadingCircle.Instance.StopSpin();
+        Console.Log("네이버 로그인은 더 이상 지원하지 않습니다.");
     }
 
     #endregion
