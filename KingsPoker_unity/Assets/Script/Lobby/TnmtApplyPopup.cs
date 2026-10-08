@@ -1,10 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 토너먼트 입장(신청) 팝업.
+///
+/// 결제 방법은 서버가 주는 바이인 옵션 목록(buyin_options / reentry_options)으로 표시한다 — 옵션 한 줄씩, 택1.
+/// 옵션 배열이 없는 구버전 서버라도 BuyinOption.Resolve 가 기존 필드로 합성하므로 경로는 하나다.
+///
+/// 보유 블록은 템플릿 행(myChipText 의 부모 = "보유 칩" 행, 라벨 + 값) 하나를 필요한 재화 수만큼 복제해 만든다.
+/// 프리팹에서는 그 템플릿 행 하나만 관리하면 된다 (칩 → KP → 티켓 종류 순, 없는 재화는 행이 생기지 않음).
+/// </summary>
 public class TnmtApplyPopup : MonoBehaviour
 {
     private int tn;
@@ -16,68 +24,24 @@ public class TnmtApplyPopup : MonoBehaviour
     [SerializeField]
     private LocalText entryOrReentryText;
 
-    [Header("myInfo")]
+    [Header("보유 — 템플릿 행")]
     [SerializeField]
-    private GameObject myChipObj; // 보유 칩 행 루트 — 옵션 모드에서 칩 옵션이 있을 때만 노출 (미연결 시 myChipText 오브젝트 기준)
+    private Text myChipText; // "보유 칩" 행의 값 텍스트. 이 텍스트의 부모(라벨 + 값 한 줄)가 보유 행 템플릿이다
 
+    [Header("옵션 (줄 나열)")]
     [SerializeField]
-    private Text myChipText;
-
-    [SerializeField]
-    private GameObject myTicketObj;
+    private TnmtBuyinOptionItem optionItemPrefab; // 옵션 한 줄 프리팹 (컨테이너 안에 두면 템플릿은 자동으로 숨김)
 
     [SerializeField]
-    private LocalText[] myTicketTexts;
+    private Transform optionContainer; // 줄들이 들어갈 부모 (Vertical Layout Group 권장)
 
     [SerializeField]
-    private GameObject myOptionTicketObj; // 옵션 모드 보유 티켓 행 루트 (미연결 시 myOptionTicketText 오브젝트 기준)
+    private ToggleGroup optionToggleGroup; // 미연결 시 optionContainer 에서 찾거나 새로 붙인다
 
     [SerializeField]
-    private Text myOptionTicketText; // 옵션에 쓰이는 티켓만: "JOPT 1장 · 월간티켓 0장" (미연결 시 보유 칩 행을 복제해 같은 레이아웃으로 표시)
+    private GameObject optionCaptionObj; // "결제 방법 선택 (택1)" 캡션 — 옵션이 2개 이상일 때만 노출 (미연결 시 생략)
 
-    // 옵션 모드의 보유 블록: 보유 칩 행(myChipText 의 부모, 라벨+값)을 템플릿으로 필요한 재화 수만큼 복제한다.
-    // 칩 → KP → 티켓 종류 순. 프리팹에서는 템플릿 행 하나만 관리하면 되고, 원래 KP/티켓 행은 숨긴다.
-    private readonly List<GameObject> holdRows = new List<GameObject>();
-    private readonly List<LocalText> holdRowLabels = new List<LocalText>();
-    private readonly List<LocalText> holdRowValues = new List<LocalText>();
-
-    [SerializeField]
-    private GameObject buyinTicketObj;
-
-    [Header("ticket")]
-    [SerializeField]
-    private Variation[] ticketVariations;
-
-    [SerializeField]
-    private LocalText ticketTypeText;
-
-    [SerializeField]
-    private Text ticketCountText;
-
-    [Header("chip")]
-    [SerializeField]
-    private GameObject buyinChipObj;
-
-    [SerializeField]
-    private Variation[] chipVariations;
-
-    [SerializeField]
-    private Text buyinChipText;
-
-    [Header("kp")]
-    [SerializeField]
-    private GameObject myKpObj; // 보유 KP 행 — KP 전용 토너에서만 노출 (미연결 시 myKpText 오브젝트 기준)
-
-    [SerializeField]
-    private Text myKpText; // 보유 KP 표시 (미연결 시 무시)
-
-    [SerializeField]
-    private GameObject buyinKpObj; // KP 바이인 행 — KP 전용 토너에서만 노출 (미연결 시 칩 칸 재활용)
-
-    [SerializeField]
-    private LocalText buyinKpText; // KP 바이인 금액 표시 (kp_count_text 키)
-
-    [Header("Scale")]
+    [Header("배율")]
     [SerializeField]
     private LocalText buyinScaleMinText;
 
@@ -93,7 +57,7 @@ public class TnmtApplyPopup : MonoBehaviour
     [SerializeField]
     private InputField buyinScaleInput;
 
-    [Header("Total")]
+    [Header("사용 (합계)")]
     [SerializeField]
     private GameObject totalBuyinChipObj; // 사용 칩 행 루트 (미연결 시 텍스트 오브젝트 기준)
 
@@ -110,52 +74,32 @@ public class TnmtApplyPopup : MonoBehaviour
     private GameObject totalBuyinKpObj; // 사용 KP 행 루트 (미연결 시 텍스트 오브젝트 기준)
 
     [SerializeField]
-    private LocalText totalBuyinKpText; // KP 결제 시 총 KP 표시 (미연결 시 무시)
+    private LocalText totalBuyinKpText;
 
-    [SerializeField]
-    private Toggle ticketToggle;
-
-    [SerializeField]
-    private Toggle chipToggle;
-
-    // ── 바이인 옵션 줄 나열 방식 ──
-    // optionItemPrefab + optionContainer 를 연결하면 옵션 모드. 이 모드에서는 위쪽 필드가
-    // 전부 선택 사항이라(없으면 건너뜀) 기존 칩/티켓 토글·행을 프리팹에서 지워도 된다.
-    // 둘 중 하나라도 비어 있으면 기존 칩/티켓 토글 방식 그대로 동작한다.
-    [Header("options (줄 나열)")]
-    [SerializeField]
-    private TnmtBuyinOptionItem optionItemPrefab; // 옵션 한 줄 프리팹
-
-    [SerializeField]
-    private Transform optionContainer; // 줄들이 들어갈 부모 (Vertical Layout Group 권장)
-
-    [SerializeField]
-    private ToggleGroup optionToggleGroup; // 미연결 시 optionContainer 에서 찾거나 새로 붙인다
-
-    [SerializeField]
-    private GameObject optionCaptionObj; // "결제 방법 선택 (택1)" 캡션 — 옵션이 2개 이상일 때만 노출 (미연결 시 생략)
-
-    private readonly List<BuyinOption> buyinOptions = new List<BuyinOption>();
-    private readonly List<TnmtBuyinOptionItem> optionItems = new List<TnmtBuyinOptionItem>();
-    private int selectedOptionIndex = 0;
-    private bool optionMode = false;
-    private int optionPanelVersion = 0; // 비동기 갱신이 겹칠 때 늦게 끝난 쪽이 덮어쓰지 않게
-
+    [Header("기타")]
     [SerializeField]
     private GameObject passwordObj;
 
     [SerializeField]
     private InputField passwordInput;
 
-    private int buyinScale;
-    private long entryCost;
-    private int entryTicketCount;
-    private long kpOnlyBuyin; // KP 전용 바이인 토너 (t_o.buyin_kp) — 0이면 일반 토너
-    private long kpOnlyReentry; // KP 전용 토너 리엔트리 비용 (t_o.reentry_kp, 미설정 시 buyin_kp)
-    private string condition;
-
     [SerializeField]
     private CustomUIOpener opener;
+
+    // ── 상태 ──
+    private readonly List<BuyinOption> buyinOptions = new List<BuyinOption>();
+    private readonly List<TnmtBuyinOptionItem> optionItems = new List<TnmtBuyinOptionItem>();
+    private int selectedOptionIndex = 0;
+    private int optionPanelVersion = 0; // 비동기 갱신이 겹칠 때 늦게 끝난 쪽이 덮어쓰지 않게
+
+    // 보유 블록 복제본 (재사용 — 팝업을 다시 열어도 늘어나지 않음)
+    private readonly List<GameObject> holdRows = new List<GameObject>();
+    private readonly List<LocalText> holdRowLabels = new List<LocalText>();
+    private readonly List<LocalText> holdRowValues = new List<LocalText>();
+
+    private int buyinScale;
+    private int scaleMin;
+    private int scaleMax;
 
     private bool isInit = false;
 
@@ -190,10 +134,10 @@ public class TnmtApplyPopup : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    // ───────────────────────── 옵션 모드 ─────────────────────────
+    // ───────────────────────── 헬퍼 ─────────────────────────
 
     private BuyinOption CurrentOption =>
-        optionMode && selectedOptionIndex >= 0 && selectedOptionIndex < buyinOptions.Count ? buyinOptions[selectedOptionIndex] : null;
+        selectedOptionIndex >= 0 && selectedOptionIndex < buyinOptions.Count ? buyinOptions[selectedOptionIndex] : null;
 
     private static void SetTextSafe(Text t, string s)
     {
@@ -208,6 +152,28 @@ public class TnmtApplyPopup : MonoBehaviour
     private static void SetActiveSafe(GameObject g, bool active)
     {
         if (g != null) g.SetActive(active);
+    }
+
+    // 행 루트가 연결돼 있으면 행 전체, 아니면 텍스트의 부모가 "라벨 + 값" 묶음(자식 몇 개짜리 Line)일 때 그 줄째,
+    // 큰 컨테이너면 텍스트만 토글한다 (라벨만 덩그러니 남는 문제 방지)
+    private static void SetRowActive(GameObject rowObj, Component fallbackText, bool active)
+    {
+        if (rowObj != null)
+        {
+            rowObj.SetActive(active);
+        }
+        else if (fallbackText != null)
+        {
+            var parent = fallbackText.transform.parent;
+            if (parent != null && parent.childCount <= 4 && parent.GetComponent<TnmtApplyPopup>() == null)
+            {
+                parent.gameObject.SetActive(active);
+            }
+            else
+            {
+                fallbackText.gameObject.SetActive(active);
+            }
+        }
     }
 
     private static List<long> MyTicketCounts()
@@ -232,6 +198,23 @@ public class TnmtApplyPopup : MonoBehaviour
         return GetChip(tnmtInfo.info.ValueOrDefault("t_chip_type", CHIP_TYPE.nothing));
     }
 
+    public long GetChip(CHIP_TYPE chipType)
+    {
+        switch (chipType)
+        {
+            case CHIP_TYPE.cc: //카페 칩
+                return (long)Cafe.instance.curEnterCafeInfo["cafeMember"]["cc"];
+
+            case CHIP_TYPE.dc:
+                return MyStatus.dc;
+
+            case CHIP_TYPE.zc:
+                return MyStatus.zc;
+            default:
+                return 0;
+        }
+    }
+
     private bool IsDidEntry()
     {
         if (tnmtInfo == null)
@@ -248,6 +231,19 @@ public class TnmtApplyPopup : MonoBehaviour
         return false;
     }
 
+    // ───────────────────────── 패널 구성 ─────────────────────────
+
+    public async void SetTnmtApplyPanel()
+    {
+        tnmtInfo = InfoManager.Instance.GetTournamentInfo(tn);
+        if (optionItemPrefab == null || optionContainer == null)
+        {
+            Debug.LogError($"[TnmtApplyPopup] tn={tn} optionItemPrefab / optionContainer 가 연결돼 있지 않습니다 — 옵션 줄을 그릴 수 없습니다.");
+            return;
+        }
+        await SetOptionPanel();
+    }
+
     private async UniTask SetOptionPanel()
     {
         var version = ++optionPanelVersion;
@@ -261,7 +257,7 @@ public class TnmtApplyPopup : MonoBehaviour
         // 서버가 준 옵션, 없으면(구버전 서버) 기존 필드로 합성
         var resolved = BuyinOption.Resolve(info, didEntry);
         Debug.Log(
-            $"[TnmtApplyPopup] tn={tn} optionMode reentry={didEntry} serverOptions={(info.ContainsKey("buyin_options") ? info["buyin_options"].ToString(Newtonsoft.Json.Formatting.None) : "(none)")} resolved={resolved.Count} ids={string.Join(",", resolved.ConvertAll(o => o.id + (o.fromServer ? "" : "*")))}"
+            $"[TnmtApplyPopup] tn={tn} reentry={didEntry} serverOptions={(info.ContainsKey("buyin_options") ? info["buyin_options"].ToString(Newtonsoft.Json.Formatting.None) : "(none)")} resolved={resolved.Count} ids={string.Join(",", resolved.ConvertAll(o => o.id + (o.fromServer ? "" : "*")))}"
         );
 
         var t_o = info.CastOrEmpty<JObject>("t_o");
@@ -290,17 +286,12 @@ public class TnmtApplyPopup : MonoBehaviour
                 if (!ticketTypes.Contains(t.type)) ticketTypes.Add(t.type);
             }
         }
-        // 보유 티켓: 옵션에 쓰이는 종류만, 종류마다 (이름, 보유량)
         var ticketNames = new List<string>();
         var ticketHaves = new List<long>();
-        var ticketHoldParts = new List<string>(); // 전용 한 줄 텍스트(myOptionTicketText)용 "JOPT 1장 · 월간티켓 0장"
         foreach (var type in ticketTypes)
         {
-            var have = type >= 1 && type <= myTickets.Count ? myTickets[type - 1] : 0;
-            var name = await KingshillInfo.GetTicketString(type);
-            ticketNames.Add(name);
-            ticketHaves.Add(have);
-            ticketHoldParts.Add($"{name}{BuyinOption.NBSP}{have}장");
+            ticketNames.Add(await KingshillInfo.GetTicketString(type));
+            ticketHaves.Add(type >= 1 && type <= myTickets.Count ? myTickets[type - 1] : 0);
         }
         if (version != optionPanelVersion || this == null)
         {
@@ -315,41 +306,19 @@ public class TnmtApplyPopup : MonoBehaviour
         SetLocalSafe(entryOrReentryText, didEntry ? "reentry" : "entry");
         SetActiveSafe(passwordObj, t_o.ValueOrDefault("is_password", false));
 
-        // 내 보유 — 이 토너의 옵션에 등장하는 재화만, 보유 칩 행을 템플릿으로 복제해 한 재화에 한 행씩 보여준다.
-        // (칩 옵션이 없는데 "보유 칩 0" 이 뜨면 칩이 필요한 줄 안다)
+        // 내 보유 — 이 토너의 옵션에 등장하는 재화만 (칩 옵션이 없는데 "보유 칩 0" 이 뜨면 칩이 필요한 줄 안다)
         var holdEntries = new List<(string labelKey, string labelParam, string value)>();
         if (anyChip) holdEntries.Add(("hold_chips", null, MoneyToString.Converting(myChip)));
         if (anyKp) holdEntries.Add(("hold_kps", null, MoneyToString.Converting(myKp)));
-        if (myOptionTicketText == null)
+        for (int i = 0; i < ticketTypes.Count; i++)
         {
-            for (int i = 0; i < ticketTypes.Count; i++)
-            {
-                // 라벨 "보유 JOPT": 줄바꿈 불가 공백으로 라벨 폭에서 두 줄로 갈리지 않게 (Best Fit 이 한 줄로 축소)
-                holdEntries.Add(("hold_ticket_label", BuyinOption.NBSP + ticketNames[i], ticketHaves[i].ToString()));
-            }
+            // 라벨 "보유 JOPT": 줄바꿈 불가 공백으로 라벨 폭에서 두 줄로 갈리지 않게 (Best Fit 이 한 줄로 축소)
+            holdEntries.Add(("hold_ticket_label", BuyinOption.NBSP + ticketNames[i], ticketHaves[i].ToString()));
         }
         BuildHoldRows(holdEntries);
 
-        // 옵션 티켓 전용 한 줄 텍스트가 연결돼 있으면 그쪽으로 ("JOPT 1장 · 월간티켓 0장")
-        if (myOptionTicketText != null)
-        {
-            var anyTicket = ticketTypes.Count > 0;
-            SetRowActive(myOptionTicketObj, myOptionTicketText, anyTicket);
-            if (anyTicket)
-            {
-                SetTextSafe(myOptionTicketText, string.Join(" · ", ticketHoldParts));
-            }
-        }
-
         // 옵션이 둘 이상일 때만 "결제 방법 선택 (택1)" 캡션
         SetActiveSafe(optionCaptionObj, resolved.Count > 1);
-
-        // 기존 칩/티켓/KP 가격 행과 토글은 옵션 줄이 대신한다 (남아 있으면 숨김)
-        SetActiveSafe(buyinChipObj, false);
-        SetActiveSafe(buyinTicketObj, false);
-        SetActiveSafe(buyinKpObj, false);
-        if (chipToggle != null) chipToggle.gameObject.SetActive(false);
-        if (ticketToggle != null) ticketToggle.gameObject.SetActive(false);
 
         // 옵션 줄
         if (optionToggleGroup == null)
@@ -400,22 +369,83 @@ public class TnmtApplyPopup : MonoBehaviour
 
         SetLocalSafe(buyinScaleMinText, "buyin_scale_min", scaleMinSetting);
         SetLocalSafe(buyinScaleMaxText, "buyin_scale_max", scaleMaxSetting);
-        SetMinMaxText();
+        SetMinMax();
         SetBuyinScale(scaleMaxSetting);
+    }
+
+    /// <summary>
+    /// 보유 블록을 템플릿 행(보유 칩 행)의 복제본으로 구성한다. entries 순서대로 행을 켜고 라벨/값을 채우며
+    /// 템플릿 행 자체는 숨긴다. 복제본은 재사용한다.
+    /// </summary>
+    private void BuildHoldRows(List<(string labelKey, string labelParam, string value)> entries)
+    {
+        var template = myChipText != null ? myChipText.transform.parent : null;
+        if (template == null)
+        {
+            return;
+        }
+        var templateObj = template.gameObject;
+        var container = template.parent;
+        var valueIndex = myChipText.transform.GetSiblingIndex();
+
+        while (holdRows.Count < entries.Count)
+        {
+            var row = Instantiate(templateObj, container);
+            row.name = templateObj.name + " (hold " + (holdRows.Count + 1) + ")";
+            row.transform.SetSiblingIndex(template.GetSiblingIndex() + 1 + holdRows.Count); // 템플릿 바로 뒤에 순서대로
+
+            // 값 칸 = 칩 값 텍스트와 같은 자리의 자식, 라벨 = 그 외 첫 Text
+            var valueTr = valueIndex < row.transform.childCount ? row.transform.GetChild(valueIndex) : null;
+            var valueText = valueTr != null ? valueTr.GetComponent<Text>() : null;
+            LocalText valueLocal = null;
+            if (valueText != null)
+            {
+                valueLocal = valueText.GetComponent<LocalText>() ?? valueText.gameObject.AddComponent<LocalText>();
+            }
+            LocalText labelLocal = null;
+            foreach (var txt in row.GetComponentsInChildren<Text>(true))
+            {
+                if (txt == valueText) continue;
+                labelLocal = txt.GetComponent<LocalText>() ?? txt.gameObject.AddComponent<LocalText>();
+                break;
+            }
+            holdRows.Add(row);
+            holdRowLabels.Add(labelLocal);
+            holdRowValues.Add(valueLocal);
+        }
+
+        for (int i = 0; i < holdRows.Count; i++)
+        {
+            var show = i < entries.Count;
+            holdRows[i].SetActive(show);
+            if (!show) continue;
+            var e = entries[i];
+            if (holdRowLabels[i] != null)
+            {
+                if (e.labelParam != null) holdRowLabels[i].SetLocalText(e.labelKey, e.labelParam);
+                else holdRowLabels[i].SetLocalText(e.labelKey);
+            }
+            // LocalText 는 자기 키로 글자를 다시 쓰므로 .text 직접 대입은 덮어써진다 → "{0}" 키(raw_text)로
+            if (holdRowValues[i] != null) holdRowValues[i].SetLocalText("raw_text", e.value);
+        }
+
+        templateObj.SetActive(false); // 템플릿은 숨기고 복제본만 보인다
     }
 
     private void OnOptionSelected(int index)
     {
-        if (!optionMode || index == selectedOptionIndex)
+        if (index == selectedOptionIndex)
         {
             return;
         }
         selectedOptionIndex = index;
-        SetMinMaxText();
+        SetMinMax();
         SetBuyinScale(buyinScale);
     }
 
-    private void SetMinMaxOption()
+    // ───────────────────────── 배율 / 합계 ─────────────────────────
+
+    private void SetMinMax()
     {
         var t_buyin_scale_min = tnmtInfo.info.ValueOrDefault("t_buyin_scale_min", 1);
         var t_buyin_scale_max = tnmtInfo.info.ValueOrDefault("t_buyin_scale_max", 1);
@@ -427,8 +457,9 @@ public class TnmtApplyPopup : MonoBehaviour
         SetLocalSafe(buyinMaxButtnText, "buyin_max_button", scaleMax);
     }
 
-    private void SetTotalsOption()
+    private void SetBuyinScale(int scale)
     {
+        buyinScale = Mathf.Clamp(scale, scaleMin, scaleMax);
         var opt = CurrentOption;
 
         var showChip = opt != null && opt.HasChip;
@@ -463,428 +494,6 @@ public class TnmtApplyPopup : MonoBehaviour
         }
     }
 
-    public void OnClickCancelButton()
-    {
-        gameObject.SetActive(false);
-        if (opener)
-        {
-            opener.ShowUI("mtt_nlh_info");
-        }
-    }
-
-    public async void SetTnmtApplyPanel()
-    {
-        tnmtInfo = InfoManager.Instance.GetTournamentInfo(tn);
-
-        // 옵션 줄 프리팹과 부모가 연결돼 있으면 옵션 모드 (아래 기존 방식은 타지 않는다)
-        optionMode = optionItemPrefab != null && optionContainer != null;
-        if (!optionMode)
-        {
-            Debug.Log($"[TnmtApplyPopup] tn={tn} legacyMode (optionItemPrefab={(optionItemPrefab != null)} optionContainer={(optionContainer != null)}) buyin_options in info={(tnmtInfo != null && tnmtInfo.info.ContainsKey("buyin_options"))}");
-        }
-        if (optionMode)
-        {
-            await SetOptionPanel();
-            return;
-        }
-
-        // 옛 방식은 원래 행들을 쓴다 — 옵션 모드가 숨겨 둔 템플릿 행을 되살리고 복제본은 숨긴다
-        if (myChipText != null && myChipText.transform.parent != null) myChipText.transform.parent.gameObject.SetActive(true);
-        foreach (var row in holdRows) if (row != null) row.SetActive(false);
-
-        var data = MyStatus.loungeData;
-
-        var ticketCounts = new List<long>();
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket", 0));
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket2", 0));
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket3", 0));
-        var chipType = tnmtInfo.info.ValueOrDefault<CHIP_TYPE>("t_chip_type", CHIP_TYPE.nothing);
-        long chip = GetChip(chipType);
-
-        var live = tnmtInfo.info.CastOrEmpty<JObject>("live");
-
-        var didEntry = false; // = live.ContainsKey("my");
-        var reentryCount = 0;
-        //var my = live.CastOrEmpty<JObject>("my");
-        //if (didEntry)
-        //{
-        //    reentryCount = my.ValueOrDefault("reentryCount", 0);
-        //}
-
-        var historys = InfoManager.TnmtHistory;
-        JObject history = null;
-        foreach (JObject his in historys)
-        {
-            if (tnmtInfo.tn == his.ValueOrDefault("tn", 0))
-            {
-                didEntry = true;
-                history = his;
-                break;
-            }
-        }
-        if (history != null)
-        {
-            reentryCount = history.ValueOrDefault("reentryCount", 0);
-        }
-
-        var t_ticket = tnmtInfo.info.CastOrEmpty<JObject>("t_ticket");
-        var ticket_type = t_ticket.ValueOrDefault("ticket_type", 0);
-        var ticket_count = t_ticket.ValueOrDefault("ticket_count", 0);
-        condition = t_ticket.ValueOrDefault("condition", "and");
-
-        var t_buyin = tnmtInfo.info.ValueOrDefault("t_buyin", 0);
-        var t_buyin_fee = tnmtInfo.info.ValueOrDefault("t_buyin_fee", 0);
-
-        var t_reentry_cost = tnmtInfo.info.ValueOrDefault("t_reentry_cost", 0);
-
-        var t_buyin_scale_min = tnmtInfo.info.ValueOrDefault("t_buyin_scale_min", 1);
-        var t_buyin_scale_max = tnmtInfo.info.ValueOrDefault("t_buyin_scale_max", 1);
-
-        var buyinChip = t_buyin + t_buyin_fee;
-
-        var t_o = tnmtInfo.info.CastOrEmpty<JObject>("t_o");
-        var is_password = t_o.ValueOrDefault("is_password", false);
-        // KP 전용 바이인 토너 — 칩 대신 KP를 buyin_kp 만큼 차감 (서버 강제, 리엔트리는 reentry_kp)
-        kpOnlyBuyin = t_o.ValueOrDefault<long>("buyin_kp", 0);
-        kpOnlyReentry = t_o.ValueOrDefault<long>("reentry_kp", 0);
-        if (kpOnlyReentry <= 0)
-        {
-            kpOnlyReentry = kpOnlyBuyin;
-        }
-        var isKpOnlyTnmt = kpOnlyBuyin > 0;
-
-        passwordObj.SetActive(is_password);
-
-        tnmtNameText.text = $"# {tnmtInfo.tn} {tnmtInfo.title}";
-
-        entryOrReentryText.SetLocalText(didEntry ? "reentry" : "entry");
-        myChipText.text = MoneyToString.Converting(chip);
-        var cafeIdx = data.ValueOrDefault("cafeIdx", 0); //(int)Cafe.instance.curEnterCafeInfo["cafe"]["idx"];
-        var isLounge = cafeIdx == 2;
-        myTicketObj.SetActive(isLounge);
-        if (isLounge)
-        {
-            for (int i = 0; i < myTicketTexts.Length; ++i)
-            {
-                myTicketTexts[i].SetLocalText($"ticket{i + 1}_count", ticketCounts[i]);
-            }
-        }
-        var isTicketTnmt = ticket_count > 0;
-        var isChipTnmt = buyinChip > 0 && !isKpOnlyTnmt;
-        var hasKpRow = buyinKpObj != null; // KP 행이 프리팹에 있으면 그 행 사용, 없으면 칩 칸 재활용
-
-        buyinTicketObj.SetActive(isTicketTnmt);
-        buyinChipObj.SetActive(isChipTnmt || (isKpOnlyTnmt && !hasKpRow));
-        if (hasKpRow)
-        {
-            buyinKpObj.SetActive(isKpOnlyTnmt);
-        }
-
-        chipToggle.isOn = isChipTnmt || isKpOnlyTnmt; // KP 전용도 배율 계산은 칩 토글 경로 사용
-        chipToggle.interactable = !condition.Equals("and");
-
-        ticketToggle.isOn = condition.Equals("and") && isTicketTnmt;
-        ticketToggle.interactable = !condition.Equals("and");
-
-        // 보유 KP 는 KP 전용 토너에서만 표시
-        SetRowActive(myKpObj, myKpText, isKpOnlyTnmt);
-        if (myKpText != null && isKpOnlyTnmt)
-        {
-            var myKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
-            myKpText.text = MoneyToString.Converting(myKp);
-        }
-
-        if (isTicketTnmt)
-        {
-            var ticketTypeString = await KingshillInfo.GetTicketString(ticket_type);
-            ticketTypeText.SetLocalText(ticketTypeString);
-            ticketCountText.text = MoneyToString.Converting(ticket_count);
-        }
-
-        if (isKpOnlyTnmt)
-        {
-            var kpAmount = MoneyToString.Converting(didEntry ? kpOnlyReentry : kpOnlyBuyin);
-            if (hasKpRow)
-            {
-                if (buyinKpText != null)
-                {
-                    buyinKpText.SetLocalText("kp_count_text", kpAmount);
-                }
-            }
-            else
-            {
-                buyinChipText.text = $"{kpAmount}KP"; // KP 행 미연결 시 칩 칸 재활용
-            }
-        }
-        else if (isChipTnmt)
-        {
-            if (didEntry)
-            {
-                buyinChipText.text = $"{MoneyToString.Converting(t_reentry_cost)}칩";
-            }
-            else
-            {
-                buyinChipText.text = $"{MoneyToString.Converting(buyinChip)}칩";
-            }
-        }
-
-        //if(didEntry)
-        //{
-        //    t_buyin_scale_max = 1;
-        //    t_buyin_scale_min = 1;
-        //}
-
-        buyinScaleMinText.SetLocalText("buyin_scale_min", t_buyin_scale_min);
-        buyinScaleMaxText.SetLocalText("buyin_scale_max", t_buyin_scale_max);
-
-        SetMinMaxText();
-        SetVariations();
-        SetBuyinScale(t_buyin_scale_max);
-    }
-
-    private int scaleMin;
-    private int scaleMax;
-
-    private void SetMinMaxText()
-    {
-        if (optionMode)
-        {
-            SetMinMaxOption();
-            return;
-        }
-
-        var data = MyStatus.loungeData;
-
-        var ticketCounts = new List<long>();
-
-        var live = tnmtInfo.info.CastOrEmpty<JObject>("live");
-
-        var didEntry = live.ContainsKey("my");
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket", 0));
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket2", 0));
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket3", 0));
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket4", 0));
-        ticketCounts.Add(data.ValueOrDefault<long>("ticket5", 0));
-        var chipType = tnmtInfo.info.ValueOrDefault("t_chip_type", CHIP_TYPE.nothing);
-
-        long chip = GetChip(chipType);
-
-        var t_buyin_scale_min = tnmtInfo.info.ValueOrDefault("t_buyin_scale_min", 1);
-        var t_buyin_scale_max = tnmtInfo.info.ValueOrDefault("t_buyin_scale_max", 1);
-        var historys = InfoManager.TnmtHistory;
-        foreach (JObject his in historys)
-        {
-            if (tnmtInfo.tn == his.ValueOrDefault("tn", 0))
-            {
-                didEntry = true;
-                break;
-            }
-        }
-
-        var t_buyin = tnmtInfo.info.ValueOrDefault("t_buyin", 0);
-        var t_buyin_fee = tnmtInfo.info.ValueOrDefault("t_buyin_fee", 0);
-
-        var t_reentry_cost = tnmtInfo.info.ValueOrDefault("t_reentry_cost", 0);
-
-        var t_ticket = tnmtInfo.info.CastOrEmpty<JObject>("t_ticket");
-        var ticket_type = t_ticket.ValueOrDefault("ticket_type", 0);
-        entryTicketCount = t_ticket.ValueOrDefault("ticket_count", 0);
-
-        entryCost = didEntry ? t_reentry_cost : t_buyin + t_buyin_fee;
-        var chipMaxScale = entryCost > 0 ? Mathf.FloorToInt(chip / entryCost) : t_buyin_scale_max;
-        if (kpOnlyBuyin > 0)
-        {
-            // KP 전용 토너 — 비용·배율 한도를 KP 잔액 기준으로 (리엔트리는 reentry_kp)
-            entryCost = didEntry ? kpOnlyReentry : kpOnlyBuyin;
-            var myKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
-            chipMaxScale = Mathf.FloorToInt(myKp / entryCost);
-        }
-        var ticketMaxScale = Mathf.FloorToInt(
-            (
-                ticket_type > 0 && ticket_type < ticketCounts.Count
-                    ? ticketCounts[ticket_type - 1] / entryTicketCount
-                    : t_buyin_scale_max
-            )
-        );
-        //if (didEntry)
-        //{
-        //    chipMaxScale = 1;
-        //    ticketMaxScale = 1;
-        //}
-        if (!condition.Equals("and"))
-        {
-            if (chipToggle.isOn)
-            {
-                scaleMin = Mathf.Min(t_buyin_scale_min, chipMaxScale);
-                scaleMax = Mathf.Min(t_buyin_scale_max, chipMaxScale);
-            }
-
-            if (ticketToggle.isOn)
-            {
-                scaleMin = Mathf.Min(t_buyin_scale_min, ticketMaxScale);
-                scaleMax = Mathf.Min(t_buyin_scale_max, ticketMaxScale);
-            }
-        }
-        else
-        {
-            scaleMin = Mathf.Min(t_buyin_scale_min, chipMaxScale);
-            scaleMax = Mathf.Min(t_buyin_scale_max, chipMaxScale);
-            scaleMin = Mathf.Min(scaleMin, ticketMaxScale);
-            scaleMax = Mathf.Min(scaleMax, ticketMaxScale);
-        }
-
-        buyinMinButtnText.SetLocalText("buyin_min_button", scaleMin);
-        buyinMaxButtnText.SetLocalText("buyin_max_button", scaleMax);
-    }
-
-    public void OnchangeTicketToggle(bool value)
-    {
-        if (optionMode)
-        {
-            return;
-        }
-        if (!condition.Equals("and"))
-        {
-            chipToggle.SetIsOnWithoutNotify(!value);
-        }
-        SetMinMaxText();
-        SetVariations();
-        SetBuyinScale(buyinScale);
-    }
-
-    public long GetChip(CHIP_TYPE chipType)
-    {
-        switch (chipType)
-        {
-            case CHIP_TYPE.cc: //카페 칩
-                return (long)Cafe.instance.curEnterCafeInfo["cafeMember"]["cc"];
-
-            case CHIP_TYPE.dc:
-                return MyStatus.dc;
-
-            case CHIP_TYPE.zc:
-                return MyStatus.zc;
-            default:
-                return 0;
-        }
-    }
-
-    public void OnchangeChipToggle(bool value)
-    {
-        if (optionMode)
-        {
-            return;
-        }
-        if (!condition.Equals("and"))
-        {
-            ticketToggle.SetIsOnWithoutNotify(!value);
-        }
-        SetMinMaxText();
-        SetVariations();
-        SetBuyinScale(buyinScale);
-    }
-
-    private void SetVariations()
-    {
-        if (optionMode)
-        {
-            return;
-        }
-        foreach (var variation in chipVariations)
-        {
-            variation.SetVariation(chipToggle.isOn.ToString());
-        }
-        foreach (var variation in ticketVariations)
-        {
-            variation.SetVariation(ticketToggle.isOn.ToString());
-        }
-    }
-
-    // 행 루트가 연결돼 있으면 행 전체(라벨 포함), 아니면 텍스트 오브젝트만 토글
-    /// <summary>
-    /// 보유 블록을 템플릿 행(보유 칩 행)의 복제본으로 구성한다. entries 순서대로 행을 켜고 라벨/값을 채우며,
-    /// 템플릿 행과 원래 KP/티켓 행은 숨긴다. 복제본은 재사용한다 (팝업을 다시 열어도 늘어나지 않음).
-    /// </summary>
-    private void BuildHoldRows(List<(string labelKey, string labelParam, string value)> entries)
-    {
-        var template = myChipText != null ? myChipText.transform.parent : null;
-        if (template == null)
-        {
-            // 템플릿이 없으면 기존 오브젝트로 최소한만: 칩/KP 값
-            return;
-        }
-        var templateObj = template.gameObject;
-        var container = template.parent;
-        var valueIndex = myChipText.transform.GetSiblingIndex();
-
-        while (holdRows.Count < entries.Count)
-        {
-            var row = Instantiate(templateObj, container);
-            row.name = templateObj.name + " (hold " + (holdRows.Count + 1) + ")";
-            // 템플릿 바로 뒤에 순서대로
-            row.transform.SetSiblingIndex(template.GetSiblingIndex() + 1 + holdRows.Count);
-
-            var valueTr = valueIndex < row.transform.childCount ? row.transform.GetChild(valueIndex) : null;
-            var valueText = valueTr != null ? valueTr.GetComponent<Text>() : null;
-            LocalText valueLocal = null;
-            if (valueText != null)
-            {
-                valueLocal = valueText.GetComponent<LocalText>() ?? valueText.gameObject.AddComponent<LocalText>();
-            }
-            LocalText labelLocal = null;
-            foreach (var txt in row.GetComponentsInChildren<Text>(true))
-            {
-                if (txt == valueText) continue;
-                labelLocal = txt.GetComponent<LocalText>() ?? txt.gameObject.AddComponent<LocalText>();
-                break;
-            }
-            holdRows.Add(row);
-            holdRowLabels.Add(labelLocal);
-            holdRowValues.Add(valueLocal);
-        }
-
-        for (int i = 0; i < holdRows.Count; i++)
-        {
-            var show = i < entries.Count;
-            holdRows[i].SetActive(show);
-            if (!show) continue;
-            var e = entries[i];
-            if (holdRowLabels[i] != null)
-            {
-                if (e.labelParam != null) holdRowLabels[i].SetLocalText(e.labelKey, e.labelParam);
-                else holdRowLabels[i].SetLocalText(e.labelKey);
-            }
-            if (holdRowValues[i] != null) holdRowValues[i].SetLocalText("raw_text", e.value);
-        }
-
-        // 템플릿과 원래 행은 숨긴다 (옵션 모드에서는 복제본만 보인다)
-        templateObj.SetActive(false);
-        SetRowActive(myKpObj, myKpText, false);
-        SetActiveSafe(myTicketObj, false);
-    }
-
-    private static void SetRowActive(GameObject rowObj, Component fallbackText, bool active)
-    {
-        if (rowObj != null)
-        {
-            rowObj.SetActive(active);
-        }
-        else if (fallbackText != null)
-        {
-            // 행 루트가 연결돼 있지 않으면 텍스트의 부모가 "라벨 + 값" 묶음(자식 몇 개짜리 Line)일 때 그 줄째 끄고,
-            // 큰 컨테이너면 텍스트만 끈다 (라벨만 덩그러니 남는 문제 방지)
-            var parent = fallbackText.transform.parent;
-            if (parent != null && parent.childCount <= 4 && parent.GetComponent<TnmtApplyPopup>() == null)
-            {
-                parent.gameObject.SetActive(active);
-            }
-            else
-            {
-                fallbackText.gameObject.SetActive(active);
-            }
-        }
-    }
-
     public void BuyinScaleChanged(string str)
     {
         var scale = 0;
@@ -899,41 +508,6 @@ public class TnmtApplyPopup : MonoBehaviour
         SetBuyinScale(scale);
     }
 
-    private void SetBuyinScale(int scale)
-    {
-        buyinScale = Mathf.Clamp(scale, scaleMin, scaleMax);
-        if (optionMode)
-        {
-            SetTotalsOption();
-            return;
-        }
-        var chip = chipToggle.isOn ? entryCost * buyinScale : 0;
-        var ticket = ticketToggle.isOn ? entryTicketCount * buyinScale : 0;
-
-        // 토탈 줄은 해당 재화를 쓰는 토너에서만 표시 (행 루트 연결 시 라벨까지 함께 토글)
-        var showChipTotal = kpOnlyBuyin <= 0 && entryCost > 0;
-        SetRowActive(totalBuyinChipObj, totalBuyinChipText, showChipTotal);
-        if (showChipTotal)
-        {
-            totalBuyinChipText.SetLocalText("chip_count_text", chip);
-        }
-
-        var showTicketTotal = entryTicketCount > 0;
-        SetRowActive(totalBuyinTicketObj, totalBuyinTicketText, showTicketTotal);
-        if (showTicketTotal)
-        {
-            totalBuyinTicketText.SetLocalText("ticket_counting_text", ticket);
-        }
-
-        // 사용 KP 줄은 KP 전용 토너에서만 노출
-        SetRowActive(totalBuyinKpObj, totalBuyinKpText, kpOnlyBuyin > 0);
-        if (totalBuyinKpText != null && kpOnlyBuyin > 0)
-        {
-            totalBuyinKpText.SetLocalText("kp_count_text", entryCost * buyinScale);
-        }
-        buyinScaleInput.SetTextWithoutNotify(buyinScale.ToString());
-    }
-
     public void OnClickBuyinMinButton()
     {
         SetBuyinScale(scaleMin);
@@ -942,6 +516,17 @@ public class TnmtApplyPopup : MonoBehaviour
     public void OnClickBuyinMaxButton()
     {
         SetBuyinScale(scaleMax);
+    }
+
+    // ───────────────────────── 버튼 ─────────────────────────
+
+    public void OnClickCancelButton()
+    {
+        gameObject.SetActive(false);
+        if (opener)
+        {
+            opener.ShowUI("mtt_nlh_info");
+        }
     }
 
     public async void OnClickTryApply()
@@ -958,90 +543,39 @@ public class TnmtApplyPopup : MonoBehaviour
             await new WaitForPCProtocol(PCProtocol.PC_PLAY_GAME_LEAVE_OBSERVER);
         }
 
-        if (optionMode)
+        var opt = CurrentOption;
+        if (opt == null)
         {
-            var opt = CurrentOption;
-            if (opt == null)
-            {
-                LoadingCircle.Instance.StopSpin();
-                return;
-            }
-            var applyScale = Mathf.Max(1, buyinScale);
-            if (opt.HasKp && MyKp() < opt.kp * (long)applyScale)
-            {
-                LoadingCircle.Instance.StopSpin();
-                ErrorMessageManager.Instance.AddGameError(0, "KP 부족", "보유한 KP가 부족합니다.", ErrorHandlingType.NONE, null, null);
-                return;
-            }
-
-            p = new Packet(CPProtocol.CP_TNMT_APPLY);
-            p.Add("tn", tn);
-            if (opt.fromServer)
-            {
-                // 서버가 준 옵션 — id 로 지정 (서버는 scale 키 추론을 하지 않는다)
-                p.Add("option", opt.id);
-                p.Add("scale", applyScale);
-            }
-            else
-            {
-                // 구버전 서버 — 예전 방식 키 (scale / scale_chip / scale_ticket)
-                p.Add(opt.legacyScaleKey, applyScale);
-            }
-            if (passwordObj != null && passwordObj.activeSelf && passwordInput != null)
-            {
-                p.Add("password", passwordInput.text);
-            }
-            WebSocketManager.defaultCli.Send(p);
-            var waitOpt = new WaitForPCProtocol(PCProtocol.PC_TNMT_APPLY, PCProtocol.PC_TNMT_APPLY_FAIL);
-            await waitOpt;
             LoadingCircle.Instance.StopSpin();
-            if (waitOpt.Result.c.ValueOrDefault("ecode", 0) == 0)
-            {
-                NormalMessage.instance.OnOneButtonMessagePopUp("confirm_success");
-            }
-            else
-            {
-                NormalMessage.instance.OnOneButtonMessagePopUp(waitOpt.Result.c.ValueOrDefault("message", "tnmt_apply_fail"));
-            }
-            gameObject.SetActive(false);
-            LoadingCircle.Instance.LoadingComplete("tnmtApply");
             return;
         }
-
-        if (kpOnlyBuyin > 0)
+        var applyScale = Mathf.Max(1, buyinScale);
+        if (opt.HasKp && MyKp() < opt.kp * (long)applyScale)
         {
-            // KP 전용 토너 — 신청 전 KP 잔액 사전 체크 (entryCost 는 신청/리엔트리에 맞는 KP 비용)
-            var needKp = entryCost * (long)Mathf.Max(1, buyinScale);
-            var hasKp = MyStatus.loungeData != null ? MyStatus.loungeData.ValueOrDefault<long>("newKp", 0) : 0;
-            if (hasKp < needKp)
-            {
-                LoadingCircle.Instance.StopSpin();
-                ErrorMessageManager.Instance.AddGameError(0, "KP 부족", "보유한 KP가 부족합니다.", ErrorHandlingType.NONE, null, null);
-                return;
-            }
+            LoadingCircle.Instance.StopSpin();
+            ErrorMessageManager.Instance.AddGameError(0, "KP 부족", "보유한 KP가 부족합니다.", ErrorHandlingType.NONE, null, null);
+            return;
         }
 
         p = new Packet(CPProtocol.CP_TNMT_APPLY);
         p.Add("tn", tn);
-
-        var scaleString = "scale";
-        if (!condition.Equals("and"))
+        if (opt.fromServer)
         {
-            scaleString = chipToggle.isOn ? "scale_chip" : "scale_ticket";
+            // 서버가 준 옵션 — id 로 지정 (서버는 scale 키 추론을 하지 않는다)
+            p.Add("option", opt.id);
+            p.Add("scale", applyScale);
         }
-
-        p.Add(scaleString, buyinScale);
-        if (passwordObj.activeSelf)
+        else
+        {
+            // 구버전 서버 — 예전 방식 키 (scale / scale_chip / scale_ticket)
+            p.Add(opt.legacyScaleKey, applyScale);
+        }
+        if (passwordObj != null && passwordObj.activeSelf && passwordInput != null)
         {
             p.Add("password", passwordInput.text);
         }
-
-        //p.Add("double", 0);
         WebSocketManager.defaultCli.Send(p);
-        WaitForPCProtocol wait = new WaitForPCProtocol(
-            PCProtocol.PC_TNMT_APPLY,
-            PCProtocol.PC_TNMT_APPLY_FAIL
-        );
+        var wait = new WaitForPCProtocol(PCProtocol.PC_TNMT_APPLY, PCProtocol.PC_TNMT_APPLY_FAIL);
         await wait;
         LoadingCircle.Instance.StopSpin();
         if (wait.Result.c.ValueOrDefault("ecode", 0) == 0)
@@ -1050,9 +584,7 @@ public class TnmtApplyPopup : MonoBehaviour
         }
         else
         {
-            NormalMessage.instance.OnOneButtonMessagePopUp(
-                wait.Result.c.ValueOrDefault("message", "tnmt_apply_fail")
-            );
+            NormalMessage.instance.OnOneButtonMessagePopUp(wait.Result.c.ValueOrDefault("message", "tnmt_apply_fail"));
         }
         gameObject.SetActive(false);
         LoadingCircle.Instance.LoadingComplete("tnmtApply");
