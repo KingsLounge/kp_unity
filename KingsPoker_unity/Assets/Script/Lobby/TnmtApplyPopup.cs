@@ -349,11 +349,9 @@ public class TnmtApplyPopup : MonoBehaviour
                     slots[i].gameObject.SetActive(used);
                     if (used)
                     {
-                        var txt = slots[i].GetComponent<Text>();
-                        if (txt != null)
-                        {
-                            txt.text = ticketHoldParts[i];
-                        }
+                        // LocalText 는 Start/언어 변경 때 자기 키로 글자를 다시 쓰므로 .text 직접 대입은 덮어써진다
+                        // → "{0}" 키(raw_text)로 넣어 유지되게 한다
+                        slots[i].SetLocalText("raw_text", ticketHoldParts[i]);
                     }
                 }
             }
