@@ -35,8 +35,10 @@ public class TnmtApplyPopup : MonoBehaviour
     [SerializeField]
     private Text myOptionTicketText; // 옵션에 쓰이는 티켓만: "JOPT 1장 · 월간티켓 0장" (미연결 시 보유 칩 행을 복제해 같은 레이아웃으로 표시)
 
-    private GameObject ticketRowClone; // 보유 칩 행(라벨+값)을 복제한 보유 티켓 행 — 레이아웃을 칩/KP 행과 똑같이 맞추기 위해
-    private LocalText ticketRowValue;
+    // 보유 칩 행(라벨+값)을 복제한 보유 티켓 행들 — 티켓 종류마다 한 행 ("보유 JOPT   0장"), 레이아웃은 칩/KP 행과 동일
+    private readonly List<GameObject> ticketRows = new List<GameObject>();
+    private readonly List<LocalText> ticketRowLabels = new List<LocalText>();
+    private readonly List<LocalText> ticketRowValues = new List<LocalText>();
 
     [SerializeField]
     private GameObject buyinTicketObj;
@@ -287,12 +289,17 @@ public class TnmtApplyPopup : MonoBehaviour
                 if (!ticketTypes.Contains(t.type)) ticketTypes.Add(t.type);
             }
         }
-        // 보유 티켓 줄: 옵션에 쓰이는 종류만 "JOPT 1장 · 월간티켓 0장"
-        var ticketHoldParts = new List<string>();
+        // 보유 티켓: 옵션에 쓰이는 종류만, 종류마다 (이름, 보유량)
+        var ticketNames = new List<string>();
+        var ticketHaves = new List<long>();
+        var ticketHoldParts = new List<string>(); // 전용 한 줄 텍스트(myOptionTicketText)용 "JOPT 1장 · 월간티켓 0장"
         foreach (var type in ticketTypes)
         {
             var have = type >= 1 && type <= myTickets.Count ? myTickets[type - 1] : 0;
-            ticketHoldParts.Add($"{await KingshillInfo.GetTicketString(type)}{BuyinOption.NBSP}{have}장");
+            var name = await KingshillInfo.GetTicketString(type);
+            ticketNames.Add(name);
+            ticketHaves.Add(have);
+            ticketHoldParts.Add($"{name}{BuyinOption.NBSP}{have}장");
         }
         if (version != optionPanelVersion || this == null)
         {
@@ -333,50 +340,49 @@ public class TnmtApplyPopup : MonoBehaviour
         }
         else
         {
-            // 보유 칩 행(라벨 + 값, 간격까지)을 복제해 보유 티켓 행으로 쓴다 → 칩/KP 행과 레이아웃이 같아진다.
-            // 기존 종류별 줄(myTicketObj)은 쓰지 않는다. 프리팹 수정 없이 동작.
+            // 보유 칩 행(라벨 + 값, 간격까지)을 종류 수만큼 복제해 보유 티켓 행으로 쓴다 → 칩/KP 행과 레이아웃이 같다.
+            // 라벨 "보유 JOPT", 값 "0장". 기존 종류별 줄(myTicketObj)은 쓰지 않는다. 프리팹 수정 없이 동작.
             SetActiveSafe(myTicketObj, false);
-            if (ticketRowClone == null && myChipText != null && myChipText.transform.parent != null)
+            var chipRow = myChipText != null ? myChipText.transform.parent : null;
+            if (chipRow != null)
             {
-                var chipRow = myChipText.transform.parent;
-                var rowIndex = myTicketObj != null && myTicketObj.transform.parent == chipRow.parent
-                    ? myTicketObj.transform.GetSiblingIndex()
-                    : chipRow.GetSiblingIndex() + 1;
-                ticketRowClone = Instantiate(chipRow.gameObject, chipRow.parent);
-                ticketRowClone.name = chipRow.name + " (ticket)";
-                ticketRowClone.transform.SetSiblingIndex(rowIndex);
+                while (ticketRows.Count < ticketTypes.Count)
+                {
+                    var row = Instantiate(chipRow.gameObject, chipRow.parent);
+                    row.name = chipRow.name + " (ticket " + (ticketRows.Count + 1) + ")";
+                    // 자리: 기존 티켓 줄 위치(없으면 칩 행 다음), 종류 순서대로 뒤에 이어 붙인다
+                    var baseIndex = myTicketObj != null && myTicketObj.transform.parent == chipRow.parent
+                        ? myTicketObj.transform.GetSiblingIndex()
+                        : chipRow.GetSiblingIndex() + 1;
+                    row.transform.SetSiblingIndex(baseIndex + ticketRows.Count);
 
-                // 값 칸 = 칩 값 텍스트와 같은 자리의 자식, 라벨 = 그 외 첫 Text
-                var valueIndex = myChipText.transform.GetSiblingIndex();
-                var valueTr = valueIndex < ticketRowClone.transform.childCount ? ticketRowClone.transform.GetChild(valueIndex) : null;
-                var valueText = valueTr != null ? valueTr.GetComponent<Text>() : null;
-                if (valueText != null)
-                {
-                    ticketRowValue = valueText.GetComponent<LocalText>();
-                    if (ticketRowValue == null)
+                    var valueIndex = myChipText.transform.GetSiblingIndex();
+                    var valueTr = valueIndex < row.transform.childCount ? row.transform.GetChild(valueIndex) : null;
+                    var valueText = valueTr != null ? valueTr.GetComponent<Text>() : null;
+                    LocalText valueLocal = null;
+                    if (valueText != null)
                     {
-                        ticketRowValue = valueText.gameObject.AddComponent<LocalText>();
+                        valueLocal = valueText.GetComponent<LocalText>() ?? valueText.gameObject.AddComponent<LocalText>();
                     }
-                }
-                foreach (var txt in ticketRowClone.GetComponentsInChildren<Text>(true))
-                {
-                    if (txt == valueText) continue;
-                    var label = txt.GetComponent<LocalText>();
-                    if (label == null)
+                    LocalText labelLocal = null;
+                    foreach (var txt in row.GetComponentsInChildren<Text>(true))
                     {
-                        label = txt.gameObject.AddComponent<LocalText>();
+                        if (txt == valueText) continue;
+                        labelLocal = txt.GetComponent<LocalText>() ?? txt.gameObject.AddComponent<LocalText>();
+                        break;
                     }
-                    label.SetLocalText("hold_ticket_label");
-                    break;
+                    ticketRows.Add(row);
+                    ticketRowLabels.Add(labelLocal);
+                    ticketRowValues.Add(valueLocal);
                 }
             }
-            if (ticketRowClone != null)
+            for (int i = 0; i < ticketRows.Count; i++)
             {
-                ticketRowClone.SetActive(anyTicket);
-                if (anyTicket && ticketRowValue != null)
-                {
-                    ticketRowValue.SetLocalText("raw_text", string.Join(" · ", ticketHoldParts));
-                }
+                var show = anyTicket && i < ticketTypes.Count;
+                ticketRows[i].SetActive(show);
+                if (!show) continue;
+                if (ticketRowLabels[i] != null) ticketRowLabels[i].SetLocalText("hold_ticket_label", ticketNames[i]);
+                if (ticketRowValues[i] != null) ticketRowValues[i].SetLocalText("raw_text", $"{ticketHaves[i]}장");
             }
         }
 
