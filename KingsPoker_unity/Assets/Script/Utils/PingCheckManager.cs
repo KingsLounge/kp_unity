@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,6 +177,20 @@ public static class PingCheckManager
         }
     }
 
+    // 마지막 CP_PING 을 보낸 시각(Stopwatch 틱). 수신 시각은 WebSocketClient.PingReceivedTicks.
+    private static long pingSentTicks = 0;
+
+    /// <summary>
+    /// 마지막 핑의 왕복 시간(ms). 송신 직전 ~ 소켓 콜백 도착 기준이라 프레임 대기가 섞이지 않는다.
+    /// 수신 기록이 없거나 송신보다 앞서면(이전 핑의 값) -1.
+    /// </summary>
+    private static double LastPingRttMs()
+    {
+        long recv = WebSocketClient.PingReceivedTicks;
+        if (recv <= pingSentTicks) return -1;
+        return (recv - pingSentTicks) * 1000.0 / System.Diagnostics.Stopwatch.Frequency;
+    }
+
     public static async UniTask<bool> CheckWebSocketPing(double timeout = 2)
     {
         try
@@ -186,6 +200,7 @@ public static class PingCheckManager
                 return false;
             }
             Packet p = new Packet(CPProtocol.CP_PING);
+            pingSentTicks = System.Diagnostics.Stopwatch.GetTimestamp();
             WebSocketManager.defaultCli.Send(p);
             var wait = new WaitForPCProtocol(PCProtocol.PC_PING);
 
@@ -221,13 +236,17 @@ public static class PingCheckManager
         {
             try
             {
-                DateTime send = DateTime.Now;
+                System.Diagnostics.Stopwatch fallback = System.Diagnostics.Stopwatch.StartNew();
 
                 var succ = await CheckWebSocketPing();
 
                 if (succ)
                 {
-                    queue.Enqueue((DateTime.Now - send).Milliseconds);
+                    // 소켓 도착 시각 기준. 못 구하면 예전처럼 완료 시점 기준(프레임 대기 포함)으로 대체.
+                    // 예전 코드의 .Milliseconds 는 밀리초 자릿수(0~999)만 돌려줘 1초 넘는 지연이 작게 보였다.
+                    double rtt = LastPingRttMs();
+                    if (rtt < 0) rtt = fallback.Elapsed.TotalMilliseconds;
+                    queue.Enqueue((int)Math.Round(rtt));
                     while (queue.Count > checkCount)
                     {
                         queue.Dequeue();

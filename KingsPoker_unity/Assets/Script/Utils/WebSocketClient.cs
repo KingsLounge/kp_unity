@@ -69,6 +69,13 @@ public class WebSocketClient
     }
     private Queue<WebSocketEvent> queue = new Queue<WebSocketEvent>();
 
+    // 핑 측정용: PC_PING 이 소켓 콜백에 도착한 시각(Stopwatch 틱).
+    // 메인 스레드 큐를 거쳐 꺼낼 때(PreUpdate, 다음 프레임)가 아니라 도착 즉시 찍어서,
+    // 표시되는 핑에 프레임 대기(모바일 30fps 기준 33~66ms)가 섞이지 않게 한다.
+    private static long pingReceivedTicks = 0;
+    public static long PingReceivedTicks => System.Threading.Interlocked.Read(ref pingReceivedTicks);
+    private static readonly string pingPrefix = "{\"p\":" + ((int)PCProtocol.PC_PING).ToString() + ",";
+
     public bool recvProtocolBlock = false;
 
     public WebSocketClient(string url)
@@ -313,6 +320,11 @@ public class WebSocketClient
 
     private void WebSocketMessage(WebSocket ws, string msg)
     {
+        // JSON 파싱 없이 앞부분 문자열만 비교 (매 메시지마다 파싱하지 않기 위해)
+        if (msg != null && msg.StartsWith(pingPrefix, StringComparison.Ordinal))
+        {
+            System.Threading.Interlocked.Exchange(ref pingReceivedTicks, System.Diagnostics.Stopwatch.GetTimestamp());
+        }
         WebSocketEvent evt = new WebSocketEvent();
         evt.evt = WebSocketEventType.Message;
         evt.param = new object[] { msg };
