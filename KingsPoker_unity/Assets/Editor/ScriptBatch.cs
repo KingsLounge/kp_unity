@@ -241,26 +241,21 @@ public class ScriptBatch : EditorWindow
     static string StoreFolder(int os) =>
         os switch { 0 => "GooglePlay", 1 => "iOS", 2 => "Windows", 3 => "OneStore", _ => "" };
 
-    static Color StoreColor(int os) =>
-        os switch
-        {
-            0 => new Color(0.18f, 0.62f, 0.30f), // 구글 플레이: 초록
-            3 => new Color(0.95f, 0.45f, 0.10f), // 원스토어: 주황
-            _ => new Color(0.35f, 0.35f, 0.40f),
-        };
+    static Color StoreColor(int os) => new Color(0.35f, 0.35f, 0.40f);
 
-    // 창 맨 위 색 띠: 지금 어느 스토어로 빌드되는지 한눈에
+    // 창 맨 위 띠: Android 면 스토어는 빌드할 때 고른다는 안내
     static void DrawStoreBanner(int os)
     {
         var rect = GUILayoutUtility.GetRect(0, 36, GUILayout.ExpandWidth(true));
-        EditorGUI.DrawRect(rect, StoreColor(os));
+        EditorGUI.DrawRect(rect, os == 0 || os == 3 ? new Color(0.20f, 0.45f, 0.70f) : StoreColor(os));
         var style = new GUIStyle(EditorStyles.boldLabel)
         {
             alignment = TextAnchor.MiddleCenter,
             fontSize = 18,
             normal = { textColor = Color.white },
         };
-        GUI.Label(rect, $"빌드 대상: {StoreLabel(os)}" + (os == 3 ? "  (ONE_STORE)" : ""), style);
+        bool android = os == 0 || os == 3;
+        GUI.Label(rect, android ? "Android — 빌드 버튼을 누르면 원스토어 / 구글 플레이 선택" : $"빌드 대상: {StoreLabel(os)}", style);
         EditorGUILayout.Space(6);
     }
 
@@ -290,11 +285,21 @@ public class ScriptBatch : EditorWindow
     {
         DrawStoreBanner(option.osSelect);
         EditorGUILayout.LabelField("Build Platform");
-        option.osSelect = GUILayout.Toolbar(
-            option.osSelect,
-            new string[] { "Android", "IOS", "Window", "OneStore" },
+        // 툴바는 Android / iOS / Windows. Android 의 스토어(원스토어 3 / 구글 플레이 0)는 빌드 버튼을 누를 때 고른다.
+        // osSelect 값(0·1·2·3)은 그대로 둬서 아래 분기·저장된 options 와 맞춘다
+        int platformTab = GUILayout.Toolbar(
+            option.osSelect == 1 ? 1 : option.osSelect == 2 ? 2 : 0,
+            new string[] { "Android", "iOS", "Windows" },
             EditorStyles.toggleGroup
         );
+        if (platformTab == 1 || platformTab == 2)
+        {
+            option.osSelect = platformTab;
+        }
+        else if (option.osSelect != 0 && option.osSelect != 3)
+        {
+            option.osSelect = 3; // iOS·Windows 에서 Android 로 오면 원스토어를 기본으로
+        }
 
         EditorGUILayout.LabelField("");
         EditorGUILayout.LabelField("Build Mode");
