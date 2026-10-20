@@ -853,7 +853,7 @@ public class StorePickerWindow : EditorWindow
 
     void OnGUI()
     {
-        var e = Event.current;
+        var e = UnityEngine.Event.current; // 프로젝트에 같은 이름의 Event 클래스(InfoManager.cs)가 있어 전체 이름으로
         if (e.type == EventType.KeyDown)
         {
             if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter)
