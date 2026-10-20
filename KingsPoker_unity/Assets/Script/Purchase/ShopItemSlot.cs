@@ -32,12 +32,20 @@ public class ShopItemSlot : MonoBehaviour
 
     private void Awake()
     {
+#if ONE_STORE
+        OnestoreIAPManager.Instance.PricesUpdated += GetPrice; // 원스토어: 상품 정보가 늦게 와도 가격을 채운다
+#else
         IAPManager.Instance.initSuccessEvent.AddListener(GetPrice);
+#endif
     }
 
     private void OnDestroy()
     {
+#if ONE_STORE
+        OnestoreIAPManager.Instance.PricesUpdated -= GetPrice;
+#else
         IAPManager.Instance.initSuccessEvent.RemoveListener(GetPrice);
+#endif
     }
 
     public virtual void SetSlot(JObject data, SpriteAtlas atals, ShopManager shop)
@@ -84,6 +92,8 @@ public class ShopItemSlot : MonoBehaviour
 
     public async void GetPrice()
     {
+        if (this == null || priceText == null || string.IsNullOrEmpty(buyCode))
+            return;
 #if ONE_STORE
         priceText.text = OnestoreIAPManager.Instance.GetPrice(buyCode);
 #else

@@ -957,3 +957,11 @@ get_tnmt_kp,0,획득 KP : {0},Reward KP : {0},토너 결과 팝업 KP 상금
 buyin_option_select_caption,0,결제 방법 선택 (택1),Select one payment method,토너먼트 입장 팝업 옵션 캡션
 raw_text,0,{0},{0},문구를 그대로 표시 (코드에서 만든 문자열용)
 hold_ticket_label,0,보유{0},{0},토너먼트 입장 팝업 보유 티켓 라벨 (코드가 줄바꿈 불가 공백+티켓 이름을 넣음)
+login_fail_title,0,로그인 실패,Login failed,로그인 실패 창 제목(다시 시도 / 로그인 화면으로)
+login_fail_retry_body,0,로그인 중 문제가 발생했습니다.<br>다시 시도하거나 로그인 화면으로 돌아가 다른 방법으로 로그인해 주세요.,Something went wrong while logging in.<br>Please try again or go back and choose another login method.,로그인 실패 창 본문
+login_fail_server_body,0,서버에 연결하지 못했습니다.<br>네트워크 상태를 확인한 뒤 다시 시도해 주세요.,Could not connect to the server.<br>Please check your network and try again.,게임 서버 연결 실패 창 본문
+login_retry,0,다시 시도,Retry,로그인 실패 창 버튼
+login_to_select,0,로그인 화면으로,Back to login,로그인 실패 창 버튼(로그아웃 후 로그인 방법 선택)
+adult_cert_go,0,본인인증 진행,Verify,본인인증 안내 창 버튼
+login_other_account,0,다른 계정으로 로그인,Use another account,본인인증 안내 창 버튼(로그아웃 후 로그인 방법 선택)
+adult_cert_incomplete_body,0,본인인증이 완료되지 않았습니다.<br>다시 인증하거나 다른 계정으로 로그인해 주세요.,Identity verification was not completed.<br>Please verify again or log in with another account.,본인인증 창을 끝내지 않고 닫았을 때

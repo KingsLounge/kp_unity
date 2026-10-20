@@ -32,11 +32,17 @@ public class IAPManager : IStoreListener
     {
         if(controller!=null)
         {
-            while (string.IsNullOrEmpty(controller.products.WithID(productID).metadata.localizedPriceString))
+            // 스토어에 없는(등록 안 됐거나 비활성) 상품이면 예전에는 예외가 나거나 가격을 영원히 기다렸다 → 10초까지만 기다리고 빈칸
+            var product = controller.products.WithID(productID);
+            if (product == null)
+                return "";
+            float waited = 0;
+            while (string.IsNullOrEmpty(product.metadata.localizedPriceString) && waited < 10f)
             {
                 await UniTask.WaitForSeconds(0.1f);
+                waited += 0.1f;
             }
-            return controller.products.WithID(productID).metadata.localizedPriceString;
+            return product.metadata.localizedPriceString ?? "";
         }
         else
         {

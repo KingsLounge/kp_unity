@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading;
 using BestHTTP;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -1064,6 +1065,20 @@ public class LoginManager : MonoBehaviour
     /// </summary>
     public async UniTask RequestPubLogin()
     {
+        // 호출하는 곳 대부분이 기다리지 않아(fire-and-forget) 예외가 묻혀 화면이 멈췄다 → 잡아서 다시 시도 창
+        try
+        {
+            await RequestPubLoginCore();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+            ShowLoginRetry();
+        }
+    }
+
+    private async UniTask RequestPubLoginCore()
+    {
 
         
         var response = await PublisherApiManager.Instance.LoginPubAPI();
@@ -1180,32 +1195,185 @@ public class LoginManager : MonoBehaviour
             }
             //LoginCheck();
         }
-        else if (response.code == 422)
+        else if (
+            response.code == 422
+            && response.json != null
+            && response.json.ValueOrDefault<string>("need", "") == "join"
+        )
         {
-            JToken need = null;
-            if (response.json.TryGetValue("need", out need))
-            {
-                if (need.ToString() == "join")
-                {
-                    Debug.Log("회원가입");
-                    //LoadingCircle.Instance.StopSpin();
-                    RandomNicknameSet();
-                    //OpenNicknameCheckPanel();
-                }
-            }
+            Debug.Log("회원가입");
+            //LoadingCircle.Instance.StopSpin();
+            nickTries = 0;
+            registerTries = 0;
+            RandomNicknameSet();
+            //OpenNicknameCheckPanel();
         }
-        else // 에러
+        else if (response.handled)
         {
+            // 차단·손실 한도·탈퇴 등: 이유를 담은 안내창이 이미 떴고 닫으면 로그아웃된다 → 로그인 방법 버튼을 보인다
             LoadingCircle.Instance.StopSpin();
-            ErrorMessageManager.Instance.AddGameError(
-                (int)response.code,
-                "SYS_ERR_LOGIN",
-                "SYS_ERR_LOGIN_NOT_DEFINED"
-            );
-            OnClickLogOut();
             SetLoginMode(true);
         }
+        else // 에러: 네트워크·서버 오류·모르는 422(예전 422 는 join 이 아니면 아무것도 안 해 멈췄다)
+        {
+            ShowLoginRetry();
+        }
     }
+
+    #region 로그인 실패 처리 (다시 시도 / 로그인 화면으로)
+    // 원본은 로그인 중 실패하면 오류만 띄우고 멈추는 곳이 많았다(자동 로그인이면 로그인 버튼도 안 보임) — 애플 심사 반려 원인.
+    // 어느 단계에서 실패하든 이 창으로 모은다.
+    //  다시 시도: 로그인 화면을 다시 연다 → 파이어베이스 로그인이 남아 있으면 자동 로그인부터 다시
+    //  로그인 화면으로: 로그아웃 후 다시 연다 → 로그인 방법 버튼이 보인다
+    private bool loginFailShown = false;
+    private CancellationTokenSource loginWatchCts;
+    private int nickTries = 0; // 랜덤 닉네임 중복 재시도
+    private int registerTries = 0; // 회원가입 실패 재시도(예전에는 끝없이 반복)
+    private const int MaxNickTries = 10;
+    private const int MaxRegisterTries = 3;
+
+    public void ShowLoginRetry(string bodyKey = "login_fail_retry_body")
+    {
+        if (loginFailShown || this == null)
+            return;
+        loginFailShown = true;
+        StopLoginWatch();
+        CloseLoginSocket();
+        LoadingCircle.Instance.StopSpin();
+        string title = LocalizeManager.GetLocalString("login_fail_title");
+        string body = LocalizeManager.GetLocalString(bodyKey);
+        if (NormalMessage.instance == null)
+        {
+            ErrorMessageManager.Instance.AddGameError(
+                0,
+                title,
+                body,
+                ErrorHandlingType.RECALL,
+                null,
+                ReloadLoginScene
+            );
+            return;
+        }
+        NormalMessage.instance.OnMessagePopup(
+            title,
+            body,
+            () => CustomSceneManager.LoadLoginScene(),
+            ReloadLoginScene,
+            LocalizeManager.GetLocalString("login_retry"),
+            LocalizeManager.GetLocalString("login_to_select")
+        );
+    }
+
+    // 게임 서버 단계 감시: 정해진 시간 안에 다음 단계로 못 가면 다시 시도 창.
+    // 원본은 소켓이 안 열리거나 로그인 패킷 하나가 빠지면 30초 로딩 뒤 '대기 시간 초과' 안내만 뜨고 멈췄다
+    private void StartLoginWatch(int seconds, string bodyKey)
+    {
+        StopLoginWatch();
+        loginWatchCts = new CancellationTokenSource();
+        WatchLogin(seconds, bodyKey, loginWatchCts.Token).Forget();
+    }
+
+    private async UniTaskVoid WatchLogin(int seconds, string bodyKey, CancellationToken token)
+    {
+        bool canceled = await UniTask
+            .Delay(TimeSpan.FromSeconds(seconds), ignoreTimeScale: true, cancellationToken: token)
+            .SuppressCancellationThrow();
+        if (!canceled && this != null)
+        {
+            Debug.LogWarning($"로그인 단계 {seconds}초 초과 → 다시 시도 창");
+            ShowLoginRetry(bodyKey);
+        }
+    }
+
+    private void StopLoginWatch()
+    {
+        if (loginWatchCts == null)
+            return;
+        loginWatchCts.Cancel();
+        loginWatchCts.Dispose();
+        loginWatchCts = null;
+    }
+
+    // 로그인 도중의 소켓을 닫는다(다시 시도하면 새로 연결). 로그아웃은 하지 않는다
+    private void CloseLoginSocket()
+    {
+        var cli = WebSocketManager.defaultCli;
+        if (cli == null)
+            return;
+        cli.OnMessage -= WebSocketOnMessage;
+        if (cli.isOpened)
+            cli.Close();
+    }
+
+    private void OnDestroy()
+    {
+        StopLoginWatch();
+    }
+
+    // 본인인증 안내: 원본은 확인 버튼 하나뿐이고 본인인증 창에도 닫기가 없어, 인증을 못 하면 다른 로그인으로 갈 수 없었다.
+    // 본인인증 진행 / 다른 계정으로 로그인(로그아웃 후 로그인 화면)
+    private const string AdultCertExpireBody =
+        "본인 인증 유효기간이 만료되었습니다.\n청소년보호법 제 17조와 여성가족부의 정책에 따라 연 1회 본인 인증을 진행하시면 청소년 유해매체물을 이용하실 수 있습니다.\n 인증 결과는 1년간 적용됩니다.\n\n확인 버튼을 누르시면 본인인증이 진행됩니다.";
+    private const string AdultCertNewBody =
+        "본인 인증을 하지 않은 계정입니다.\n청소년보호법 제 17조와 여성가족부의 정책에 따라 연 1회 본인 인증을 진행하시면 청소년 유해매체물을 이용하실 수 있습니다.\n 인증 결과는 1년간 적용됩니다.\n\n확인 버튼을 누르시면 본인인증이 진행됩니다.";
+
+    private void ShowAdultCertNotice(string body)
+    {
+        LoadingCircle.Instance.StopSpin();
+        Action open = () =>
+        {
+            adultOkButton.interactable = false;
+            adultWindow.SetActive(true);
+        };
+        if (NormalMessage.instance == null)
+        {
+            ErrorMessageManager.Instance.AddGameError(
+                0,
+                "popup_adult_verification",
+                body,
+                ErrorHandlingType.RECALL,
+                null,
+                open
+            );
+            return;
+        }
+        NormalMessage.instance.OnMessagePopup(
+            LocalizeManager.GetLocalString("popup_adult_verification"),
+            body,
+            () => open(),
+            ReloadLoginScene,
+            LocalizeManager.GetLocalString("adult_cert_go"),
+            LocalizeManager.GetLocalString("login_other_account")
+        );
+    }
+
+    /// 본인인증 창의 '다른 계정으로 로그인' 버튼용(씬의 VerificationWindow 에 버튼을 달아 이 함수를 연결)
+    public void CancelAdultCert()
+    {
+        if (webView != null)
+        {
+            Destroy(webView.gameObject);
+            webView = null;
+        }
+        if (adultWindow != null)
+            adultWindow.SetActive(false);
+        ReloadLoginScene();
+    }
+
+    private void Update()
+    {
+        // 안드로이드 뒤로가기: 본인인증 창이 떠 있고 웹뷰가 없으면 빠져나갈지 묻는다(원본은 아무 반응 없음)
+        if (
+            Input.GetKeyDown(KeyCode.Escape)
+            && adultWindow != null
+            && adultWindow.activeSelf
+            && webView == null
+        )
+        {
+            ShowAdultCertNotice(LocalizeManager.GetLocalString("adult_cert_incomplete_body"));
+        }
+    }
+    #endregion
 
     public void ReloadLoginScene()
     {
@@ -1237,7 +1405,7 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public async void LoginCheck()
+    public void LoginCheck()
     {
         LoadingCircle.Instance.StartSpin();
 
@@ -1248,6 +1416,7 @@ public class LoginManager : MonoBehaviour
         if (needTermsofuse)
         {
             LoadingCircle.Instance.StopSpin();
+            SetLoginMode(true); // 자동 로그인 중이면 로그인 버튼이 없어 약관 창의 '뒤로'를 누르면 갇혔다
             agreePanel.SetActive(true);
             if (termsOpener && ServerConfigManager.Contains("terms"))
             {
@@ -1266,69 +1435,25 @@ public class LoginManager : MonoBehaviour
             LoginCheck();
 
 #elif UNITY_IOS || UNITY_ANDROID
-            switch (reason)
+            // reason 이 new·expire 가 아니면 예전에는 로그만 남기고 멈췄다 → new 처럼 안내
+            if (reason != "new" && reason != "expire")
             {
-                case "new":
-                    ErrorMessageManager.Instance.AddGameError(
-                        0,
-                        "popup_adult_verification",
-                        "popup_adult_verification_message",
-                        ErrorHandlingType.RECALL,
-                        null,
-                        () =>
-                        {
-                            adultOkButton.interactable = false;
-                            adultWindow.SetActive(true);
-                        }
-                    );
-                    break;
-                case "expire":
-                    ErrorMessageManager.Instance.AddGameError(
-                        0,
-                        "본인 인증",
-                        "본인 인증 유효기간이 만료되었습니다.\n청소년보호법 제 17조와 여성가족부의 정책에 따라 연 1회 본인 인증을 진행하시면 청소년 유해매체물을 이용하실 수 있습니다.\n 인증 결과는 1년간 적용됩니다.\n\n확인 버튼을 누르시면 본인인증이 진행됩니다.",
-                        ErrorHandlingType.RECALL,
-                        null,
-                        () =>
-                        {
-                            adultOkButton.interactable = false;
-                            adultWindow.SetActive(true);
-                        }
-                    );
-                    break;
-                default:
-                    Debug.LogError(
-                        "needAdultCert 가 true이지만 reason이 없거나 new 나 expire가 아님 서버 담당자님 봐주세요!"
-                    );
-                    break;
+                Debug.LogWarning($"needAdultCert 인데 reason 이 '{reason}' — new 로 안내");
             }
+            ShowAdultCertNotice(
+                reason == "expire"
+                    ? AdultCertExpireBody
+                    : LocalizeManager.GetLocalString("popup_adult_verification_message")
+            );
 #endif
         }
         else
         {
             LoadingCircle.Instance.StartSpin();
 
-            Action webSocketLogin = () =>
-            {
-                if (WebSocketManager.defaultCli == null || !WebSocketManager.defaultCli.isOpened)
-                    ConnectGameServer(PushTokenCheck);
-            };
-
-            if (WebSocketManager.defaultCli != null && WebSocketManager.defaultCli.isOpened)
-            {
-                if (await PingCheckManager.CheckWebSocketPing())
-                {
-                    LoadingCircle.Instance.StopSpin();
-                }
-                else
-                {
-                    webSocketLogin?.Invoke();
-                }
-            }
-            else
-            {
-                webSocketLogin?.Invoke();
-            }
+            // 예전: 소켓이 이미 열려 있으면 핑이 될 때 로딩만 멈추고 끝, 핑이 안 되면 '열려 있음'이라 아무것도 안 해 멈췄다
+            // (게임 서버 로그인 실패 뒤 다시 시도하면 여기서 갇힘). 로그인 화면에서는 늘 새로 연결한다(Init 이 이전 소켓을 닫음)
+            ConnectGameServer(PushTokenCheck);
 
             DevManager.Instance.PubLogin = true;
         }
@@ -1336,7 +1461,24 @@ public class LoginManager : MonoBehaviour
 
     public async void PushTokenCheck()
     {
-        var response = await PublisherApiManager.Instance.CheckMyPushToken();
+        // 푸시 토큰은 로그인에 꼭 필요하지 않다: 아직 못 받았거나(TokenReceived 전) 요청이 실패하면 건너뛰고 로그인을 이어간다
+        // (예전에는 토큰이 null 이면 등록 요청에서 예외가 나 그대로 멈췄다)
+        if (string.IsNullOrEmpty(FirebaseManager.Instance.deviceToken))
+        {
+            RequestGameLoginData();
+            return;
+        }
+        ResponseData response;
+        try
+        {
+            response = await PublisherApiManager.Instance.CheckMyPushToken();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+            RequestGameLoginData();
+            return;
+        }
 
         switch (response.code)
         {
@@ -1361,14 +1503,15 @@ public class LoginManager : MonoBehaviour
 
     public async UniTask RegisterPushToken()
     {
-        var response = await PublisherApiManager.Instance.SendCloudeMessesingToken(
-            FirebaseManager.Instance.deviceToken
-        );
-
-        switch (response.code)
+        try
         {
-            case 200:
-                break;
+            await PublisherApiManager.Instance.SendCloudeMessesingToken(
+                FirebaseManager.Instance.deviceToken
+            );
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e); // 등록 실패는 로그인을 막지 않는다
         }
 
         RequestGameLoginData();
@@ -1536,13 +1679,17 @@ public class LoginManager : MonoBehaviour
                     },
                     () =>
                     {
-                        RequestGameLoginData();
-                        Debug.Log("성인 인증 실패, 로그인 다시 시도");
+                        // 예전: 소켓도 없이 RequestGameLoginData 를 불러 조용히 멈췄다(인증 창은 이미 닫힘)
+                        Debug.Log("성인 인증 확인 실패 → 다시 시도 창");
+                        ShowLoginRetry();
                     }
                 );
             }
             else
             {
+                // 인증을 끝내지 않고 닫음: 서버에 다시 물어 아직 필요하면 안내창(본인인증 진행 / 다른 계정으로 로그인)이 뜬다.
+                // 예전에는 같은 안내·창이 다시 떠 빠져나갈 수 없었다
+                LoadingCircle.Instance.StartSpin();
                 RequestPubLogin();
                 Debug.Log("성인 인증 성공 or 실패, 로그인 다시 시도");
             }
@@ -1589,19 +1736,16 @@ public class LoginManager : MonoBehaviour
                     SetNicknameCheckNotification("", Color.red);
                     RequestPubRegister(ranNick);
                 }
-                else if (statusCode == 422)
+                else if (statusCode == 422 && ++nickTries < MaxNickTries)
                 {
                     //LoadingCircle.Instance.StopSpin();
                     //SetNicknameCheckNotification("중복된 닉네임입니다.", Color.red);
-                    RandomNicknameSet();
+                    RandomNicknameSet(); // 중복: 다른 번호로 다시(끝없이 돌지 않게 횟수 제한)
                 }
                 else
                 {
-                    ErrorMessageManager.Instance.AddGameError(
-                        (int)statusCode,
-                        "SYS_ERR_NICK_CHECKING",
-                        "SYS_ERR_NICK_CHECKING_NOT_DEFINED"
-                    );
+                    // 예전: 오류 창(확인)만 띄우고 로딩이 돌던 채로 멈췄다
+                    ShowLoginRetry();
                 }
             }
         );
@@ -1704,7 +1848,7 @@ public class LoginManager : MonoBehaviour
                     {
                         if (need.ToString() == "adultCert")
                         {
-                            certurl = json.GetValue("certurl").ToString();
+                            certurl = json.ValueOrDefault<string>("certurl", ""); // 없으면 예전에는 예외로 멈췄다
                             if (json["certurl"] != null)
                             {
                                 kakaoUrl = json["certurl"].ToObject<string>();
@@ -1718,40 +1862,9 @@ public class LoginManager : MonoBehaviour
                                 danalUrl = json["danalCerturl"].ToObject<string>();
                             }
 
-                            if (json.TryGetValue("reason", out reason))
-                            {
-                                switch (reason.ToObject<string>())
-                                {
-                                    case "new":
-                                        ErrorMessageManager.Instance.AddGameError(
-                                            0,
-                                            "본인 인증",
-                                            "본인 인증을 하지 않은 계정입니다.\n청소년보호법 제 17조와 여성가족부의 정책에 따라 연 1회 본인 인증을 진행하시면 청소년 유해매체물을 이용하실 수 있습니다.\n 인증 결과는 1년간 적용됩니다.\n\n확인 버튼을 누르시면 본인인증이 진행됩니다.",
-                                            ErrorHandlingType.RECALL,
-                                            null,
-                                            () =>
-                                            {
-                                                adultOkButton.interactable = false;
-                                                adultWindow.SetActive(true);
-                                            }
-                                        );
-                                        break;
-                                    case "expire":
-                                        ErrorMessageManager.Instance.AddGameError(
-                                            0,
-                                            "본인 인증",
-                                            "본인 인증 유효기간이 만료되었습니다.\n청소년보호법 제 17조와 여성가족부의 정책에 따라 연 1회 본인 인증을 진행하시면 청소년 유해매체물을 이용하실 수 있습니다.\n 인증 결과는 1년간 적용됩니다.\n\n확인 버튼을 누르시면 본인인증이 진행됩니다.",
-                                            ErrorHandlingType.RECALL,
-                                            null,
-                                            () =>
-                                            {
-                                                adultOkButton.interactable = false;
-                                                adultWindow.SetActive(true);
-                                            }
-                                        );
-                                        break;
-                                }
-                            }
+                            // 안내: 본인인증 진행 / 다른 계정으로 로그인(예전에는 확인뿐, reason 이 new·expire 가 아니면 아무것도 안 해 멈춤)
+                            string why = json.TryGetValue("reason", out reason) ? reason.ToObject<string>() : "";
+                            ShowAdultCertNotice(why == "expire" ? AdultCertExpireBody : AdultCertNewBody);
 
 #if UNITY_EDITOR || UNITY_STANDALONE
                             //LoadingCircle.Instance.StartSpin();
@@ -1766,6 +1879,10 @@ public class LoginManager : MonoBehaviour
                             //RequestAdultCert(certurl);
 #endif
                         }
+                        else
+                        {
+                            ShowLoginRetry(); // 모르는 need: 예전에는 아무것도 안 해 멈췄다
+                        }
                     }
                     else
                     {
@@ -1774,14 +1891,13 @@ public class LoginManager : MonoBehaviour
                         Debug.Log("성인인증 필요없음");
                     }
                 }
+                else if (++registerTries < MaxRegisterTries)
+                {
+                    RandomNicknameSet(); // 다른 닉네임으로 다시(예전에는 오류 창을 쌓으며 끝없이 반복)
+                }
                 else
                 {
-                    RandomNicknameSet();
-                    ErrorMessageManager.Instance.AddGameError(
-                        (int)statusCode,
-                        "SYS_ERR_JOIN",
-                        "SYS_ERR_JOIN_NOT_DEFINED"
-                    );
+                    ShowLoginRetry();
                 }
 #if UNITY_STANDALONE
             },
@@ -1821,8 +1937,12 @@ public class LoginManager : MonoBehaviour
             DevManager.Instance.WsConnect = true;
             DevManager.Instance.WsDelegate += 1;
 
+            // 열린 뒤부터 로비까지(푸시 토큰 → 로그인 정보 → 로그인 패킷 → 유저 정보…) 25초 안에 못 가면 다시 시도 창
+            StartLoginWatch(25, "login_fail_retry_body");
             callback?.Invoke();
         };
+        // 소켓이 15초 안에 안 열리면 다시 시도 창(예전에는 30초 로딩 뒤 안내만 뜨고 멈춤)
+        StartLoginWatch(15, "login_fail_server_body");
 
         //var cts = new CancellationTokenSource();
         //cts.CancelAfterSlim(TimeSpan.FromSeconds(30f));
@@ -1835,29 +1955,33 @@ public class LoginManager : MonoBehaviour
     /// </summary>
     private async void RequestGameLoginData()
     {
-        var response = await PublisherApiManager.Instance.GetGameLoginDataPubAPI();
-
-        if (recvBlock == true)
+        try
         {
-            return;
+            var response = await PublisherApiManager.Instance.GetGameLoginDataPubAPI();
+
+            if (recvBlock == true)
+            {
+                return;
+            }
+
+            if (response.code == 200)
+            {
+                string uid = response.json.GetValue("userid").ToString();
+                string pw = response.json.GetValue("password").ToString();
+
+                //LoadingCircle.Instance.StartSpin();
+                RequestLogin(uid, pw);
+            }
+            else if (!response.handled)
+            {
+                // 예전: 오류 창(확인)만 띄우고 소켓은 열린 채로 멈췄다
+                ShowLoginRetry();
+            }
         }
-
-        if (response.code == 200)
+        catch (Exception e)
         {
-            string uid = response.json.GetValue("userid").ToString();
-            string pw = response.json.GetValue("password").ToString();
-
-            Debug.Log(string.Format("{0} / {1}", uid, pw));
-            //LoadingCircle.Instance.StartSpin();
-            RequestLogin(uid, pw);
-        }
-        else
-        {
-            ErrorMessageManager.Instance.AddGameError(
-                (int)response.code,
-                "SYS_ERR_GAME_LOGIN",
-                "SYS_ERR_GAME_LOGIN_NOT_DEFINED"
-            );
+            Debug.LogException(e);
+            ShowLoginRetry();
         }
     }
 
@@ -2095,6 +2219,7 @@ public class LoginManager : MonoBehaviour
                 break;
             case PCProtocol.PC_CONSOLE_LOGIN_FAIL:
                 //WebSocketManager.defaultCli.Close();
+                StopLoginWatch();
                 DevManager.Instance.GsLogin = false;
                 FailGameServerLogin();
 
@@ -2111,10 +2236,14 @@ public class LoginManager : MonoBehaviour
                 }
                 else
                 {
+                    // 예전: 확인만 있는 창 + 로그아웃 → 자동 로그인 중이면 로그인 버튼이 없어 멈췄다. 닫으면 로그인 화면을 다시 연다
                     ErrorMessageManager.Instance.AddGameError(
                         (int)reason,
                         "SYS_ERR_LOGIN",
-                        reason.ToString()
+                        reason.ToString(),
+                        ErrorHandlingType.RECALL,
+                        null,
+                        ReloadLoginScene
                     );
                 }
 
@@ -2153,6 +2282,7 @@ public class LoginManager : MonoBehaviour
 
     public void LoadLobby()
     {
+        StopLoginWatch();
         if (WebSocketManager.defaultCli != null)
         {
             WebSocketManager.defaultCli.OnMessage -= WebSocketOnMessage;

@@ -18,6 +18,7 @@ public class ResponseData
     public long code = 0;
     public JObject json = null;
     public bool isOK = false;
+    public bool handled = false; // 실패 이유를 이미 안내창으로 띄웠다(로그인 화면에서 다시 띄우지 않는다)
 
     public ResponseData(long code, JObject json = null, bool isOK = true)
     {
@@ -29,6 +30,9 @@ public class ResponseData
 
 public class PublisherApiManager : MonoBehaviour
 {
+    // 로그인 단계 요청(로그인·게임 서버 로그인 정보·본인인증 확인)의 응답 대기 한도(초). 0 이면 OS 가 포기할 때까지 기다려 화면이 멈춰 보였다
+    private const int LoginRequestTimeout = 15;
+
     #region Singleton Initialize
 
     private static PublisherApiManager sInstance;
@@ -190,7 +194,17 @@ public class PublisherApiManager : MonoBehaviour
         //    return task.Result;
         //});
 
-        var to = await FirebaseManager.TokenAsync();
+        string to;
+        try
+        {
+            to = await FirebaseManager.TokenAsync();
+        }
+        catch (Exception e)
+        {
+            // 오프라인·로그인 정보 없음 등. 예전에는 예외가 그대로 묻혀 화면이 멈췄다 → 실패로 돌려 로그인 화면이 다시 시도 창을 띄운다
+            Debug.LogWarning("파이어베이스 토큰 발급 실패: " + e.Message);
+            return new ResponseData(0, null, false);
+        }
         FirebaseManager.Instance.token = to;
 
         Console.Log(string.Format("파이어베이스 토근 발급: {0}", FirebaseManager.Instance.token));
@@ -215,6 +229,7 @@ public class PublisherApiManager : MonoBehaviour
         //Debug.LogError(url);
         using (UnityWebRequest www = UnityWebRequest.Post(url, form))
         {
+            www.timeout = LoginRequestTimeout;
             await sendWebRequest(www, url);
 
             if (
@@ -239,7 +254,7 @@ public class PublisherApiManager : MonoBehaviour
 
                 if (www.responseCode == 422)
                 {
-                    string error = json["error"].ToObject<string>();
+                    string error = json.ValueOrDefault<string>("error", "");
                     string need = "";
                     if (json["need"] != null)
                     {
@@ -364,39 +379,33 @@ public class PublisherApiManager : MonoBehaviour
                     }
                     else
                     {
-                        ErrorMessageManager.Instance.AddNetworkError(
-                            0,
-                            www.error,
-                            www.downloadHandler.text,
-                            ErrorHandlingType.RECALL,
-                            null,
-                            () =>
-                            {
-                                CustomSceneManager.LoadLoginScene();
-                            }
-                        );
+                        // 모르는 422: 서버 원문을 띄우던 것을 로그인 화면의 다시 시도 창으로 넘긴다
+                        Debug.Log(www.error);
+                        Debug.Log(www.downloadHandler.text);
+                        return new ResponseData(www.responseCode, json, false);
                     }
+                    // 위의 알려진 사유(차단·손실 한도·탈퇴 등)는 안내창을 띄웠다
+                    return new ResponseData(www.responseCode, json, false) { handled = true };
                 }
                 else
                 {
+                    // 4xx·5xx: 서버 원문(www.error·본문)을 띄우던 것을 로그인 화면의 다시 시도 창으로 넘긴다
                     Debug.Log(www.error);
                     Debug.Log(www.downloadHandler.text);
-                    ErrorMessageManager.Instance.AddNetworkError(
-                        0,
-                        www.error,
-                        www.downloadHandler.text,
-                        ErrorHandlingType.RECALL,
-                        null,
-                        () =>
-                        {
-                            CustomSceneManager.LoadLoginScene();
-                        }
-                    );
+                    return new ResponseData(www.responseCode, json, false);
                 }
             }
             else
             {
-                JObject json = JObject.Parse(www.downloadHandler.text);
+                JObject json;
+                try
+                {
+                    json = JObject.Parse(www.downloadHandler.text);
+                }
+                catch
+                {
+                    return new ResponseData(0, null, false);
+                }
 
                 if (www.responseCode == 200)
                 {
@@ -1600,41 +1609,40 @@ public class PublisherApiManager : MonoBehaviour
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
             www.SetRequestHeader("Authorization", token);
+            www.timeout = LoginRequestTimeout;
 
             await sendWebRequest(www, url);
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
-                JObject json = JObject.Parse(www.downloadHandler.text);
                 int ecode = 0;
                 try
                 {
-                    ecode = json["ecode"].ToObject<int>();
+                    // 연결 오류면 본문이 비어 있어 Parse 가 예외를 낸다(예전에는 여기서 멈춤)
+                    ecode = JObject.Parse(www.downloadHandler.text)["ecode"].ToObject<int>();
                 }
                 catch { }
                 if (ecode == 402)
                 {
                     NetWorkErrorLogOut();
+                    return new ResponseData(www.responseCode, null, false) { handled = true };
                 }
-                else
-                {
-                    Debug.Log(www.error);
-                    Debug.Log(www.downloadHandler.text);
-                    ErrorMessageManager.Instance.AddNetworkError(
-                        0,
-                        www.error,
-                        www.downloadHandler.text
-                    );
-                }
+                // 그 외: 서버 원문 창 대신 로그인 화면의 다시 시도 창
+                Debug.Log(www.error);
+                Debug.Log(www.downloadHandler.text);
+                return new ResponseData(www.responseCode, null, false);
             }
             else
             {
-                JObject json = JObject.Parse(www.downloadHandler.text);
-
-                if (www.responseCode == 200)
+                try
                 {
-                    return new ResponseData(www.responseCode, json);
+                    JObject json = JObject.Parse(www.downloadHandler.text);
+                    if (www.responseCode == 200)
+                    {
+                        return new ResponseData(www.responseCode, json);
+                    }
                 }
+                catch { }
             }
 
             return new ResponseData(0, null, false);
@@ -2679,6 +2687,7 @@ public class PublisherApiManager : MonoBehaviour
         {
             www.SetRequestHeader("Authorization", token);
 
+            www.timeout = LoginRequestTimeout;
             yield return sendWebRequest(www, url);
 
             if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
@@ -2709,6 +2718,10 @@ public class PublisherApiManager : MonoBehaviour
                 if (www.responseCode == 200)
                 {
                     successCallback.Invoke();
+                }
+                else
+                {
+                    failCallback.Invoke(); // 예전에는 200 이 아닌 성공 응답이면 아무것도 안 불러 멈췄다
                 }
             }
         }

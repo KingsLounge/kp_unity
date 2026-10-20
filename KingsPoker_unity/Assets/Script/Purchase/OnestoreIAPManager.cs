@@ -1,4 +1,4 @@
-#if UNITY_ANDROID
+﻿#if UNITY_ANDROID
 
 using System;
 using System.Collections.Generic;
@@ -90,8 +90,19 @@ public class OnestoreIAPManager : IPurchaseCallback
             purchaseClient.QueryPurchases(ProductType.INAPP);
     }
 
+    /// 상품 정보(가격)가 도착했을 때(메인 스레드). 상점 칸이 가격을 다시 채운다.
+    /// 예전에는 상점을 정보 도착 전에 열면 가격 칸이 빈 채로 남았다(다시 채우라는 신호가 구글 결제 쪽에만 있었음)
+    public event Action PricesUpdated;
+    private DateTime lastDetailsQuery = DateTime.MinValue;
+
     public string GetPrice(string productID)
     {
+        // 아직 정보가 없으면(요청 실패·로그인 직후) 다시 요청한다. 5초에 한 번까지
+        if (productDetails == null && shopItemList != null && shopItemList.Count > 0
+            && (DateTime.UtcNow - lastDetailsQuery).TotalSeconds > 5)
+        {
+            AddProduct();
+        }
         if (productDetails != null)
         {
             var detail = productDetails.Find(
@@ -145,6 +156,7 @@ public class OnestoreIAPManager : IPurchaseCallback
 
     public void AddProduct()
     {
+        lastDetailsQuery = DateTime.UtcNow;
         var items = shopItemList.Select(store => store["store_code"].ToString()).ToList();
         if (purchaseClient != null)
             purchaseClient.QueryProductDetails(items.AsReadOnly(), ProductType.INAPP);
@@ -275,7 +287,7 @@ public class OnestoreIAPManager : IPurchaseCallback
                 iapResult.Message
             )
         );
-        throw new System.NotImplementedException();
+        // 예전에는 예외를 던지고 끝나 앱을 다시 켤 때까지 가격이 비었다. 상점을 다시 열면(GetPrice) 다시 요청한다
     }
 
     private List<ProductDetail> productDetails = null;
@@ -283,6 +295,8 @@ public class OnestoreIAPManager : IPurchaseCallback
     public void OnProductDetailsSucceeded(List<ProductDetail> productDetails)
     {
         this.productDetails = productDetails;
+        // 원스토어 콜백은 메인 스레드가 아닐 수 있어 화면(Text)은 메인 스레드에서 고친다
+        UniTask.Post(() => PricesUpdated?.Invoke());
     }
 
     public void OnPurchaseFailed(IapResult iapResult)
