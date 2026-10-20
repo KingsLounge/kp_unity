@@ -230,8 +230,70 @@ public class ScriptBatch : EditorWindow
     static BuildOption option = LoadOptions();
     List<string> platformNames = new List<string>();
 
+    // ---- 스토어 구분(원스토어로 빌드해야 하는데 구글 플레이로 빌드하는 실수 방지) ----
+    // osSelect: 0 Android(구글 플레이), 1 iOS, 2 Windows, 3 OneStore. 0 과 3 은 패키지·버전 코드가 같아 결과물만으로는 구분이 안 된다.
+    static string StoreLabel(int os) =>
+        os switch { 0 => "구글 플레이", 1 => "iOS", 2 => "Windows", 3 => "원스토어", _ => "?" };
+
+    static string StoreTag(int os) =>
+        os switch { 0 => "google", 1 => "ios", 2 => "windows", 3 => "onestore", _ => "unknown" };
+
+    static string StoreFolder(int os) =>
+        os switch { 0 => "GooglePlay", 1 => "iOS", 2 => "Windows", 3 => "OneStore", _ => "" };
+
+    static Color StoreColor(int os) =>
+        os switch
+        {
+            0 => new Color(0.18f, 0.62f, 0.30f), // 구글 플레이: 초록
+            3 => new Color(0.95f, 0.45f, 0.10f), // 원스토어: 주황
+            _ => new Color(0.35f, 0.35f, 0.40f),
+        };
+
+    // 창 맨 위 색 띠: 지금 어느 스토어로 빌드되는지 한눈에
+    static void DrawStoreBanner(int os)
+    {
+        var rect = GUILayoutUtility.GetRect(0, 36, GUILayout.ExpandWidth(true));
+        EditorGUI.DrawRect(rect, StoreColor(os));
+        var style = new GUIStyle(EditorStyles.boldLabel)
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fontSize = 18,
+            normal = { textColor = Color.white },
+        };
+        GUI.Label(rect, $"빌드 대상: {StoreLabel(os)}" + (os == 3 ? "  (ONE_STORE)" : ""), style);
+        EditorGUILayout.Space(6);
+    }
+
+    // 빌드 직전 확인 창. 취소하면 버전 코드도 올리지 않는다
+    static bool ConfirmStore(int os, JObject platformInfo, string ex, bool release)
+    {
+        string package = platformInfo?.ValueOrDefault<string>("PackageName", "") ?? "";
+        string code =
+            os == 1 ? PlayerSettings.iOS.buildNumber
+            : platformInfo != null ? platformInfo["BundleCode"]?.ToString() ?? "" : "";
+        string msg =
+            $"스토어: {StoreLabel(os)}\n"
+            + $"패키지: {package}\n"
+            + $"버전: {PlayerSettings.bundleVersion}\n"
+            + $"버전 코드: {code}\n"
+            + (string.IsNullOrEmpty(ex) ? "" : $"파일: {ex}\n")
+            + $"모드: {(release ? "release" : "debug")}\n"
+            + $"ONE_STORE 정의: {(os == 3 ? "포함" : "없음")}";
+        if (os == 0)
+        {
+            msg += "\n\n※ 원스토어 빌드가 아닙니다. 원스토어용이면 취소하고 위에서 OneStore 를 고르세요.";
+        }
+        return EditorUtility.DisplayDialog(
+            $"{StoreLabel(os)} 빌드 확인",
+            msg,
+            $"{StoreLabel(os)}로 빌드",
+            "취소"
+        );
+    }
+
     void OnGUI()
     {
+        DrawStoreBanner(option.osSelect);
         EditorGUILayout.LabelField("Build Platform");
         option.osSelect = GUILayout.Toolbar(
             option.osSelect,
@@ -386,7 +448,31 @@ public class ScriptBatch : EditorWindow
         {
             // PlayerSettings.SplashScreen.show = false;
             BuildTarget target = BuildTarget.Android;
-            string ex = "";
+            int os = option.osSelect;
+            string ex =
+                (os == 0 || os == 3) ? (option.buildExtentions == BuildExtensions.AAB ? "aab" : "apk")
+                : os == 2 ? "exe"
+                : "";
+            // 스토어 확인 → 저장 위치를 먼저 받는다. 어느 쪽이든 취소하면 버전 코드를 올리지 않고 끝낸다
+            JObject selectedInfo = platformData != null ? platformData[option.platform] as JObject : null;
+            if (!ConfirmStore(os, selectedInfo, ex, option.buildModeSelect == 1))
+            {
+                UnityEngine.Debug.Log("[ScriptBatch] 빌드 취소 (스토어 확인)");
+                return;
+            }
+            // 파일 이름·기본 폴더에 스토어를 붙인다: ../Build/OneStore/Kings.1.xx_onestore.apk
+            string baseName =
+                platformNames[option.platform] + "." + PlayerSettings.bundleVersion + "_" + StoreTag(os);
+            string dir = "../Build/" + StoreFolder(os);
+            Directory.CreateDirectory(dir);
+            string file = string.IsNullOrEmpty(ex)
+                ? EditorUtility.SaveFolderPanel("Choose Location of Built Game", dir, baseName)
+                : EditorUtility.SaveFilePanel("Choose Location of Built Game", dir, baseName, ex);
+            if (string.IsNullOrEmpty(file))
+            {
+                UnityEngine.Debug.Log("[ScriptBatch] 빌드 취소 (저장 경로 없음)");
+                return;
+            }
             switch (option.osSelect)
             {
                 case 0:
@@ -436,7 +522,6 @@ public class ScriptBatch : EditorWindow
                         UnityEngine.Debug.Log(PlayerSettings.bundleVersion);
                         UnityEngine.Debug.Log(PlayerSettings.Android.bundleVersionCode);
                     }
-                    ex = aabBuild ? "aab" : "apk";
                     break;
                 case 1:
                     {
@@ -460,26 +545,7 @@ public class ScriptBatch : EditorWindow
                     break;
                 case 2:
                     target = BuildTarget.StandaloneWindows;
-                    ex = "exe";
                     break;
-            }
-            string file;
-            if (string.IsNullOrEmpty(ex))
-            {
-                file = EditorUtility.SaveFolderPanel(
-                    "Choose Location of Built Game",
-                    "../Build",
-                    platformNames[option.platform] + "." + PlayerSettings.bundleVersion
-                );
-            }
-            else
-            {
-                file = EditorUtility.SaveFilePanel(
-                    "Choose Location of Built Game",
-                    "../Build",
-                    platformNames[option.platform] + "." + PlayerSettings.bundleVersion,
-                    ex
-                );
             }
             SettingInit();
             GetWindow<ScriptBatch>().Close();
