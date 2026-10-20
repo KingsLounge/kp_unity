@@ -264,31 +264,26 @@ public class ScriptBatch : EditorWindow
         EditorGUILayout.Space(6);
     }
 
-    // 빌드 직전 확인 창. 취소하면 버전 코드도 올리지 않는다
-    static bool ConfirmStore(int os, JObject platformInfo, string ex, bool release)
+    // Android 빌드 버튼을 누르면 스토어를 고르는 창(원스토어 / 구글 플레이). 위 툴바에서 무엇을 골라 뒀든 여기서 정한다.
+    // 고른 스토어 번호(0 구글 플레이, 3 원스토어)를 돌려준다. 취소면 -1 — 버전 코드도 올리지 않는다
+    static int ChooseAndroidStore(JObject platformInfo, string ex, bool release)
     {
         string package = platformInfo?.ValueOrDefault<string>("PackageName", "") ?? "";
-        string code =
-            os == 1 ? PlayerSettings.iOS.buildNumber
-            : platformInfo != null ? platformInfo["BundleCode"]?.ToString() ?? "" : "";
+        string code = platformInfo != null ? platformInfo["BundleCode"]?.ToString() ?? "" : "";
         string msg =
-            $"스토어: {StoreLabel(os)}\n"
-            + $"패키지: {package}\n"
+            $"패키지: {package}\n"
             + $"버전: {PlayerSettings.bundleVersion}\n"
             + $"버전 코드: {code}\n"
-            + (string.IsNullOrEmpty(ex) ? "" : $"파일: {ex}\n")
-            + $"모드: {(release ? "release" : "debug")}\n"
-            + $"ONE_STORE 정의: {(os == 3 ? "포함" : "없음")}";
-        if (os == 0)
-        {
-            msg += "\n\n※ 원스토어 빌드가 아닙니다. 원스토어용이면 취소하고 위에서 OneStore 를 고르세요.";
-        }
-        return EditorUtility.DisplayDialog(
-            $"{StoreLabel(os)} 빌드 확인",
+            + $"파일: {ex}\n"
+            + $"모드: {(release ? "release" : "debug")}";
+        int picked = EditorUtility.DisplayDialogComplex(
+            "어느 스토어로 빌드할까요?",
             msg,
-            $"{StoreLabel(os)}로 빌드",
-            "취소"
+            "원스토어",
+            "취소",
+            "구글 플레이"
         );
+        return picked switch { 0 => 3, 2 => 0, _ => -1 };
     }
 
     void OnGUI()
@@ -453,12 +448,17 @@ public class ScriptBatch : EditorWindow
                 (os == 0 || os == 3) ? (option.buildExtentions == BuildExtensions.AAB ? "aab" : "apk")
                 : os == 2 ? "exe"
                 : "";
-            // 스토어 확인 → 저장 위치를 먼저 받는다. 어느 쪽이든 취소하면 버전 코드를 올리지 않고 끝낸다
-            JObject selectedInfo = platformData != null ? platformData[option.platform] as JObject : null;
-            if (!ConfirmStore(os, selectedInfo, ex, option.buildModeSelect == 1))
+            // Android 면 스토어부터 고른다 → 저장 위치를 먼저 받는다. 어느 쪽이든 취소하면 버전 코드를 올리지 않고 끝낸다
+            if (os == 0 || os == 3)
             {
-                UnityEngine.Debug.Log("[ScriptBatch] 빌드 취소 (스토어 확인)");
-                return;
+                JObject selectedInfo = platformData != null ? platformData[option.platform] as JObject : null;
+                int picked = ChooseAndroidStore(selectedInfo, ex, option.buildModeSelect == 1);
+                if (picked < 0)
+                {
+                    UnityEngine.Debug.Log("[ScriptBatch] 빌드 취소 (스토어 선택)");
+                    return;
+                }
+                os = option.osSelect = picked; // 정의 기호(ONE_STORE)는 아래 SettingInit → DefineChange 가 이 값으로 맞춘다
             }
             // 파일 이름·기본 폴더에 스토어를 붙인다: ../Build/OneStore/Kings.1.xx_onestore.apk
             string baseName =
