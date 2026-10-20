@@ -271,14 +271,8 @@ public class ScriptBatch : EditorWindow
             + $"버전 코드: {code}\n"
             + $"파일: {ex}\n"
             + $"모드: {(release ? "release" : "debug")}";
-        int picked = EditorUtility.DisplayDialogComplex(
-            "어느 스토어로 빌드할까요?",
-            msg,
-            "원스토어",
-            "취소",
-            "구글 플레이"
-        );
-        return picked switch { 0 => 3, 2 => 0, _ => -1 };
+        // macOS 기본 창(DisplayDialogComplex)은 버튼 순서가 확인·취소·기타로 고정이라 취소가 가운데 온다 → 직접 그린 창
+        return StorePickerWindow.Pick(msg);
     }
 
     void OnGUI()
@@ -829,4 +823,75 @@ public enum BuildExtensions
 {
     APK = 0,
     AAB = 1
+}
+
+/// Android 스토어 선택 창: 원스토어 · 구글 플레이 · (간격) · 취소 순서. Enter = 원스토어, Esc·창 닫기 = 취소.
+/// ShowModal 은 창이 닫힐 때까지 돌아오지 않는다
+public class StorePickerWindow : EditorWindow
+{
+    string info;
+    int result = -1; // 3 원스토어, 0 구글 플레이, -1 취소
+
+    public static int Pick(string info)
+    {
+        var w = CreateInstance<StorePickerWindow>();
+        w.info = info;
+        w.titleContent = new GUIContent("스토어 선택");
+        var main = EditorGUIUtility.GetMainWindowPosition();
+        var size = new Vector2(320, 270);
+        w.position = new Rect(main.center - size / 2, size);
+        w.minSize = w.maxSize = size;
+        w.ShowModal();
+        return w.result;
+    }
+
+    void Pick(int store)
+    {
+        result = store;
+        Close();
+    }
+
+    void OnGUI()
+    {
+        var e = Event.current;
+        if (e.type == EventType.KeyDown)
+        {
+            if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter)
+            {
+                e.Use();
+                Pick(3);
+                return;
+            }
+            if (e.keyCode == KeyCode.Escape)
+            {
+                e.Use();
+                Pick(-1);
+                return;
+            }
+        }
+
+        EditorGUILayout.Space(8);
+        EditorGUILayout.LabelField("어느 스토어로 빌드할까요?", EditorStyles.boldLabel);
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField(info, EditorStyles.wordWrappedLabel);
+        EditorGUILayout.Space(10);
+
+        var prev = GUI.backgroundColor;
+        GUI.backgroundColor = new Color(0.95f, 0.55f, 0.25f); // 원스토어(기본)
+        if (GUILayout.Button("원스토어", GUILayout.Height(30)))
+        {
+            Pick(3);
+        }
+        GUI.backgroundColor = prev;
+        if (GUILayout.Button("구글 플레이", GUILayout.Height(30)))
+        {
+            Pick(0);
+        }
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("취소", GUILayout.Height(26)))
+        {
+            Pick(-1);
+        }
+        EditorGUILayout.Space(6);
+    }
 }
